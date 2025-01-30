@@ -20,5 +20,11 @@ from KycDashboard.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',Home),
+    path('signup/', signup, name='signup'),
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('dashboard/', role_redirect, name='role_redirect'),
+    path('employee-dashboard/', employee_dashboard, name='employee_dashboard'),
+    path('associate-dashboard/', associate_dashboard, name='associate_dashboard'),
+    path('superuser-dashboard/', superuser_dashboard, name='superuser_dashboard'),
 ]
