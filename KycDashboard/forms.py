@@ -26,3 +26,22 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+from django import forms
+from .models import KYCProperty
+from django.contrib.auth import get_user_model
+
+class KYCPropertyForm(forms.ModelForm):
+    class Meta:
+        model = KYCProperty
+        fields = '__all__'
+        exclude = ['filed_by']
+        widgets = {
+            'file_status': forms.Select(choices=KYCProperty.FILE_STATUS_CHOICES),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter the choices for the 'file_maintained_by' field to only associates
+        self.fields['file_maintained_by'].queryset = get_user_model().objects.filter(employee_type='associate')

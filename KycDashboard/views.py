@@ -116,3 +116,96 @@ def associate_dashboard(request):
 @login_required
 def superuser_dashboard(request):
     return render(request, 'superuser_dashboard.html')
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from .models import KYCProperty
+from .forms import KYCPropertyForm
+
+from django.shortcuts import render
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from .models import KYCProperty
+
+@login_required
+def kyc_list(request):
+    # Fetch the search query from the GET parameters
+    search_query = request.GET.get('search', '')
+
+    # If the logged-in user is a superuser, display all KYC properties
+    if request.user.is_superuser:
+        properties = KYCProperty.objects.all()
+    else:
+        # Otherwise, only display KYC properties filed by the current user
+        properties = KYCProperty.objects.filter(filed_by=request.user)
+    
+    # Apply filtering based on search fields if search query is provided
+    if search_query:
+        properties = properties.filter(
+            Q(client_name__icontains=search_query) |
+            Q(village__icontains=search_query) |
+            Q(site_number__icontains=search_query) |
+            Q(sy_number__icontains=search_query) |
+            Q(file_status__icontains=search_query)
+        )
+    
+    return render(request, 'kyc_list.html', {
+        'properties': properties,
+        'search_query': search_query
+    })
+
+
+@login_required
+def kyc_detail(request, pk):
+    property = get_object_or_404(KYCProperty, pk=pk)
+    return render(request, 'kyc_detail.html', {'property': property})
+
+@login_required
+def kyc_create(request):
+    if request.method == "POST":
+        form = KYCPropertyForm(request.POST)
+        if form.is_valid():
+            kyc = form.save(commit=False)
+            kyc.filed_by = request.user  # ensure 'filed_by' is correct
+            kyc.save()
+            return redirect('kyc_list')
+        else:
+            # Debugging form errors
+            print(form.errors)  # Print errors to the console
+    else:
+        form = KYCPropertyForm()
+    return render(request, 'kyc_form.html', {'form': form})
+
+@login_required
+def kyc_update(request, pk):
+    # Fetch the KYC property using the provided primary key
+    kyc = get_object_or_404(KYCProperty, pk=pk)
+    
+    # Permission check: Ensure the logged-in user is the one who filed the property
+    if kyc.filed_by != request.user:
+        return HttpResponseForbidden('You do not have permission to edit this property.')
+
+    if request.method == "POST":
+        form = KYCPropertyForm(request.POST, instance=kyc)
+        if form.is_valid():
+            # Save the form but ensure 'filed_by' is not modified
+            kyc = form.save(commit=False)
+            kyc.filed_by = request.user  # Ensure 'filed_by' stays as the current user
+            kyc.save()
+            return redirect('kyc_list')
+    else:
+        form = KYCPropertyForm(instance=kyc)
+
+    return render(request, 'kyc_form.html', {'form': form})
+
+@login_required
+def kyc_delete(request, pk):
+    kyc = get_object_or_404(KYCProperty, pk=pk)
+    if kyc.filed_by != request.user:  # Permission check
+        return HttpResponseForbidden('You do not have permission to delete this property.')
+
+    if request.method == "POST":
+        kyc.delete()
+        return redirect('kyc_list')
+    return render(request, 'kyc_confirm_delete.html', {'property': kyc})

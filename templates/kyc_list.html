@@ -1,0 +1,47 @@
+{% block content %}
+<h2>KYC Property List</h2>
+
+<!-- Search Form -->
+<form method="get" action="{% url 'kyc_list' %}" class="form-inline mt-3 mb-3">
+    <input type="text" name="search" value="{{ search_query }}" class="form-control" placeholder="Search by Client Name, Village, Site Number, Survey Number, or File Status">
+    <button type="submit" class="btn btn-info ml-2">Search</button>
+</form>
+
+<a href="{% url 'kyc_create' %}" class="btn btn-primary mb-3">Add New KYC Property</a>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Client Name</th>
+            <th>Mobile Number</th>
+            <th>File Status</th>
+            <th>Filed By</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for property in properties %}
+        <tr>
+            <td>{{ property.client_name }}</td>
+            <td>{{ property.mobile_number }}</td>
+            <td>{{ property.get_file_status_display }}</td>
+            <td>{{ property.filed_by }}</td>
+            <td>
+                <a href="{% url 'kyc_detail' property.pk %}" class="btn btn-info btn-sm">View</a>
+
+                <!-- Show the "Edit" button only if the current user filed the KYC property or is a superuser -->
+                {% if property.filed_by == request.user %}
+                <a href="{% url 'kyc_update' property.pk %}" class="btn btn-warning btn-sm">Edit</a> {% endif %}
+
+                <!-- Optional: Un-comment the following line if you want to show a delete button (with proper permissions) -->
+                <!-- <a href="{% url 'kyc_delete' property.pk %}" class="btn btn-danger btn-sm">Delete</a> -->
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No KYC Properties Found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

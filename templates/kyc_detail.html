@@ -1,0 +1,126 @@
+{% block content %}
+<h2>KYC Property Details</h2>
+<a href="{% url 'kyc_list' %}" class="btn btn-secondary">Back to List</a>
+
+<!-- Show the "Edit" button only if the current user filed the KYC property or is a superuser -->
+{% if property.filed_by == request.user %}
+<a href="{% url 'kyc_update' property.pk %}" class="btn btn-warning">Edit</a> {% endif %}
+
+<!-- Optional: Un-comment the following line if you want to show a delete button (with proper permissions) -->
+<!-- <a href="{% url 'kyc_delete' property.pk %}" class="btn btn-danger">Delete</a> -->
+
+<table class="table table-bordered mt-3">
+    <tr>
+        <th>Client Name</th>
+        <td>{{ property.client_name }}</td>
+    </tr>
+    <tr>
+        <th>Mobile Number</th>
+        <td>{{ property.mobile_number }}</td>
+    </tr>
+    <tr>
+        <th>WhatsApp Number</th>
+        <td>{{ property.whatsapp_number }}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{{ property.email_id }}</td>
+    </tr>
+    <tr>
+        <th>Reference</th>
+        <td>{{ property.reference|default:"N/A" }}</td>
+    </tr>
+    <tr>
+        <th>Property Owner PAN</th>
+        <td>{{ property.property_owner_pan }}</td>
+    </tr>
+    <tr>
+        <th>Mode of Seller Ownership</th>
+        <td>{{ property.mode_of_seller_ownership }}</td>
+    </tr>
+    <tr>
+        <th>Nature of Property</th>
+        <td>{{ property.nature_of_property }}</td>
+    </tr>
+    <tr>
+        <th>Site Number</th>
+        <td>{{ property.site_number }}</td>
+    </tr>
+    <tr>
+        <th>Survey Number</th>
+        <td>{{ property.sy_number }}</td>
+    </tr>
+    <tr>
+        <th>Village</th>
+        <td>{{ property.village }}</td>
+    </tr>
+    <tr>
+        <th>Hobli</th>
+        <td>{{ property.hobli }}</td>
+    </tr>
+    <tr>
+        <th>Taluk</th>
+        <td>{{ property.taluk }}</td>
+    </tr>
+    <tr>
+        <th>Vacant or Built</th>
+        <td>{{ property.vacant_or_built }}</td>
+    </tr>
+    <tr>
+        <th>Localbody or Katha</th>
+        <td>{{ property.localbody_or_katha }}</td>
+    </tr>
+    <tr>
+        <th>Conversion</th>
+        <td>{{ property.conversion }}</td>
+    </tr>
+    <tr>
+        <th>Existing Loan</th>
+        <td>{{ property.existing_loan }}</td>
+    </tr>
+    <tr>
+        <th>Assessment or Remarks</th>
+        <td>{{ property.assessment_or_remarks }}</td>
+    </tr>
+    <tr>
+        <th>Summary or Proceedings</th>
+        <td>{{ property.summary_or_proceedings }}</td>
+    </tr>
+    <tr>
+        <th>Oral or Written Opinion</th>
+        <td>{{ property.oral_or_written_opinion }}</td>
+    </tr>
+    <tr>
+        <th>Total Fee</th>
+        <td>{{ property.total_fee }}</td>
+    </tr>
+    <tr>
+        <th>Advance</th>
+        <td>{{ property.advance }}</td>
+    </tr>
+    <tr>
+        <th>Balance</th>
+        <td>{{ property.balance }}</td>
+    </tr>
+    <tr>
+        <th>File Maintained By</th>
+        <td>{{ property.file_maintained_by|default:"N/A" }}</td>
+    </tr>
+    <tr>
+        <th>Filed On Date</th>
+        <td>{{ property.filed_on_date }}</td>
+    </tr>
+    <tr>
+        <th>Filed By</th>
+        <td>{{ property.filed_by }}</td>
+    </tr>
+    <tr>
+        <th>File Status</th>
+        <td>{{ property.get_file_status_display }}</td>
+    </tr>
+    <tr>
+        <th>Status Remarks</th>
+        <td>{{ property.status_remarks|default:"N/A" }}</td>
+    </tr>
+</table>
+{% endblock %}

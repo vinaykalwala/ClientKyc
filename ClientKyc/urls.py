@@ -21,10 +21,15 @@ from KycDashboard.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', signup, name='signup'),
-    path('login/', login_view, name='login'),
+    path('', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('dashboard/', role_redirect, name='role_redirect'),
     path('employee-dashboard/', employee_dashboard, name='employee_dashboard'),
     path('associate-dashboard/', associate_dashboard, name='associate_dashboard'),
     path('superuser-dashboard/', superuser_dashboard, name='superuser_dashboard'),
+    path('kyc_list', kyc_list, name='kyc_list'),
+    path('kyc_detail/<int:pk>/', kyc_detail, name='kyc_detail'),
+    path('kyc_create/', kyc_create, name='kyc_create'),
+    path('kyc_update/<int:pk>/', kyc_update, name='kyc_update'),
+    path('kyc_delete/<int:pk>/', kyc_delete, name='kyc_delete'),
 ]

@@ -1,0 +1,129 @@
+{% block content %}
+<h1>Client KYC Property Details</h1>
+<h2>{% if form.instance.pk %}Edit KYC Property{% else %}Add New KYC Property{% endif %}</h2>
+<a href="{% url 'kyc_list' %}" class="btn btn-secondary mb-3">Back to List</a>
+
+<form method="post" class="form" enctype="multipart/form-data">
+    {% csrf_token %} {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field in form %} {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %} {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <h3>Verbal Certificate/Written Opinion</h3>
+
+    <!-- Client Details -->
+    <div class="form-group">
+        <label for="client_name">Client Name</label> {{ form.client_name }}
+    </div>
+
+    <div class="form-group">
+        <label for="mobile_number">Mobile Number</label> {{ form.mobile_number }}
+    </div>
+
+    <div class="form-group">
+        <label for="whatsapp_number">WhatsApp Number</label> {{ form.whatsapp_number }}
+    </div>
+
+    <div class="form-group">
+        <label for="email_id">Email</label> {{ form.email_id }}
+    </div>
+
+    <div class="form-group">
+        <label for="reference">Reference</label> {{ form.reference }}
+    </div>
+
+    <div class="form-group">
+        <label for="property_owner_pan">Property Owner PAN</label> {{ form.property_owner_pan }}
+    </div>
+
+    <div class="form-group">
+        <label for="mode_of_seller_ownership">Mode of Seller Ownership</label> {{ form.mode_of_seller_ownership }}
+    </div>
+
+    <div class="form-group">
+        <label for="nature_of_property">Nature of Property</label> {{ form.nature_of_property }}
+    </div>
+
+    <div class="form-group">
+        <label for="site_number">Site Number</label> {{ form.site_number }}
+    </div>
+
+    <div class="form-group">
+        <label for="sy_number">Survey Number</label> {{ form.sy_number }}
+    </div>
+
+    <div class="form-group">
+        <label for="village">Village</label> {{ form.village }}
+    </div>
+
+    <div class="form-group">
+        <label for="hobli">Hobli</label> {{ form.hobli }}
+    </div>
+
+    <div class="form-group">
+        <label for="taluk">Taluk</label> {{ form.taluk }}
+    </div>
+
+    <div class="form-group">
+        <label for="vacant_or_built">Vacant or Built</label> {{ form.vacant_or_built }}
+    </div>
+
+    <div class="form-group">
+        <label for="localbody_or_katha">Localbody or Katha</label> {{ form.localbody_or_katha }}
+    </div>
+
+    <div class="form-group">
+        <label for="conversion">Conversion</label> {{ form.conversion }}
+    </div>
+
+    <div class="form-group">
+        <label for="existing_loan">Existing Loan</label> {{ form.existing_loan }}
+    </div>
+
+    <div class="form-group">
+        <label for="assessment_or_remarks">Assessment or Remarks</label> {{ form.assessment_or_remarks }}
+    </div>
+
+    <div class="form-group">
+        <label for="summary_or_proceedings">Summary or Proceedings</label> {{ form.summary_or_proceedings }}
+    </div>
+
+    <div class="form-group">
+        <label for="oral_or_written_opinion">Oral or Written Opinion</label> {{ form.oral_or_written_opinion }}
+    </div>
+
+    <div class="form-group">
+        <label for="total_fee">Total Fee</label> {{ form.total_fee }}
+    </div>
+
+    <div class="form-group">
+        <label for="advance">Advance</label> {{ form.advance }}
+    </div>
+
+    <div class="form-group">
+        <label for="balance">Balance</label> {{ form.balance }}
+    </div>
+
+    <div class="form-group">
+        <label for="file_maintained_by">File Maintained By</label> {{ form.file_maintained_by }}
+    </div>
+
+    <div class="form-group">
+        <label for="file_status">File Status</label> {{ form.file_status }}
+    </div>
+
+    <div class="form-group">
+        <label for="status_remarks">Status Remarks</label> {{ form.status_remarks }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<!-- Display the Edit button if the current user is the one who filed the KYC or if the user is a superuser -->
+{% if form.instance.pk %} {% if form.instance.filed_by == request.user or request.user.is_superuser %}
+<a href="{% url 'kyc_update' form.instance.pk %}" class="btn btn-warning mt-3">Edit</a> {% endif %} {% endif %} {% endblock %}
