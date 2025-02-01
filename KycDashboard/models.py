@@ -51,7 +51,6 @@ class KYCProperty(models.Model):
         limit_choices_to={'employee_type': 'associate'}, 
         related_name='maintained_files',
         null=True, 
-        blank=True
     )
     filed_on_date = models.DateField(auto_now_add=True)
     filed_by = models.ForeignKey(

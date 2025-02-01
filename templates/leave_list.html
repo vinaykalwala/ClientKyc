@@ -8,7 +8,6 @@
         background: #fff;
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 
     h2 {
@@ -31,8 +30,9 @@
     }
 
     table th {
-        background-color: rgba(89, 50, 234, 0.1);
+        background-color: rgba(89, 50, 234, 1);
         font-weight: bold;
+        color: white;
     }
 
     table td a {
@@ -44,39 +44,53 @@
         text-decoration: underline;
     }
 
-    .btn {
-        display: inline-block;
-        padding: 8px 15px;
-        text-decoration: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        text-align: center;
-    }
+    .action-icons {
+    display: inline-flex;
+    gap: 10px;  /* Adjust spacing between icons */
+    align-items: center;
+}
 
-    .btn-success {
-        background-color: #28a745;
-        color: white;
-        border: none;
-    }
+.btn-icon {
+    font-size: 20px; 
+    cursor: pointer;
+    text-decoration: none;
+}
 
-    .btn-danger {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-    }
+.text-success {
+    color: #28a745;
+}
 
-    .btn-sm {
-        padding: 6px 10px;
-    }
+.text-danger {
+    color: #dc3545;
+}
 
-    .btn-success:hover {
-        background-color: #218838;
-    }
+.text-success:hover {
+    color: #218838;
+}
 
-    .btn-danger:hover {
-        background-color: #c82333;
-    }
+.text-danger:hover {
+    color: #c82333;
+}
+.status-color {
+    font-weight: bold;  
+}
+
+.pending-status {
+    color: rgb(6, 179, 247); 
+}
+
+.approved-status {
+    color: #28a745;  
+}
+
+.rejected-status {
+    color: #dc3545; 
+}
+
+.unknown-status {
+    color: #6c757d;  
+}
+
 </style>
 
 <div class="container">
@@ -116,14 +130,34 @@
                     {% endif %}
                 </td>
                 <td>{{ leave.relief_officer }}</td>
-                <td>{{ leave.status }}</td>
-                {% if user.is_superuser %}
+                <td class="status-color 
+    {% if leave.status == 'Pending' %}
+        pending-status
+    {% elif leave.status == 'Approved' %}
+        approved-status
+    {% elif leave.status == 'Rejected' %}
+        rejected-status
+    {% else %}
+        unknown-status
+    {% endif %}
+">
+    {{ leave.status }}
+</td>
+
+                            {% if user.is_superuser %}
                 <td>
                     {% if leave.status == "Pending" %}
-                    <a href="{% url 'leave_approve_reject' leave.id 'approve' %}" class="btn btn-success btn-sm">Approve</a>
-                    <a href="{% url 'leave_approve_reject' leave.id 'reject' %}" class="btn btn-danger btn-sm">Reject</a> 
+                    <div class="action-icons">
+                        <a href="{% url 'leave_approve_reject' leave.id 'approve' %}" class="btn-icon text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </a>
+                        <a href="{% url 'leave_approve_reject' leave.id 'reject' %}" class="btn-icon text-danger">
+                            <i class="fas fa-times-circle"></i>
+                        </a> 
+                    </div>
                     {% endif %}
                 </td>
+                
                 {% endif %}
             </tr>
             {% empty %}

@@ -14,7 +14,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            background: #ffffff;
         }
         
         .sidebar {
@@ -63,19 +63,31 @@
             color: #fff;
         }
         
-        .sidebar ul li a {
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
+       .sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.sidebar ul li i {
+    margin-right: 10px;
+}
+
+
+
+.sidebar ul li i:last-child {
+    margin-left: auto;
+}
+
         
         .main-content {
             margin-left: 260px;
             padding: 20px;
             border-radius: 8px;
         }
+        
     </style>
 </head>
 
@@ -86,26 +98,26 @@
             <h4 class="sidebar_title"><i class="fas fa-shield"></i> Admin Dashboard</h4>
             <ul>
                 <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
-                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List</a>
+                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i> Client List<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href=""><i class="fas fa-tasks"></i>Assign Task</a>
+                    <a href=""><i class="fas fa-tasks"></i>Assign Task<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href="{% url 'signup' %}"><i class="fas fa-user-plus"></i>Add Employees</a>
+                    <a href="{% url 'signup' %}"><i class="fas fa-user-plus"></i>Add Employees<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href=""><i class="fas fa-clipboard-list"></i>Log Tracker</a>
+                    <a href=""><i class="fas fa-clipboard-list"></i>Log Tracker<i class="fas fa-chevron-right"></i></a>
                 </li>
 
                 <li class="">
-                    <a href="{% url 'leave_list' %}"><i class="fas fa-history"></i>Leave Requests</a>
+                    <a href="{% url 'leave_list' %}"><i class="fas fa-history"></i>Leave Requests<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href="{% url 'leave_data' %}"><i class="fas fa-history"></i>Leave Summary</a>
+                    <a href="{% url 'leave_data' %}"><i class="fas fa-file-alt"></i>Leave Summary<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href=""><i class="fas fa-key"></i>Password Management</a>
+                    <a href=""><i class="fas fa-key"></i>Password Management<i class="fas fa-chevron-right"></i></a>
                 </li>
             </ul>
 
@@ -113,30 +125,30 @@
             <h4 class="sidebar_title"><i class="fas fa-shield"></i> Employee Dashboard</h4>
             <ul>
                 <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
-                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List</a>
+                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="{% if request.path == '/kyc-create/' %}active{% endif %}">
-                    <a href="{% url 'kyc_create' %}"><i class="fas fa-file-alt"></i>Client Form</a>
+                    <a href="{% url 'kyc_create' %}"><i class="fas fa-file-alt"></i>Client Form<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href="{% url 'apply_leave' %}"><i class="fas fa-calendar-alt"></i>Leave Request</a>
+                    <a href="{% url 'apply_leave' %}"><i class="fas fa-calendar-alt"></i>Leave Request<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href="{% url 'leave_list' %}"><i class="fas fa-history"></i>Leave History</a>
+                    <a href="{% url 'leave_list' %}"><i class="fas fa-history"></i>Leave History<i class="fas fa-chevron-right"></i></a>
                 </li>
             </ul>
 
             {% elif user.employee_type == "associate" %}
-            <h4 class="sidebar_title"><i class="fas fa-shield"></i> Associate Dashboard</h4>
+            <h4 class="sidebar_title"><i class="fas fa-shield"></i> Associate Dashboar</h4>
             <ul>
                 <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
-                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List</a>
+                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href="{% url 'apply_leave' %}"><i class="fas fa-calendar-alt"></i>Leave Request</a>
+                    <a href="{% url 'apply_leave' %}"><i class="fas fa-calendar-alt"></i>Leave Request<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href="{% url 'leave_list' %}"><i class="fas fa-history"></i>Leave History</a>
+                    <a href="{% url 'leave_list' %}"><i class="fas fa-history"></i>Leave History<i class="fas fa-chevron-right"></i></a>
                 </li>
             </ul>
             {% endif %}

@@ -136,12 +136,12 @@ def kyc_list(request):
 
     # If the logged-in user is a superuser, display all KYC properties
     if request.user.is_superuser:
-        properties = KYCProperty.objects.all()
+        properties = KYCProperty.objects.all()[::-1]
     elif request.user.employee_type == "associate":
-        properties = KYCProperty.objects.filter(file_maintained_by=request.user)
+        properties = KYCProperty.objects.filter(file_maintained_by=request.user)[::-1]
     else:
         # Otherwise, only display KYC properties filed by the current user
-        properties = KYCProperty.objects.filter(filed_by=request.user)
+        properties = KYCProperty.objects.filter(filed_by=request.user)[::-1]
     
     # Apply filtering based on search fields if search query is provided
     if search_query:
