@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .navbar {
+            display: flex;
+            font-family: sans-serif;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(89, 50, 234, 1);
+            height: 54px;
+            padding: 0 20px;
+            color: #fff;
+            border-bottom: 1px solid #ffffff;
+            font-size: 24px;
+            transition: 0.5s;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: auto;
+            max-width: 30px;
+            height: auto;
+            margin-right: 10px;
+        }
+        
+        .logo h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+        
+        .logout-button {
+            width: 100%;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-weight: 600;
+            color: rgba(89, 50, 234, 1);
+            background-color: #fff;
+            outline: none;
+        }
+        
+        .logout-button:hover {
+            cursor: pointer;
+            background-color: #f4f4f4;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h4>C.K.V.K Law associates</h4>
+        </div>
+        <div class="logout">
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </div>
+    </nav>
+</body>
+
+</html>

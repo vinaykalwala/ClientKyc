@@ -1,47 +1,121 @@
+{% extends 'base.html' %}
+
 {% block content %}
-<h2>KYC Property List</h2>
+<style>
+    .container {
+        max-width: 90%;
+        margin: auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: rgba(89, 50, 234, 1);
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .form-inline {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .form-inline input {
+        width: 50%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+    }
+    .btn {
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: none;
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .btn-primary {
+        background: #572af8;
+        color: white;
+    }
+    .btn-info {
+        background: #17a2b8;
+        color: white;
+    }
+    .btn-warning {
+        background: #ffc107;
+        color: black;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .table th, .table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+    }
+    .table th {
+        background-color: rgba(89, 50, 234, 1);
+        color: white;
+    }
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+    .text-center {
+        text-align: center;
+        font-weight: bold;
+        color: #666;
+    }
+</style>
 
-<!-- Search Form -->
-<form method="get" action="{% url 'kyc_list' %}" class="form-inline mt-3 mb-3">
-    <input type="text" name="search" value="{{ search_query }}" class="form-control" placeholder="Search by Client Name, Village, Site Number, Survey Number, or File Status">
-    <button type="submit" class="btn btn-info ml-2">Search</button>
-</form>
+<div class="container">
+    <h2>KYC Property List</h2>
 
-<a href="{% url 'kyc_create' %}" class="btn btn-primary mb-3">Add New KYC Property</a>
+    <!-- Search Form -->
+    <form method="get" action="{% url 'kyc_list' %}" class="form-inline">
+        <input type="text" name="search" value="{{ search_query }}" class="form-control" placeholder="Search by Client Name, Village, Site Number, Survey Number, or File Status">
+        <button type="submit" class="btn btn-info">Search</button>
+    </form>
 
-<table class="table table-striped mt-3">
-    <thead>
-        <tr>
-            <th>Client Name</th>
-            <th>Mobile Number</th>
-            <th>File Status</th>
-            <th>Filed By</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for property in properties %}
-        <tr>
-            <td>{{ property.client_name }}</td>
-            <td>{{ property.mobile_number }}</td>
-            <td>{{ property.get_file_status_display }}</td>
-            <td>{{ property.filed_by }}</td>
-            <td>
-                <a href="{% url 'kyc_detail' property.pk %}" class="btn btn-info btn-sm">View</a>
+    <a href="{% url 'kyc_create' %}" class="btn btn-primary">Add New KYC Property</a>
 
-                <!-- Show the "Edit" button only if the current user filed the KYC property or is a superuser -->
-                {% if property.filed_by == request.user %}
-                <a href="{% url 'kyc_update' property.pk %}" class="btn btn-warning btn-sm">Edit</a> {% endif %}
-
-                <!-- Optional: Un-comment the following line if you want to show a delete button (with proper permissions) -->
-                <!-- <a href="{% url 'kyc_delete' property.pk %}" class="btn btn-danger btn-sm">Delete</a> -->
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5" class="text-center">No KYC Properties Found</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Client Name</th>
+                <th>Mobile Number</th>
+                <th>File Status</th>
+                <th>Filed By</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for property in properties %}
+            <tr>
+                <td>{{ property.client_name }}</td>
+                <td>{{ property.mobile_number }}</td>
+                <td>{{ property.get_file_status_display }}</td>
+                <td>{{ property.filed_by }}</td>
+                <td>
+                    <a href="{% url 'kyc_detail' property.pk %}" class="btn btn-info btn-sm">View</a>
+                    {% if property.filed_by == request.user %}
+                    <a href="{% url 'kyc_update' property.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                    <!-- Optional: Un-comment the following line if you want to show a delete button (with proper permissions) -->
+                    <!-- <a href="{% url 'kyc_delete' property.pk %}" class="btn btn-danger btn-sm">Delete</a> -->
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No KYC Properties Found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

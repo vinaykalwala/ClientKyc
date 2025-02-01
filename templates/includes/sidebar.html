@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            color: #353434;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0px 10px rgba(89, 50, 234, 1);
+        }
+
+        .sidebar_title {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+
+        .sidebar ul li:hover,
+        .sidebar ul li.active {
+            background: rgba(89, 50, 234, 1);
+            color: #fff;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            {% if user.is_superuser %}
+            <h4 class="sidebar_title"><i class="fas fa-shield"></i> Admin Dashboard</h4>
+            <ul>
+                <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
+                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List</a>
+                </li>
+                <li class="">
+                    <a href=""><i class="fas fa-tasks"></i>Assign Task</a>
+                </li>
+                <li class="">
+                    <a href="{% url 'signup' %}"><i class="fas fa-user-plus"></i>Add Employees</a>
+                </li>
+                <li class="">
+                    <a href=""><i class="fas fa-clipboard-list"></i>Log Tracker</a>
+                </li>
+                <li class="">
+                    <a href=""><i class="fas fa-calendar-check"></i>Leave Requests</a>
+                </li>
+                <li class="">
+                    <a href=""><i class="fas fa-history"></i>Leave Tracker</a>
+                </li>
+                <li class="">
+                    <a href=""><i class="fas fa-key"></i>Password Management</a>
+                </li>
+            </ul>
+
+            {% elif user.employee_type == "employee" %}
+            <h4 class="sidebar_title"><i class="fas fa-shield"></i> Employee Dashboard</h4>
+            <ul>
+                <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
+                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List</a>
+                </li>
+                <li class="{% if request.path == '/kyc-create/' %}active{% endif %}">
+                    <a href="{% url 'kyc_create' %}"><i class="fas fa-file-alt"></i>Client Form</a>
+                </li>
+                <li class="">
+                    <i class="fas fa-calendar-alt"></i>Leave Request
+                </li>
+                <li class="">
+                    <i class="fas fa-history"></i>Leave History
+                </li>
+            </ul>
+
+            {% elif user.employee_type == "associate" %}
+            <h4 class="sidebar_title"><i class="fas fa-shield"></i> Associate Dashboard</h4>
+            <ul>
+                <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
+                    <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List</a>
+                </li>
+                <li class="{% if request.path == '/assigned-task/' %}active{% endif %}">
+                    <a href="{% url 'assigned_task' %}"><i class="fas fa-tasks"></i>Assigned Task</a>
+                </li>
+                <li class="">
+                    <i class="fas fa-calendar-alt"></i>Leave Request
+                </li>
+                <li class="">
+                    <i class="fas fa-history"></i>Leave History
+                </li>
+            </ul>
+            {% endif %}
+        </aside>
+    </div>
+</body>
+</html>
