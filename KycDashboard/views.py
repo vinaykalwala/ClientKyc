@@ -209,3 +209,47 @@ def kyc_delete(request, pk):
         kyc.delete()
         return redirect('kyc_list')
     return render(request, 'kyc_confirm_delete.html', {'property': kyc})
+
+
+from django.utils.timezone import now
+from .models import LeaveRequest
+from .forms import LeaveRequestForm
+
+@login_required
+def apply_leave(request):
+    if request.method == "POST":
+        form = LeaveRequestForm(request.POST, request.FILES, user=request.user)
+        if form.is_valid():
+            leave = form.save(commit=False)
+            leave.applicant = request.user  # Assign logged-in user as the applicant
+            leave.save()
+            return redirect('leave_list')
+    else:
+        form = LeaveRequestForm(user=request.user)
+
+    return render(request, 'apply_leave.html', {'form': form})
+
+
+@login_required
+def leave_list(request):
+    if request.user.is_superuser:
+        leaves = LeaveRequest.objects.all()[::-1]  
+    else:
+        leaves = LeaveRequest.objects.filter(applicant=request.user)[::-1]
+
+    return render(request, 'leave_list.html', {'leaves': leaves})
+
+
+@login_required
+def leave_approve_reject(request, leave_id, action):
+    leave = get_object_or_404(LeaveRequest, id=leave_id)
+
+    if request.user.is_superuser:
+        if action == "approve":
+            leave.status = "Approved"
+            leave.approved_on = now()
+        elif action == "reject":
+            leave.status = "Rejected"
+        leave.save()
+
+    return redirect('leave_list')

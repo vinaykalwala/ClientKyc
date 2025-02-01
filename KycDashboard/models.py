@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from django.db import models
@@ -74,3 +75,53 @@ class KYCProperty(models.Model):
 
     def __str__(self):
         return self.client_name
+
+from django.db import models
+from django.conf import settings  # Import settings to access AUTH_USER_MODEL
+
+class LeaveRequest(models.Model):
+    LEAVE_TYPES = [
+        ('Sick Leave', 'Sick Leave'),
+        ('Casual Leave', 'Casual Leave'),
+        ('Annual Leave', 'Annual Leave'),
+        ('Maternity Leave', 'Maternity Leave'),
+        ('Paternity Leave', 'Paternity Leave'),
+        ('Other', 'Other'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    ]
+    
+    applicant = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # Use AUTH_USER_MODEL instead of auth.User
+        on_delete=models.CASCADE,
+        related_name="leave_requests"
+    )
+    leave_type = models.CharField(max_length=50, choices=LEAVE_TYPES)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    duration = models.IntegerField()  # Auto-calculated duration
+    reason = models.TextField()
+    handover_document = models.FileField(upload_to='handover_docs/', blank=True, null=True)
+    relief_officer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # Use AUTH_USER_MODEL instead of auth.User
+        on_delete=models.SET_NULL,
+        null=True,
+        limit_choices_to={'is_superuser': True},
+        related_name="relief_officer"
+    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+    applied_on = models.DateTimeField(auto_now_add=True)
+    approved_on = models.DateTimeField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        """Automatically calculate duration before saving"""
+        if self.start_date and self.end_date:
+            self.duration = (self.end_date - self.start_date).days + 1
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.applicant} - {self.leave_type} ({self.status})"

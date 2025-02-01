@@ -14,9 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 from KycDashboard.views import *
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,4 +34,10 @@ urlpatterns = [
     path('kyc_create/', kyc_create, name='kyc_create'),
     path('kyc_update/<int:pk>/', kyc_update, name='kyc_update'),
     path('kyc_delete/<int:pk>/', kyc_delete, name='kyc_delete'),
+    path('applyleave/', apply_leave, name='apply_leave'),
+    path('leavelist/', leave_list, name='leave_list'),
+    path('leaveapprovereject/<int:leave_id>/<str:action>/', leave_approve_reject, name='leave_approve_reject'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
