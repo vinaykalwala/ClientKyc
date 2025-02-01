@@ -1,52 +1,138 @@
-{% block content %}
-<h2>My Leave Requests</h2>
+{% extends 'base.html' %}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Applicant</th>
-            <th>Leave Type</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Duration</th>
-            <th>Reason</th>
-            <th>Handover Document</th>
-            <th>Relief Officer</th>
-            <th>Status</th>
-            {% if user.is_superuser %}
-            <th>Actions</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for leave in leaves %}
-        <tr>
-            <td>{{ leave.applicant.get_full_name }}</td>
-            <td>{{ leave.leave_type }}</td>
-            <td>{{ leave.start_date }}</td>
-            <td>{{ leave.end_date }}</td>
-            <td>{{ leave.duration }} days</td>
-            <td>{{ leave.reason }}</td>
-            <td>
-                {% if leave.handover_document %}
-                <a href="{{ leave.handover_document.url }}" target="_blank">View Document</a> {% else %} No document attached {% endif %}
-            </td>
-            <td>{{ leave.relief_officer}}</td>
-            <td>{{ leave.status }}</td>
-            {% if user.is_superuser %}
-            <td>
-                {% if leave.status == "Pending" %}
-                <a href="{% url 'leave_approve_reject' leave.id 'approve' %}" class="btn btn-success btn-sm">Approve</a>
-                <a href="{% url 'leave_approve_reject' leave.id 'reject' %}" class="btn btn-danger btn-sm">Reject</a> {% endif %}
-            </td>
-            {% endif %}
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="{% if user.is_superuser %}10{% else %}9{% endif %}">No leave requests found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+<style>
+    .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: rgba(89, 50, 234, 1);
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    table th {
+        background-color: rgba(89, 50, 234, 0.1);
+        font-weight: bold;
+    }
+
+    table td a {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    table td a:hover {
+        text-decoration: underline;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 8px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .btn-sm {
+        padding: 6px 10px;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<div class="container">
+    <h2>My Leave Requests</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Applicant</th>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Duration</th>
+                <th>Reason</th>
+                <th>Handover Document</th>
+                <th>Relief Officer</th>
+                <th>Status</th>
+                {% if user.is_superuser %}
+                <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for leave in leaves %}
+            <tr>
+                <td>{{ leave.applicant.get_full_name }}</td>
+                <td>{{ leave.leave_type }}</td>
+                <td>{{ leave.start_date }}</td>
+                <td>{{ leave.end_date }}</td>
+                <td>{{ leave.duration }} days</td>
+                <td>{{ leave.reason }}</td>
+                <td>
+                    {% if leave.handover_document %}
+                    <a href="{{ leave.handover_document.url }}" target="_blank">View Document</a> 
+                    {% else %} 
+                    No document attached 
+                    {% endif %}
+                </td>
+                <td>{{ leave.relief_officer }}</td>
+                <td>{{ leave.status }}</td>
+                {% if user.is_superuser %}
+                <td>
+                    {% if leave.status == "Pending" %}
+                    <a href="{% url 'leave_approve_reject' leave.id 'approve' %}" class="btn btn-success btn-sm">Approve</a>
+                    <a href="{% url 'leave_approve_reject' leave.id 'reject' %}" class="btn btn-danger btn-sm">Reject</a> 
+                    {% endif %}
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if user.is_superuser %}10{% else %}9{% endif %}">No leave requests found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}
