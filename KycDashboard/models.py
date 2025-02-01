@@ -30,7 +30,7 @@ class KYCProperty(models.Model):
     mode_of_seller_ownership = models.CharField(max_length=255,blank=True, null=True)
     nature_of_property = models.CharField(max_length=255,blank=True, null=True)
     site_number = models.CharField(max_length=255,blank=True, null=True)
-    sy_number = models.CharField(max_length=255,blank=True, null=True)
+    sy_number = models.CharField(max_length=255,unique=True)
     village = models.CharField(max_length=255,blank=True, null=True)
     hobli = models.CharField(max_length=255,blank=True, null=True)
     taluk = models.CharField(max_length=255,blank=True, null=True)

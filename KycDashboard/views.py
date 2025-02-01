@@ -127,6 +127,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from .models import KYCProperty
+from .models import CustomUser
 
 @login_required
 def kyc_list(request):
@@ -136,6 +137,8 @@ def kyc_list(request):
     # If the logged-in user is a superuser, display all KYC properties
     if request.user.is_superuser:
         properties = KYCProperty.objects.all()
+    elif request.user.employee_type == "associate":
+        properties = KYCProperty.objects.filter(file_maintained_by=request.user)
     else:
         # Otherwise, only display KYC properties filed by the current user
         properties = KYCProperty.objects.filter(filed_by=request.user)
@@ -182,20 +185,48 @@ def kyc_update(request, pk):
     # Fetch the KYC property using the provided primary key
     kyc = get_object_or_404(KYCProperty, pk=pk)
     
-    # Permission check: Ensure the logged-in user is the one who filed the property
-    if kyc.filed_by != request.user:
+    # Permission check: Ensure the logged-in user is either the one who filed the property
+    # or the one maintaining the property
+    if kyc.filed_by != request.user and kyc.file_maintained_by != request.user:
         return HttpResponseForbidden('You do not have permission to edit this property.')
 
     if request.method == "POST":
-        form = KYCPropertyForm(request.POST, instance=kyc)
+        # If the user is the 'filed_by', allow editing the entire form
+        if kyc.filed_by == request.user:
+            form = KYCPropertyForm(request.POST, instance=kyc)
+        # If the user is the 'file_maintained_by', allow editing only 'file_status' and 'status_remarks'
+        elif kyc.file_maintained_by == request.user:
+            form = KYCPropertyForm(request.POST, instance=kyc)
+            form.fields['file_status'].required = True
+            form.fields['status_remarks'].required = True
+            # Disable other fields (this is optional based on your requirements)
+            for field in form.fields:
+                if field not in ['file_status', 'status_remarks']:
+                    form.fields[field].disabled = True
+        
         if form.is_valid():
-            # Save the form but ensure 'filed_by' is not modified
+            # Save the form but ensure 'filed_by' and 'file_maintained_by' are not modified
             kyc = form.save(commit=False)
-            kyc.filed_by = request.user  # Ensure 'filed_by' stays as the current user
+            
+            if kyc.filed_by != request.user:
+                # If the current user is not the 'filed_by', we should not change the 'filed_by' field
+                kyc.filed_by = kyc.filed_by  # Keep the 'filed_by' unchanged if not updating by 'filed_by' user
+            
             kyc.save()
             return redirect('kyc_list')
     else:
-        form = KYCPropertyForm(instance=kyc)
+        # If user is the 'filed_by', allow editing the entire form
+        if kyc.filed_by == request.user:
+            form = KYCPropertyForm(instance=kyc)
+        # If user is the 'file_maintained_by', allow editing only 'file_status' and 'status_remarks'
+        elif kyc.file_maintained_by == request.user:
+            form = KYCPropertyForm(instance=kyc)
+            form.fields['file_status'].required = True
+            form.fields['status_remarks'].required = True
+            # Disable other fields
+            for field in form.fields:
+                if field not in ['file_status', 'status_remarks']:
+                    form.fields[field].disabled = True
 
     return render(request, 'kyc_form.html', {'form': form})
 
