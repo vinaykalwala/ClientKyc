@@ -284,3 +284,51 @@ def leave_approve_reject(request, leave_id, action):
         leave.save()
 
     return redirect('leave_list')
+
+
+
+from django.utils.dateparse import parse_date
+from django.db.models import Sum
+@login_required
+def leave_data(request):
+    leaves = None
+    total_days = 0
+    applicant = None
+
+    if request.method == "GET":
+        # Search by date (users on leave)
+        date_str = request.GET.get('date')
+        # Search by applicant's leave history (search by username, month, and year)
+        username = request.GET.get('username')
+        month = request.GET.get('month')
+        year = request.GET.get('year')
+
+        # Searching for users on leave on a specific date
+        if date_str:
+            date = parse_date(date_str)
+            if date:
+                leaves = LeaveRequest.objects.filter(start_date__lte=date, end_date__gte=date, status='Approved')
+        
+        # Searching by applicant's leave history by username
+        elif username:
+            applicant = CustomUser.objects.filter(username=username).first()
+            if applicant:
+                leaves = LeaveRequest.objects.filter(applicant=applicant)
+                total_days = leaves.aggregate(total_days=Sum('duration'))['total_days']
+
+        # Searching by applicant's leave history by username, month, and year
+        elif username and month and year:
+            applicant = CustomUser.objects.filter(username=username).first()
+            if applicant:
+                leaves = LeaveRequest.objects.filter(applicant=applicant, start_date__month=month, start_date__year=year)
+                total_days = leaves.aggregate(total_days=Sum('duration'))['total_days']
+
+        # If no parameters, show all leaves
+        else:
+            leaves = LeaveRequest.objects.all()
+
+    return render(request, 'leave_data.html', {
+        'leaves': leaves,
+        'total_days': total_days,
+        'applicant': applicant,
+    })

@@ -37,6 +37,7 @@ urlpatterns = [
     path('applyleave/', apply_leave, name='apply_leave'),
     path('leavelist/', leave_list, name='leave_list'),
     path('leaveapprovereject/<int:leave_id>/<str:action>/', leave_approve_reject, name='leave_approve_reject'),
+    path('leave_data/', leave_data, name='leave_data'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
