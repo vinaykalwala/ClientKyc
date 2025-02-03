@@ -332,3 +332,124 @@ def leave_data(request):
         'total_days': total_days,
         'applicant': applicant,
     })
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import user_passes_test
+from .models import Task
+from .forms import TaskForm
+
+def is_superuser(user):
+    return user.is_superuser
+
+@login_required
+@user_passes_test(is_superuser)  # Only superusers can create tasks
+def create_task(request):
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.assigned_by = request.user 
+            task.save()
+            return redirect('task_list')
+    else:
+        form = TaskForm()
+    return render(request, 'create_task.html', {'form': form})
+
+from django.db.models import Q
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from datetime import datetime
+
+@login_required
+def task_list(request):
+    query = Q()
+
+    # Get the search term and date filters from the GET request
+    search_term = request.GET.get('search', '')
+    start_date = request.GET.get('start_date', '')
+    end_date = request.GET.get('end_date', '')
+
+    if request.user.is_superuser:
+        tasks = Task.objects.all()
+    else:
+        tasks = Task.objects.filter(assigned_to=request.user)
+
+    # Search query logic for task_name, assigned_to, assigned_by, etc.
+    if search_term:
+        query &= Q(task_name__icontains=search_term) | \
+                Q(assigned_to__username__icontains=search_term) | \
+                Q(assigned_by__username__icontains=search_term) | \
+                Q(survey_number__icontains=search_term) | \
+                Q(status__icontains=search_term) | \
+                Q(priority__icontains=search_term)
+
+    # Date range filtering logic
+    if start_date:
+        try:
+            start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+            query &= Q(start_date__gte=start_date_obj)
+        except ValueError:
+            pass  # If date is not in the correct format, ignore the filter
+
+    if end_date:
+        try:
+            end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+            query &= Q(end_date__lte=end_date_obj)
+        except ValueError:
+            pass  # If date is not in the correct format, ignore the filter
+
+    # Apply filters to the queryset
+    tasks = tasks.filter(query)
+
+    return render(request, 'task_list.html', {'tasks': tasks, 'search_term': search_term, 'start_date': start_date, 'end_date': end_date})
+
+@login_required
+def update_task(request, task_id):
+    # Fetch the task object using the provided task_id
+    task = get_object_or_404(Task, id=task_id)
+
+    # Permission check: Ensure the logged-in user is either the one who assigned the task
+    # or the one assigned to the task
+    if task.assigned_by != request.user and task.assigned_to != request.user:
+        return HttpResponseForbidden('You do not have permission to edit this task.')
+
+    if request.method == "POST":
+        # If the user is the one who assigned the task, allow editing all fields
+        if task.assigned_by == request.user:
+            form = TaskForm(request.POST, instance=task)
+        # If the user is assigned to the task, allow editing only 'status' and 'remarks'
+        elif task.assigned_to == request.user:
+            form = TaskForm(request.POST, instance=task)
+            form.fields['status'].required = True
+            form.fields['remarks'].required = True
+            # Disable other fields (this is optional based on your requirements)
+            for field in form.fields:
+                if field not in ['status', 'remarks']:
+                    form.fields[field].disabled = True
+        
+        if form.is_valid():
+            # Save the form but ensure 'assigned_by' and 'assigned_to' are not modified
+            task = form.save(commit=False)
+            
+            if task.assigned_by != request.user:
+                # If the current user is not the 'assigned_by', we should not change the 'assigned_by' field
+                task.assigned_by = task.assigned_by  # Keep the 'assigned_by' unchanged if not updating by 'assigned_by' user
+            
+            task.save()
+            return redirect('task_list')
+    else:
+        # If the user is the one who assigned the task, allow editing all fields
+        if task.assigned_by == request.user:
+            form = TaskForm(instance=task)
+        # If the user is assigned to the task, allow editing only 'status' and 'remarks'
+        elif task.assigned_to == request.user:
+            form = TaskForm(instance=task)
+            form.fields['status'].required = True
+            form.fields['remarks'].required = True
+            # Disable other fields
+            for field in form.fields:
+                if field not in ['status', 'remarks']:
+                    form.fields[field].disabled = True
+
+    return render(request, 'update_task.html', {'form': form, 'task': task})

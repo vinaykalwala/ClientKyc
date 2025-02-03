@@ -1,0 +1,36 @@
+{% block content %}
+<h2>Task List</h2>
+
+<!-- Search form -->
+<form method="get">
+    <input type="text" name="search" value="{{ search_term }}" placeholder="Search tasks...">
+
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date" value="{{ start_date }}">
+
+    <label for="end_date">End Date:</label>
+    <input type="date" name="end_date" value="{{ end_date }}">
+
+    <button type="submit">Search</button>
+</form>
+
+<!-- Task List -->
+{% for task in tasks %}
+<div class="task-card">
+    <h3>{{ task.task_name }}</h3>
+    <p><strong>Survey Number:</strong> {{ task.survey_number }}</p>
+    <p><strong>Task Description:</strong> {{ task.task_description }}</p>
+    <p><strong>Assigned To:</strong> {{ task.assigned_to.username }}</p>
+    <p><strong>Assigned By:</strong> {{ task.assigned_by.username }}</p>
+    <p><strong>Start Date:</strong> {{ task.start_date }}</p>
+    <p><strong>End Date:</strong> {{ task.end_date }}</p>
+    <p><strong>Priority:</strong> {{ task.priority }}</p>
+    <p><strong>Status:</strong> {{ task.status }}</p>
+    <p><strong>Remarks:</strong> {{ task.remarks }}</p>
+
+    {% if not user.is_superuser and task.assigned_to == user %}
+    <a href="{% url 'update_task' task.id %}" class="btn-update">Update Task</a> {% endif %}
+</div>
+{% empty %}
+<p>No tasks available.</p>
+{% endfor %} {% endblock %}

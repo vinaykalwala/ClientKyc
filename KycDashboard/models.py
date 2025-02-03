@@ -4,6 +4,7 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
+
 class CustomUser(AbstractUser):
     EMPLOYEE_CHOICES = (
     ('employee', 'Employee'),
@@ -124,3 +125,40 @@ class LeaveRequest(models.Model):
 
     def __str__(self):
         return f"{self.applicant} - {self.leave_type} ({self.status})"
+
+from django.core.exceptions import ValidationError
+class Task(models.Model):
+    PRIORITY_CHOICES = [
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+    ]
+
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('In Progress', 'In Progress'),
+        ('Completed', 'Completed'),
+    ]
+
+    survey_number = models.CharField(max_length=255)
+    task_name = models.CharField(max_length=255)
+    task_description = models.TextField()
+    assigned_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    assigned_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="created_tasks")
+    start_date = models.DateField()
+    end_date = models.DateField()
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.task_name
+
+    def clean(self):
+        """ Validate that the entered survey_number exists in ClientKyc. """
+        if not KYCProperty.objects.filter(sy_number=self.survey_number).exists():
+            raise ValidationError({'survey_number': 'This survey number does not exist in Database.'})
+
+        """ Validate assigned_to only allows users with employee_type 'Associate' """
+        if not self.assigned_to.employee_type == 'associate':
+            raise ValidationError({'assigned_to': 'Task can only be assigned to Associates.'})

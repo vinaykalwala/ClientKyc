@@ -63,31 +63,27 @@
             color: #fff;
         }
         
-       .sidebar ul li a {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.sidebar ul li i {
-    margin-right: 10px;
-}
-
-
-
-.sidebar ul li i:last-child {
-    margin-left: auto;
-}
-
+        .sidebar ul li a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+        
+        .sidebar ul li i:last-child {
+            margin-left: auto;
+        }
         
         .main-content {
             margin-left: 260px;
             padding: 20px;
             border-radius: 8px;
         }
-        
     </style>
 </head>
 
@@ -101,7 +97,10 @@
                     <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i> Client List<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href=""><i class="fas fa-tasks"></i>Assign Task<i class="fas fa-chevron-right"></i></a>
+                    <a href="{%url 'create_task'%}"><i class="fas fa-tasks"></i>Assign Tasks<i class="fas fa-chevron-right"></i></a>
+                </li>
+                <li class="">
+                    <a href="{%url 'task_list'%}"><i class="fas fa-tasks"></i>Tasks List<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
                     <a href="{% url 'signup' %}"><i class="fas fa-user-plus"></i>Add Employees<i class="fas fa-chevron-right"></i></a>
@@ -143,6 +142,9 @@
             <ul>
                 <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
                     <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List<i class="fas fa-chevron-right"></i></a>
+                </li>
+                <li class="">
+                    <a href="{%url 'task_list'%}"><i class="fas fa-tasks"></i>Assigned Tasks<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
                     <a href="{% url 'apply_leave' %}"><i class="fas fa-calendar-alt"></i>Leave Request<i class="fas fa-chevron-right"></i></a>

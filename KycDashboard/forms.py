@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import CustomUser, Task
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
@@ -72,3 +72,18 @@ class LeaveRequestForm(forms.ModelForm):
         
         # Filter relief officer choices to only superusers
         self.fields['relief_officer'].queryset = LeaveRequest._meta.get_field('relief_officer').remote_field.model.objects.filter(is_superuser=True)
+
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['survey_number', 'task_name', 'task_description', 'assigned_to', 'start_date', 'end_date', 'priority','status','remarks']
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(TaskForm, self).__init__(*args, **kwargs)
+        self.fields['assigned_to'].queryset = CustomUser.objects.filter(employee_type='Associate')
+
