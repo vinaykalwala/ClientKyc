@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block content %}
+<h2>📜 Activity Log Tracker</h2>
+
+<form method="get" class="form-inline">
+    <input type="text" name="user" placeholder="Search by Username" value="{{ request.GET.user }}" class="form-control mb-2">
+    <input type="date" name="date" value="{{ request.GET.date }}" class="form-control mb-2">
+    <button type="submit" class="btn btn-primary mb-2">Search</button>
+</form>
+
+<div style="max-height: 500px; overflow-y: scroll; background: #f8f9fa; padding: 10px; border: 1px solid #ccc;">
+    <table style="border: 1px solid black; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid black; padding: 8px;">Logs</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td style="border: 1px solid black; padding: 8px;">{{ log }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td style="border: 1px solid black; padding: 8px;" colspan="1">No logs found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>
+{% endblock %}

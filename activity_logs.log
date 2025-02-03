@@ -1,0 +1,64 @@
+INFO 2025-02-03 12:22:51,094 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:22:51,104 basehttp "GET /logs/ HTTP/1.1" 200 6691
+INFO 2025-02-03 12:22:51,157 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:22:51,170 log Not Found: /favicon.ico
+INFO 2025-02-03 12:22:51,171 basehttp - Broken pipe from ('127.0.0.1', 61371)
+INFO 2025-02-03 12:23:52,566 middleware [LOGIN] User 'Admin' accessed /user_list/
+INFO 2025-02-03 12:23:52,573 basehttp "GET /user_list/ HTTP/1.1" 200 7888
+INFO 2025-02-03 12:23:52,648 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:23:52,653 log Not Found: /favicon.ico
+INFO 2025-02-03 12:23:52,654 basehttp - Broken pipe from ('127.0.0.1', 61375)
+INFO 2025-02-03 12:24:41,058 middleware [LOGIN] User 'Admin' accessed /user_list/
+INFO 2025-02-03 12:24:41,101 basehttp "GET /user_list/ HTTP/1.1" 200 14000
+INFO 2025-02-03 12:24:41,144 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:24:41,156 log Not Found: /favicon.ico
+INFO 2025-02-03 12:24:41,157 basehttp - Broken pipe from ('127.0.0.1', 61382)
+INFO 2025-02-03 12:24:56,102 middleware [LOGIN] User 'Admin' accessed /user_list/
+INFO 2025-02-03 12:24:56,108 basehttp "GET /user_list/ HTTP/1.1" 200 7888
+INFO 2025-02-03 12:24:56,183 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:24:56,191 log Not Found: /favicon.ico
+INFO 2025-02-03 12:24:56,192 basehttp - Broken pipe from ('127.0.0.1', 61387)
+INFO 2025-02-03 12:25:02,257 middleware [LOGIN] User 'Admin' accessed /leavelist/
+INFO 2025-02-03 12:25:02,284 basehttp "GET /leavelist/ HTTP/1.1" 200 12411
+INFO 2025-02-03 12:25:07,224 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:25:07,249 basehttp "GET /logs/ HTTP/1.1" 200 8901
+INFO 2025-02-03 12:25:07,297 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:25:07,308 log Not Found: /favicon.ico
+INFO 2025-02-03 12:25:07,308 basehttp - Broken pipe from ('127.0.0.1', 61390)
+INFO 2025-02-03 12:26:17,218 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:26:17,241 basehttp "GET /logs/ HTTP/1.1" 200 10277
+INFO 2025-02-03 12:26:17,293 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:26:17,311 log Not Found: /favicon.ico
+INFO 2025-02-03 12:26:17,311 basehttp - Broken pipe from ('127.0.0.1', 61399)
+INFO 2025-02-03 12:26:36,820 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:26:36,835 basehttp "GET /logs/ HTTP/1.1" 200 9886
+INFO 2025-02-03 12:26:36,885 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:26:36,894 log Not Found: /favicon.ico
+INFO 2025-02-03 12:26:36,895 basehttp - Broken pipe from ('127.0.0.1', 61403)
+INFO 2025-02-03 12:27:42,257 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:27:42,275 basehttp "GET /logs/ HTTP/1.1" 200 12658
+INFO 2025-02-03 12:28:03,946 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:28:03,966 basehttp "GET /logs/ HTTP/1.1" 200 14539
+INFO 2025-02-03 12:28:04,017 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:28:04,024 log Not Found: /favicon.ico
+INFO 2025-02-03 12:28:04,025 basehttp - Broken pipe from ('127.0.0.1', 61423)
+INFO 2025-02-03 12:31:00,112 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:31:00,132 basehttp "GET /logs/ HTTP/1.1" 200 13801
+INFO 2025-02-03 12:31:00,175 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:31:00,185 log Not Found: /favicon.ico
+INFO 2025-02-03 12:31:00,186 basehttp - Broken pipe from ('127.0.0.1', 61451)
+INFO 2025-02-03 12:34:24,261 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:34:24,284 basehttp "GET /logs/ HTTP/1.1" 200 17037
+INFO 2025-02-03 12:34:24,336 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:34:24,346 log Not Found: /favicon.ico
+INFO 2025-02-03 12:34:24,347 basehttp - Broken pipe from ('127.0.0.1', 61463)
+INFO 2025-02-03 12:35:28,020 middleware [LOGIN] User 'Admin' accessed /logs/
+INFO 2025-02-03 12:35:28,047 basehttp "GET /logs/ HTTP/1.1" 200 18051
+INFO 2025-02-03 12:35:28,089 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:35:28,100 log Not Found: /favicon.ico
+INFO 2025-02-03 12:35:28,101 basehttp - Broken pipe from ('127.0.0.1', 61471)
+INFO 2025-02-03 12:40:39,088 middleware [LOGIN] User 'Admin' accessed /tasklist/
+INFO 2025-02-03 12:40:39,094 basehttp "GET /tasklist/ HTTP/1.1" 200 883
+INFO 2025-02-03 12:40:39,158 middleware [LOGIN] User 'Admin' accessed /favicon.ico
+WARNING 2025-02-03 12:40:39,170 log Not Found: /favicon.ico
+INFO 2025-02-03 12:40:39,170 basehttp - Broken pipe from ('127.0.0.1', 61484)

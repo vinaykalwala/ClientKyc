@@ -453,3 +453,55 @@ def update_task(request, task_id):
                     form.fields[field].disabled = True
 
     return render(request, 'update_task.html', {'form': form, 'task': task})
+
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+
+
+@staff_member_required
+def user_list(request):
+    # Fetch all CustomUser objects excluding superusers
+    users = CustomUser.objects.all().exclude(is_superuser=True)
+    
+    # Get the EMPLOYEE_CHOICES to pass to the template
+    employee_choices = CustomUser.EMPLOYEE_CHOICES  # Get the employee types
+
+    # Pass the users and choices to the template
+    return render(request, 'user_list.html', {
+        'users': users,
+        'is_superuser': request.user.is_superuser,
+        'employee_choices': employee_choices
+    })
+
+
+
+@staff_member_required
+def delete_user(request, user_id):
+    # Fetch the user to delete
+    user = get_object_or_404(CustomUser, id=user_id)
+    user.delete()  # Delete the user
+
+    # Redirect to user list after deletion
+    return redirect('user_list')  
+
+
+from django.shortcuts import render
+import os
+from django.conf import settings
+
+def log_viewer(request):
+    log_file = os.path.join(settings.BASE_DIR, 'activity_logs.log')
+    search_user = request.GET.get('user', '').lower()
+    search_date = request.GET.get('date', '')
+
+    with open(log_file, 'r') as file:
+        logs = file.readlines()[::-1]
+
+    # Filter logs
+    if search_user:
+        logs = [log for log in logs if search_user in log.lower()]
+    if search_date:
+        logs = [log for log in logs if search_date in log]
+
+    return render(request, 'log_viewer.html', {'logs': logs})

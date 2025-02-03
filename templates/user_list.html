@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employees List</title>
+    <style>
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .filter-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-buttons button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #0c005a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .filter-buttons button:hover {
+            background-color: #1a0a8f;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th,
+        td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 0.9em;
+        }
+        
+        th {
+            background-color: #0c005a;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .button-link,
+        .toggle-password-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #0c005a;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .button-link:hover,
+        .toggle-password-btn:hover {
+            background-color: #1a0a8f;
+        }
+        
+        .restricted-text {
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+
+    <script>
+        // Function to toggle password visibility
+        function togglePassword(userId) {
+            const passwordField = document.getElementById('password_' + userId);
+            const button = document.getElementById('show_button_' + userId);
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                button.innerText = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                button.innerText = 'Show Password';
+            }
+        }
+
+        // Function to filter users by employee type
+        function filterByEmployeeType(employeeType) {
+            const rows = document.querySelectorAll('.user-row');
+            rows.forEach(row => {
+                const userEmployeeType = row.getAttribute('data-employee-type');
+                if (employeeType === 'all' || userEmployeeType === employeeType) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="main-content">
+        <h1>Employees List</h1>
+
+        <div class="filter-buttons">
+            <button onclick="filterByEmployeeType('all')">All Users</button> {% for employee_key, employee_name in employee_choices %}
+            <button onclick="filterByEmployeeType('{{ employee_key }}')">{{ employee_name }}</button> {% endfor %}
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Employee Type</th>
+                    <th>Password</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr class="user-row" data-employee-type="{{ user.employee_type }}">
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.employee_type }}</td>
+                    <td>
+                        {% if is_superuser %}
+                        <input type="password" id="password_{{ user.id }}" value="{{ user.original_password }}" readonly>
+                        <button type="button" id="show_button_{{ user.id }}" onclick="togglePassword({{ user.id }})" class="toggle-password-btn">Show Password</button> {% else %}
+                        <span class="restricted-text">Restricted</span> {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'delete_user' user.id %}" class="button-link">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}
+</body>
+
+</html>

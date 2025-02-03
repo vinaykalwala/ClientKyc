@@ -41,6 +41,10 @@ urlpatterns = [
     path('createtask/', create_task, name='create_task'),
     path('tasklist/', task_list, name='task_list'),
     path('updatetask/<int:task_id>/', update_task, name='update_task'),
+    path('user_list/', user_list, name='user_list'),
+    path('delete_user/<int:user_id>/', delete_user, name='delete_user'),
+    path('logs/', log_viewer, name='log_viewer'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
