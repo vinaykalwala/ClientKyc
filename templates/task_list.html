@@ -5,7 +5,6 @@
 {% block content %}
 <style>
     .task-container {
-        max-width: 900px;
         margin: 20px auto;
         padding: 20px;
         background: #fff;
@@ -29,12 +28,22 @@
         border-radius: 5px;
         border: 1px solid #ccc;
     }
-    .task-card {
-        background: white;
-        padding: 15px;
-        border-radius: 5px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-        margin-bottom: 15px;
+    .task-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .task-table th, .task-table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    .task-table th {
+        background-color: #5732ea;
+        color: white;
+    }
+    .task-table tr:nth-child(even) {
+        background-color: #f9f9f9;
     }
     .btn-update {
         display: inline-block;
@@ -43,7 +52,6 @@
         background: #007bff;
         text-decoration: none;
         border-radius: 5px;
-        margin-top: 10px;
     }
     .btn-update:hover {
         background: #0056b3;
@@ -66,26 +74,48 @@
         <button type="submit">Search</button>
     </form>
 
-    <!-- Task List -->
-    {% for task in tasks %}
-    <div class="task-card">
-        <h3>{{ task.task_name }}</h3>
-        <p><strong>Survey Number:</strong> {{ task.survey_number }}</p>
-        <p><strong>Task Description:</strong> {{ task.task_description }}</p>
-        <p><strong>Assigned To:</strong> {{ task.assigned_to.username }}</p>
-        <p><strong>Assigned By:</strong> {{ task.assigned_by.username }}</p>
-        <p><strong>Start Date:</strong> {{ task.start_date }}</p>
-        <p><strong>End Date:</strong> {{ task.end_date }}</p>
-        <p><strong>Priority:</strong> {{ task.priority }}</p>
-        <p><strong>Status:</strong> {{ task.status }}</p>
-        <p><strong>Remarks:</strong> {{ task.remarks }}</p>
-
-        {% if not user.is_superuser and task.assigned_to == user %}
-        <a href="{% url 'update_task' task.id %}" class="btn-update">Update Task</a>
-        {% endif %}
-    </div>
-    {% empty %}
-    <p>No tasks available.</p>
-    {% endfor %}
+    <!-- Task Table -->
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Survey Number</th>
+                <th>Task Description</th>
+                <th>Assigned To</th>
+                <th>Assigned By</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Remarks</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.task_name }}</td>
+                <td>{{ task.survey_number }}</td>
+                <td>{{ task.task_description }}</td>
+                <td>{{ task.assigned_to.username }}</td>
+                <td>{{ task.assigned_by.username }}</td>
+                <td>{{ task.start_date }}</td>
+                <td>{{ task.end_date }}</td>
+                <td>{{ task.priority }}</td>
+                <td>{{ task.status }}</td>
+                <td>{{ task.remarks }}</td>
+                <td>
+                    {% if not user.is_superuser and task.assigned_to == user %}
+                    <a href="{% url 'update_task' task.id %}" class="btn-update">Update</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="11" style="text-align: center;">No tasks available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
