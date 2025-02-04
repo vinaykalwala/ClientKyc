@@ -63,6 +63,26 @@
     .btn-update:hover {
         background: #0056b3;
     }
+    .low-priority {
+    color: green;
+}
+.medium-priority {
+    color: orange;
+}
+.high-priority {
+    color: red;
+}
+
+.pending-status {
+    color: rgb(163, 163, 2);
+}
+.in-progress-status {
+    color: blue;
+}
+.completed-status {
+    color: green;
+}
+
 </style>
 
 <div class="task-container">
@@ -108,8 +128,30 @@
                 <td>{{ task.assigned_by.username }}</td>
                 <td>{{ task.start_date }}</td>
                 <td>{{ task.end_date }}</td>
-                <td>{{ task.priority }}</td>
-                <td>{{ task.status }}</td>
+                <td class="priority-color 
+    {% if task.priority == 'Low' %}
+        low-priority
+    {% elif task.priority == 'Medium' %}
+        medium-priority
+    {% elif task.priority == 'High' %}
+        high-priority
+    {% endif %}
+">
+    {{ task.priority }}
+</td>
+
+<td class="status-color 
+    {% if task.status == 'Pending' %}
+        pending-status
+    {% elif task.status == 'In Progress' %}
+        in-progress-status
+    {% elif task.status == 'Completed' %}
+        completed-status
+    {% endif %}
+">
+    {{ task.status }}
+</td>
+
                 <td>{{ task.remarks }}</td>
                 <td>
                     {% if user.is_superuser or task.assigned_by == user or task.assigned_to == user %}
