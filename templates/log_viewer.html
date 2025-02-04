@@ -1,32 +1,103 @@
-{% extends 'base.html' %} {% block content %}
-<h2>📜 Activity Log Tracker</h2>
+{% extends 'base.html' %}
 
-<form method="get" class="form-inline">
-    <input type="text" name="user" placeholder="Search by Username" value="{{ request.GET.user }}" class="form-control mb-2">
-    <input type="date" name="date" value="{{ request.GET.date }}" class="form-control mb-2">
-    <button type="submit" class="btn btn-primary mb-2">Search</button>
-</form>
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 30px 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        border: 2px solid rgba(89, 50, 234, 1);
+        position: relative;
+    }
+    h2 {
+        color: rgba(89, 50, 234, 1);
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .form-inline {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .form-control {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    .btn-primary {
+        background: rgba(89, 50, 234, 1);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+    .btn-primary:hover {
+        background: rgba(90, 50, 234, 0.884);
+    }
+    .log-container {
+        max-height: 500px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background: rgba(89, 50, 234, 1);
+        color: white;
+    }
+    tr:nth-child(even) {
+        background: #f2f2f2;
+    }
+</style>
 
-<div style="max-height: 500px; overflow-y: scroll; background: #f8f9fa; padding: 10px; border: 1px solid #ccc;">
-    <table style="border: 1px solid black; border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th style="border: 1px solid black; padding: 8px;">Logs</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for log in logs %}
-            <tr>
-                <td style="border: 1px solid black; padding: 8px;">{{ log }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td style="border: 1px solid black; padding: 8px;" colspan="1">No logs found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container">
+    <h2>📜 Activity Log Tracker</h2>
 
+    <form method="get" class="form-inline">
+        <input type="text" name="user" placeholder="Search by Username" value="{{ request.GET.user }}" class="form-control">
+        <input type="date" name="date" value="{{ request.GET.date }}" class="form-control">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
 
+    <div class="log-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Logs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="1">No logs found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

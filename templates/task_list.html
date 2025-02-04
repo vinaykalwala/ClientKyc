@@ -1,36 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Task List{% endblock %}
+
 {% block content %}
-<h2>Task List</h2>
+<style>
+    .task-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .task-container h2 {
+        text-align: center;
+        margin-bottom: 16px;
+        color: #5732ea;
+    }
+    .search-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .search-form input, .search-form button {
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    .task-card {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+    }
+    .btn-update {
+        display: inline-block;
+        padding: 8px 12px;
+        color: white;
+        background: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+    .btn-update:hover {
+        background: #0056b3;
+    }
+</style>
 
-<!-- Search form -->
-<form method="get">
-    <input type="text" name="search" value="{{ search_term }}" placeholder="Search tasks...">
+<div class="task-container">
+    <h2>Task List</h2>
 
-    <label for="start_date">Start Date:</label>
-    <input type="date" name="start_date" value="{{ start_date }}">
+    <!-- Search form -->
+    <form method="get" class="search-form">
+        <input type="text" name="search" value="{{ search_term }}" placeholder="Search tasks...">
 
-    <label for="end_date">End Date:</label>
-    <input type="date" name="end_date" value="{{ end_date }}">
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" value="{{ start_date }}">
 
-    <button type="submit">Search</button>
-</form>
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date" value="{{ end_date }}">
 
-<!-- Task List -->
-{% for task in tasks %}
-<div class="task-card">
-    <h3>{{ task.task_name }}</h3>
-    <p><strong>Survey Number:</strong> {{ task.survey_number }}</p>
-    <p><strong>Task Description:</strong> {{ task.task_description }}</p>
-    <p><strong>Assigned To:</strong> {{ task.assigned_to.username }}</p>
-    <p><strong>Assigned By:</strong> {{ task.assigned_by.username }}</p>
-    <p><strong>Start Date:</strong> {{ task.start_date }}</p>
-    <p><strong>End Date:</strong> {{ task.end_date }}</p>
-    <p><strong>Priority:</strong> {{ task.priority }}</p>
-    <p><strong>Status:</strong> {{ task.status }}</p>
-    <p><strong>Remarks:</strong> {{ task.remarks }}</p>
+        <button type="submit">Search</button>
+    </form>
 
-    {% if not user.is_superuser and task.assigned_to == user %}
-    <a href="{% url 'update_task' task.id %}" class="btn-update">Update Task</a> {% endif %}
+    <!-- Task List -->
+    {% for task in tasks %}
+    <div class="task-card">
+        <h3>{{ task.task_name }}</h3>
+        <p><strong>Survey Number:</strong> {{ task.survey_number }}</p>
+        <p><strong>Task Description:</strong> {{ task.task_description }}</p>
+        <p><strong>Assigned To:</strong> {{ task.assigned_to.username }}</p>
+        <p><strong>Assigned By:</strong> {{ task.assigned_by.username }}</p>
+        <p><strong>Start Date:</strong> {{ task.start_date }}</p>
+        <p><strong>End Date:</strong> {{ task.end_date }}</p>
+        <p><strong>Priority:</strong> {{ task.priority }}</p>
+        <p><strong>Status:</strong> {{ task.status }}</p>
+        <p><strong>Remarks:</strong> {{ task.remarks }}</p>
+
+        {% if not user.is_superuser and task.assigned_to == user %}
+        <a href="{% url 'update_task' task.id %}" class="btn-update">Update Task</a>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p>No tasks available.</p>
+    {% endfor %}
 </div>
-{% empty %}
-<p>No tasks available.</p>
-{% endfor %} {% endblock %}
+{% endblock %}
