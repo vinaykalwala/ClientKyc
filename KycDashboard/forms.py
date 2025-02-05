@@ -85,5 +85,5 @@ class TaskForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
-        self.fields['assigned_to'].queryset = CustomUser.objects.filter(employee_type='Associate')
+        self.fields['assigned_to'].queryset = CustomUser.objects.exclude(is_staff=True)
 

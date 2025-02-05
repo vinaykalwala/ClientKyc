@@ -160,5 +160,5 @@ class Task(models.Model):
             raise ValidationError({'survey_number': 'This survey number does not exist in Database.'})
 
         """ Validate assigned_to only allows users with employee_type 'Associate' """
-        if not self.assigned_to.employee_type == 'associate':
-            raise ValidationError({'assigned_to': 'Task can only be assigned to Associates.'})
+        if self.assigned_to.employee_type not in ['associate', 'employee']:
+            raise ValidationError({'assigned_to': 'Task can only be assigned to Associates or Employees.'})

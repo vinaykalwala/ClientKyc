@@ -371,9 +371,9 @@ def task_list(request):
     end_date = request.GET.get('end_date', '')
 
     if request.user.is_superuser:
-        tasks = Task.objects.all()
+        tasks = Task.objects.all().order_by('-id')
     else:
-        tasks = Task.objects.filter(assigned_to=request.user)
+        tasks = Task.objects.filter(assigned_to=request.user).order_by('-id')
 
     # Search query logic for task_name, assigned_to, assigned_by, etc.
     if search_term:
