@@ -1,6 +1,4 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <style>
     .container {
         max-width: 800px;
@@ -13,34 +11,64 @@
         border: 2px solid rgba(89, 50, 234, 1);
         position: relative;
     }
+    
     h2 {
         color: rgba(89, 50, 234, 1);
         font-weight: bold;
         margin-bottom: 20px;
     }
+    
     .form-inline {
         display: flex;
         justify-content: center;
         gap: 10px;
         margin-bottom: 20px;
     }
+    
     .form-control {
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 16px;
     }
-    .btn-primary {
-        background: rgba(89, 50, 234, 1);
-        color: white;
-        padding: 10px;
+    
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+        padding: 10px 15px;
         border-radius: 5px;
         border: none;
         cursor: pointer;
+        font-size: 16px;
     }
+    
+    .btn-primary {
+        background: rgba(89, 50, 234, 1);
+        color: white;
+    }
+    
     .btn-primary:hover {
         background: rgba(90, 50, 234, 0.884);
     }
+    
+    .btn-secondary {
+        background: #28a745;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #218838;
+    }
+    
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        background: #c82333;
+    }
+    
     .log-container {
         max-height: 500px;
         overflow-y: auto;
@@ -49,6 +77,7 @@
         border-radius: 8px;
         border: 1px solid #ccc;
     }
+    
     table {
         width: 100%;
         border-collapse: collapse;
@@ -56,19 +85,31 @@
         border-radius: 8px;
         overflow: hidden;
     }
-    th, td {
+    
+    th,
+    td {
         border: 1px solid #ddd;
         padding: 12px;
         text-align: left;
     }
+    
     th {
         background: rgba(89, 50, 234, 1);
         color: white;
     }
+    
     tr:nth-child(even) {
         background: #f2f2f2;
     }
+    
+    .btn-group {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
 </style>
+
 
 <div class="container">
     <h2>📜 Activity Log Tracker</h2>
@@ -78,6 +119,13 @@
         <input type="date" name="date" value="{{ request.GET.date }}" class="form-control">
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
+
+    <div class="btn-group">
+        <button onclick="window.location.href='?action=print'" class="btn btn-secondary">📄 Print Logs</button>
+        <button onclick="if(confirm('Are you sure you want to clear all logs?')) window.location.href='?action=clear'" class="btn btn-danger">🗑 Clear Logs</button>
+    </div>
+
+    <br>
 
     <div class="log-container">
         <table>

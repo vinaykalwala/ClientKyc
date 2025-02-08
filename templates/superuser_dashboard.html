@@ -1,9 +1,153 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}Superuser Dashboard{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superuser Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+{% extends 'base.html' %} {% block content %}
 
-{% block content %}
-    <div class="main">
-        <h2>Welcome Superuser</h2>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Welcome Boss !</h1>
+        <div class="clock" id="clock"></div>
+
+        <!-- Year and Month Selection -->
+        <form method="get" class="mb-4">
+            <div class="row">
+                <div class="col">
+                    <label for="year">Select Year</label>
+                    <input type="number" name="year" id="year" class="form-control" value="{{ year }}">
+                </div>
+                <div class="col">
+                    <label for="month">Select Month</label>
+                    <input type="number" name="month" id="month" class="form-control" value="{{ month }}">
+                </div>
+                <div class="col align-self-end">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Success Rate Table for Associates -->
+        <h3>Associate Success Rates</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Employee Type</th>
+                    <th>Total Files Maintained</th>
+                    <th>Total Files Completed</th>
+                    <th>Success Rate (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for associate, data in success_rate_data %}
+                <tr>
+                    <td>{{ associate }}</td>
+                    <td>{{ data.employee_type }}</td>
+                    <td>{{ data.total_files_maintained }}</td>
+                    <td>{{ data.total_files_completed }}</td>
+                    <td>{{ data.success_rate|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Employee Comparison Table -->
+        <h3>Employee Comparison</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Employee Type</th>
+                    <th>Total Files Filed</th>
+                    <th>Success Rate (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee, data in employee_comparison %}
+                <tr>
+                    <td>{{ employee }}</td>
+                    <td>{{ data.employee_type }}</td>
+                    <td>{{ data.total_files_filed }}</td>
+                    <td>{{ data.success_rate|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Day-by-Day Report -->
+        <h3>Day-by-Day Report</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Files Processed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day, count in day_report.items %}
+                <tr>
+                    <td>{{ day }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">No data available for this month.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        <!-- Weekly Report -->
+        <h3>Weekly Report</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Files Processed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week, count in weekly_report.items %}
+                <tr>
+                    <td>Week {{ week }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-{% endblock %}
+    <script>
+        // Clock Functionality
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const day = now.toLocaleString('en-us', {
+                weekday: 'long'
+            });
+            const date = now.getDate();
+            const month = now.toLocaleString('en-us', {
+                month: 'long'
+            });
+            const year = now.getFullYear();
+
+            const timeString = `${day}, ${month} ${date}, ${year} - ${hours}:${minutes}:${seconds}`;
+            document.getElementById('clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000); // Update clock every second
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% endblock %}
+</body>
+
+</html>

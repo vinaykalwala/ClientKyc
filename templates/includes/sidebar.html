@@ -93,6 +93,9 @@
             {% if user.is_superuser %}
             <h4 class="sidebar_title"><i class="fas fa-shield"></i> Admin Dashboard</h4>
             <ul>
+                <li class="">
+                    <a href="{%url 'superuser_dashboard'%}"><i class="fas fa-home"></i>Home<i class="fas fa-chevron-right"></i></a>
+                </li>
                 <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
                     <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i> Client List<i class="fas fa-chevron-right"></i></a>
                 </li>
@@ -123,6 +126,9 @@
             {% elif user.employee_type == "employee" %}
             <h4 class="sidebar_title"><i class="fas fa-shield"></i> Employee Dashboard</h4>
             <ul>
+                <li class="">
+                    <a href="{%url 'employee_dashboard'%}"><i class="fas fa-home"></i>Home<i class="fas fa-chevron-right"></i></a>
+                </li>
                 <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
                     <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List<i class="fas fa-chevron-right"></i></a>
                 </li>
@@ -143,6 +149,9 @@
             {% elif user.employee_type == "associate" %}
             <h4 class="sidebar_title"><i class="fas fa-shield"></i> Associate Dashboar</h4>
             <ul>
+                <li class="">
+                    <a href="{%url 'associate_dashboard'%}"><i class="fas fa-home"></i>Home<i class="fas fa-chevron-right"></i></a>
+                </li>
                 <li class="{% if request.path == '/kyc-list/' %}active{% endif %}">
                     <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i>Client List<i class="fas fa-chevron-right"></i></a>
                 </li>

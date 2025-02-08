@@ -89,6 +89,7 @@ def role_redirect(request):
     return redirect('')
 
 from django.contrib.auth import logout
+from django.contrib.auth import get_user_model
 
 
 @login_required
@@ -104,18 +105,382 @@ def logout_view(request):
     
     return response
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from datetime import datetime, timedelta
+import pytz
+from .forms import MonthYearForm
+from .models import KYCProperty
+from django.contrib.auth import get_user_model
 
 @login_required
 def employee_dashboard(request):
-    return render(request, 'employee_dashboard.html')
+    logged_in_user = request.user
+    today = datetime.now()
+    current_year, current_month, current_day = today.year, today.month, today.day
+
+    # Handle form submission for selecting a different month/year
+    if request.method == "POST":
+        form = MonthYearForm(request.POST)
+        if form.is_valid():
+            selected_year = int(form.cleaned_data['year'])
+            selected_month = int(form.cleaned_data['month'])
+        else:
+            selected_year = current_year
+            selected_month = current_month
+    else:
+        selected_year = current_year
+        selected_month = current_month
+
+    # Fetch employee's KYC filings for the selected month/year
+    total_files_filed = KYCProperty.objects.filter(
+        filed_by=logged_in_user, filed_on_date__year=selected_year, filed_on_date__month=selected_month
+    ).count()
+
+    # Fetch all employees' KYC filings for the selected month/year
+    employees = get_user_model().objects.filter(employee_type='employee')
+    employee_file_counts = {
+        emp: KYCProperty.objects.filter(filed_by=emp, filed_on_date__year=selected_year, filed_on_date__month=selected_month).count()
+        for emp in employees
+    }
+
+    # Rank employees based on the number of files filed
+    sorted_employees = sorted(employee_file_counts.items(), key=lambda x: x[1], reverse=True)
+    rank = next((i + 1 for i, (emp, count) in enumerate(sorted_employees) if emp == logged_in_user), "N/A")
+
+    # Assign a badge based on rank
+    if rank == 1:
+        badge = "Gold"
+    elif rank == 2:
+        badge = "Silver"
+    elif rank == 3:
+        badge = "Bronze"
+    else:
+        badge = "None"
+
+    # Monthly filings for the selected month (1st to last day of the month)
+    first_day_of_month = datetime(selected_year, selected_month, 1)
+    last_day_of_month = datetime(selected_year, selected_month + 1, 1) - timedelta(days=1) if selected_month != 12 else datetime(selected_year, 12, 31)
+
+    monthly_filing_data = [
+        KYCProperty.objects.filter(filed_by=logged_in_user, filed_on_date=first_day_of_month + timedelta(days=i)).count()
+        for i in range((last_day_of_month - first_day_of_month).days + 1)
+    ]
+
+    # Weekly filings (split the month into 4 weeks)
+    weekly_data = []
+    days_in_month = (last_day_of_month - first_day_of_month).days + 1
+    weeks = [(0, 7), (7, 14), (14, 21), (21, days_in_month)]
+
+    for start_day, end_day in weeks:
+        week_start = first_day_of_month + timedelta(days=start_day)
+        week_end = first_day_of_month + timedelta(days=end_day - 1)
+        week_filings = KYCProperty.objects.filter(
+            filed_by=logged_in_user,
+            filed_on_date__gte=week_start,
+            filed_on_date__lte=week_end
+        ).count()
+        weekly_data.append(week_filings)
+
+    # Create the form for month/year selection
+    form = MonthYearForm(initial={'year': str(selected_year), 'month': f"{selected_month:02}"})
+
+    # Convert the current time to IST
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time_ist = today.astimezone(ist).strftime("%H:%M:%S")
+    
+    return render(request, 'employee_dashboard.html', {
+        "form": form,
+        "current_date": today.strftime("%Y-%m-%d"),
+        "current_time": current_time_ist,
+        "total_files_filed": total_files_filed,
+        "rank": rank,
+        "monthly_progress": (total_files_filed / max(employee_file_counts.values(), default=1)) * 100,  # Calculate the progress
+        "monthly_filing_data": monthly_filing_data,
+        "weekly_data": weekly_data,
+        "badge": badge,
+        "weekly_chart_data": weekly_data,
+        "monthly_chart_data": monthly_filing_data,
+    })
 
 @login_required
 def associate_dashboard(request):
-    return render(request, 'associate_dashboard.html')
+    logged_in_user = request.user
+
+    # Get the year and month from the GET request, or set to current year/month if not present
+    year = request.GET.get('year', datetime.now().year)
+    month = request.GET.get('month', datetime.now().month)
+    
+    # Convert year and month to integers
+    year = int(year)
+    month = int(month)
+
+    # Initialize the form with the selected month and year
+    form = MonthYearForm(initial={'month': str(month), 'year': str(year)})
+
+    # Calculate total files maintained by the logged-in associate for the selected month
+    total_files_maintained = KYCProperty.objects.filter(
+        file_maintained_by=logged_in_user,
+        filed_on_date__year=year,
+        filed_on_date__month=month
+    ).count()
+
+    # Calculate total files completed by the associate for the selected month
+    total_files_completed = KYCProperty.objects.filter(
+        file_maintained_by=logged_in_user,
+        file_status='completed',  # Ensure 'completed' status is considered
+        filed_on_date__year=year,
+        filed_on_date__month=month
+    ).count()
+
+    # Calculate success rate as a percentage of files completed out of files maintained
+    associate_success_rate = (total_files_completed / total_files_maintained) * 100 if total_files_maintained else 0
+
+    # Fetch all associates and calculate their total maintained and completed files for the selected month and year
+    associates = get_user_model().objects.filter(employee_type='associate')
+    
+    associate_completed_counts = {}
+    associate_total_counts = {}  # Dictionary to store total files maintained by each associate
+
+    for associate in associates:
+        # Calculate total files maintained for each associate
+        total_files = KYCProperty.objects.filter(
+            file_maintained_by=associate,
+            filed_on_date__year=year,
+            filed_on_date__month=month
+        ).count()
+        associate_total_counts[associate] = total_files
+        
+        # Calculate completed files for each associate
+        completed_files = KYCProperty.objects.filter(
+            file_maintained_by=associate,
+            file_status='completed',
+            filed_on_date__year=year,
+            filed_on_date__month=month
+        ).count()
+        associate_completed_counts[associate] = completed_files
+
+    # Only proceed with ranking if there are completed files
+    if total_files_completed > 0:
+        # Rank the logged-in associate based on total files completed
+        sorted_associates = sorted(associate_completed_counts.items(), key=lambda x: x[1], reverse=True)
+        rank = next((i + 1 for i, (associate, count) in enumerate(sorted_associates) if associate == logged_in_user), "N/A")
+
+        # Assign a badge based on rank
+        if rank == 1:
+            badge = "Gold"
+        elif rank == 2:
+            badge = "Silver"
+        elif rank == 3:
+            badge = "Bronze"
+        else:
+            badge = "None"
+    else:
+        # No completed files, so set rank and badge to None
+        rank = "N/A"
+        badge = "None"
+
+    # Monthly progress for the logged-in associate: Completed files each day
+    first_day_of_month = datetime(year, month, 1)
+    last_day_of_month = datetime(year, month + 1, 1) - timedelta(days=1) if month != 12 else datetime(year, 12, 31)
+
+    # Monthly filings data (files completed on each day of the month)
+    monthly_filing_data = [
+        KYCProperty.objects.filter(
+            file_maintained_by=logged_in_user,
+            filed_on_date=first_day_of_month + timedelta(days=i),
+            file_status='completed'
+        ).count()
+        for i in range((last_day_of_month - first_day_of_month).days + 1)
+    ]
+
+    # Weekly progress (completed files per week)
+    weekly_data = []
+    days_in_month = (last_day_of_month - first_day_of_month).days + 1
+    weeks = [(0, 7), (7, 14), (14, 21), (21, days_in_month)]
+
+    for start_day, end_day in weeks:
+        week_start = first_day_of_month + timedelta(days=start_day)
+        week_end = first_day_of_month + timedelta(days=end_day - 1)
+        week_filings = KYCProperty.objects.filter(
+            file_maintained_by=logged_in_user,
+            filed_on_date__gte=week_start,
+            filed_on_date__lte=week_end,
+            file_status='completed'  # Only count completed files
+        ).count()
+        weekly_data.append(week_filings)
+
+    # Weekly progress as a percentage (completed files per week)
+    total_files_completed_for_week = sum(weekly_data)
+    weekly_progress = [
+        (weekly_data[i] / total_files_completed_for_week) * 100 if total_files_completed_for_week else 0
+        for i in range(4)
+    ]
+
+    # Pass the context to the template for rendering
+    return render(request, 'associate_dashboard.html', {
+        'form': form,
+        'success_rate': {
+            'total_files_maintained': total_files_maintained,
+            'total_files_completed': total_files_completed,
+            'success_rate': associate_success_rate
+        },
+        'rank': rank,
+        'monthly_filing_data': monthly_filing_data,  # Pass the monthly filing data to template
+        'weekly_progress': weekly_progress,
+        'badge': badge,
+        'weekly_chart_data': weekly_data,
+        'associate_file_counts': associate_total_counts,  # Pass the associate maintained file counts to the template
+        'associate_completed_counts': associate_completed_counts,  # Pass completed file counts too
+    })
+
+from calendar import monthrange
+from collections import defaultdict
+from datetime import datetime, timedelta
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from .models import KYCProperty  # Assuming your model is in the same app
 
 @login_required
 def superuser_dashboard(request):
-    return render(request, 'superuser_dashboard.html')
+    # Get the year and month from the request (defaults to current month and year)
+    year = request.GET.get('year', datetime.now().year)
+    month = request.GET.get('month', datetime.now().month)
+
+    # Convert to integers
+    year = int(year)
+    month = int(month)
+
+    logged_in_user = request.user
+    success_rate_data = {}
+
+    # If user is superuser, show the superuser dashboard
+    if logged_in_user.is_superuser:
+        # Calculate success rates for all users
+        users = get_user_model().objects.all()
+
+        # Data for employee comparison
+        employee_comparison = {}
+
+        # Day-by-day and Weekly reports
+        day_report = defaultdict(int)
+        weekly_report = defaultdict(int)
+
+        # Get the number of days in the selected month
+        _, num_days_in_month = monthrange(year, month)
+
+        for user in users:
+            if user.employee_type == 'associate':
+                # Success rate calculation for associates
+                total_files_maintained = KYCProperty.objects.filter(
+                    file_maintained_by=user,
+                    filed_on_date__year=year,
+                    filed_on_date__month=month
+                ).count()
+
+                total_files_completed = KYCProperty.objects.filter(
+                    file_maintained_by=user,
+                    file_status='completed',
+                    filed_on_date__year=year,
+                    filed_on_date__month=month
+                ).count()
+
+                associate_success_rate = (total_files_completed / total_files_maintained) * 100 if total_files_maintained else 0
+
+                success_rate_data[user.username] = {
+                    'employee_type': user.employee_type,
+                    'total_files_maintained': total_files_maintained,
+                    'total_files_completed': total_files_completed,
+                    'success_rate': associate_success_rate
+                }
+
+                # Day-by-day report for associates
+                for day in range(1, num_days_in_month + 1):  # Ensure day is within the valid range
+                    try:
+                        # Check if day is valid within the month
+                        day_start = datetime(year, month, day, 0, 0, 0)
+                        day_end = datetime(year, month, day, 23, 59, 59)
+
+                        daily_count = KYCProperty.objects.filter(
+                            file_maintained_by=user,
+                            filed_on_date__gte=day_start,
+                            filed_on_date__lte=day_end
+                        ).count()
+
+                        day_report[day] += daily_count
+                    except ValueError:
+                        # If the day is invalid (e.g., 31st Feb), skip to next
+                        continue
+
+                # Weekly report for associates
+                for week_num in range(1, 6):  # assuming 5 weeks in a month
+                    try:
+                        start_day = (week_num - 1) * 7 + 1
+                        start_of_week = datetime(year, month, start_day)
+                        # Check for valid end of the week
+                        end_of_week = start_of_week + timedelta(days=6)
+
+                        # Ensure end_of_week does not exceed the last valid day of the month
+                        _, num_days_in_month = monthrange(year, month)
+                        if end_of_week.day > num_days_in_month:
+                            end_of_week = datetime(year, month, num_days_in_month)
+
+                        weekly_count = KYCProperty.objects.filter(
+                            file_maintained_by=user,
+                            filed_on_date__gte=start_of_week,
+                            filed_on_date__lte=end_of_week
+                        ).count()
+
+                        weekly_report[week_num] += weekly_count
+                    except ValueError:
+                        # Skip weeks if any calculation throws ValueError (invalid date)
+                        continue
+
+            elif user.employee_type == 'employee':
+                # Success rate calculation for employees
+                employee_file_counts = KYCProperty.objects.filter(
+                    filed_by=user,
+                    filed_on_date__year=year,
+                    filed_on_date__month=month
+                ).count()
+
+                # Find the employee who filed the most files in the selected month/year
+                employees = get_user_model().objects.filter(employee_type='employee')
+                employee_file_counts_dict = {}
+                for employee in employees:
+                    employee_file_counts_dict[employee] = KYCProperty.objects.filter(
+                        filed_by=employee,
+                        filed_on_date__year=year,
+                        filed_on_date__month=month
+                    ).count()
+
+                max_files_filed = max(employee_file_counts_dict.values(), default=0)
+
+                success_rate = (employee_file_counts / max_files_filed) * 100 if max_files_filed > 0 else 0
+
+                employee_comparison[user.username] = {
+                    'employee_type': user.employee_type,
+                    'total_files_filed': employee_file_counts,
+                    'success_rate': success_rate
+                }
+
+        # Sort associates by success rate (descending) and employees by the number of files filed (descending)
+        sorted_associates = sorted(success_rate_data.items(), key=lambda x: x[1]['success_rate'], reverse=True)
+        sorted_employees = sorted(employee_comparison.items(), key=lambda x: x[1]['total_files_filed'], reverse=True)
+        
+
+        # Render the superuser dashboard with success rate data, day-wise and week-wise reports
+        return render(request, 'superuser_dashboard.html', {
+            'success_rate_data': sorted_associates,
+            'employee_comparison': sorted_employees,
+            'day_report': dict(day_report),
+            'weekly_report': dict(weekly_report),
+            'year': year,
+            'month': month
+        })
+
+    return redirect('')
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -501,19 +866,39 @@ def delete_user(request, user_id):
 from django.shortcuts import render
 import os
 from django.conf import settings
+from django.http import HttpResponse
 
+@user_passes_test(lambda u: u.is_superuser)
+@staff_member_required
 def log_viewer(request):
     log_file = os.path.join(settings.BASE_DIR, 'activity_logs.log')
     search_user = request.GET.get('user', '').lower()
     search_date = request.GET.get('date', '')
+    action = request.GET.get('action', '')
 
-    with open(log_file, 'r') as file:
-        logs = file.readlines()[::-1]
+    # Handle log clearing
+    if action == "clear":
+        with open(log_file, 'w') as file:
+            file.write("")  # Clear file contents
+        return redirect('log_viewer')  # Reload the page
+
+    # Read logs
+    logs = []
+    if os.path.exists(log_file):
+        with open(log_file, 'r') as file:
+            logs = file.readlines()[::-1]  # Reverse logs for recent first
 
     # Filter logs
     if search_user:
         logs = [log for log in logs if search_user in log.lower()]
     if search_date:
         logs = [log for log in logs if search_date in log]
+
+    # Handle printing logs
+    if action == "print":
+        response = HttpResponse(content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename="logs.txt"'
+        response.writelines(logs)
+        return response
 
     return render(request, 'log_viewer.html', {'logs': logs})

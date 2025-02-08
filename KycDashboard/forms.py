@@ -87,3 +87,6 @@ class TaskForm(forms.ModelForm):
         super(TaskForm, self).__init__(*args, **kwargs)
         self.fields['assigned_to'].queryset = CustomUser.objects.exclude(is_staff=True)
 
+class MonthYearForm(forms.Form):
+    month = forms.ChoiceField(choices=[(str(i), f"{i:02}") for i in range(1, 13)], label='Month')
+    year = forms.ChoiceField(choices=[(str(i), str(i)) for i in range(2020, 2031)], label='Year')
