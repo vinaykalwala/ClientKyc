@@ -1,39 +1,149 @@
 {% extends 'base.html' %} {% block content %}
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Associate Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .container {
+            margin: 20px auto;
+        }
+        .card {
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.8em;
+            text-align: center;
+            color: rgb(81, 43, 218);
+            margin-bottom: 10px;
+        }
+        .form-container {
+            padding: 20px;
+            border-radius: 10px;
+            margin: auto;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn_cont {
+            text-align: center;
+        }
+
+        .btn-submit {
+            background-color: rgb(81, 43, 218);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1em;
+        }
+        .btn-submit:hover {
+            background-color: rgb(60, 32, 180);
+        }
+        .badge-top-performer {
+            display: inline-block;
+            background: gold;
+            color: black;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .chart-container {
+            width: 100%;
+            height: 300px;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .table th {
+            background-color: rgb(81, 43, 218);
+            color: white;
+        }
+        .success-rate-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .success-rate-bar {
+            width: 100%;
+            background: #ddd;
+            border-radius: 10px;
+        }
+        .success-rate-progress {
+            height: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
+    </style>
+</head>
 <body>
     <div class="container">
-        <div class="clock" id="clock"></div>
         <div class="card">
             <div class="card-body">
                 <h1 class="card-title">Welcome, {{ user.first_name }} {{ user.last_name }} to Associate Dashboard</h1>
-
-                <!-- Rank Badge Logic -->
-                {% if rank == 1 %}
-                <span class="badge-top-performer">Top Performer</span> {% endif %}
-
-                <!-- Month and Year Filter Form -->
-                <form method="GET" action="{% url 'associate_dashboard' %}">
-                    {{ form.as_p }}
-                    <button type="submit" class="btn-submit">Filter</button>
-                </form>
-
+                {% if rank == 1 %}<span class="badge-top-performer">Top Performer</span>{% endif %}
+                <div class="form-container">
+                    <form method="GET" action="{% url 'associate_dashboard' %}">
+                        <div class="row">
+                            <div class="input-group">
+                                <label for="year">Select Year</label>
+                                <input type="number" name="year" id="year" class="form-control" value="{{ request.GET.year }}" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="month">Select Month</label>
+                                <input type="number" name="month" id="month" class="form-control" value="{{ request.GET.month }}" required>
+                            </div>
+                            <div class="btn_cont">
+                                <button type="submit" class="btn-submit">Filter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
                 <h2>Dashboard Overview</h2>
                 <p><strong>Total Files Maintained:</strong> {{ success_rate.total_files_maintained }}</p>
                 <p><strong>Total Files Completed:</strong> {{ success_rate.total_files_completed }}</p>
                 <p><strong>Success Rate:</strong> {{ success_rate.success_rate }}%</p>
-
-                <!-- Success Rate as a Progress Bar -->
                 <div class="success-rate-container">
                     <h3>Success Rate</h3>
                     <div class="success-rate-bar">
-                        <div class="success-rate-progress" style="width: {{ success_rate.success_rate }}%; background-color: #4CAF50;">
+                        <div class="success-rate-progress" style="width: {{ success_rate.success_rate }}%; background-color: #28a745;">
                             {{ success_rate.success_rate }}%
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">Monthly Analysis</h3>
@@ -42,7 +152,6 @@
                 </div>
             </div>
         </div>
-
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">Weekly Analysis</h3>
@@ -51,7 +160,6 @@
                 </div>
             </div>
         </div>
-
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">Files Maintained by Associates</h3>
@@ -74,57 +182,24 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Clock Functionality
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const day = now.toLocaleString('en-us', {
-                weekday: 'long'
-            });
-            const date = now.getDate();
-            const month = now.toLocaleString('en-us', {
-                month: 'long'
-            });
-            const year = now.getFullYear();
-
-            const timeString = `${day}, ${month} ${date}, ${year} - ${hours}:${minutes}:${seconds}`;
-            document.getElementById('clock').textContent = timeString;
-        }
-        setInterval(updateClock, 1000); // Update clock every second
-
-
-        // Monthly Filing Data Bar Chart
         const monthlyFilingData = JSON.parse('{{ monthly_filing_data|escapejs }}');
-        const monthlyFilingChart = new Chart(document.getElementById('monthlyFilingChart'), {
+        new Chart(document.getElementById('monthlyFilingChart'), {
             type: 'bar',
             data: {
                 labels: monthlyFilingData.map((data, index) => 'Day ' + (index + 1)),
                 datasets: [{
                     label: 'Filing Count',
                     data: monthlyFilingData,
-                    backgroundColor: '#4CAF50',
-                    borderColor: '#388E3C',
+                    backgroundColor: '#007bff',
+                    borderColor: '#0056b3',
                     borderWidth: 1
                 }]
             },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
+            options: {responsive: true, scales: {y: {beginAtZero: true}}}
         });
-
-        // Weekly Filing Data Bar Chart
         const weeklyFilingData = JSON.parse('{{ weekly_progress|escapejs }}');
-        const weeklyFilingChart = new Chart(document.getElementById('weeklyFilingChart'), {
+        new Chart(document.getElementById('weeklyFilingChart'), {
             type: 'bar',
             data: {
                 labels: weeklyFilingData.map((data, index) => 'Week ' + (index + 1)),
@@ -136,91 +211,9 @@
                     borderWidth: 1
                 }]
             },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
+            options: {responsive: true, scales: {y: {beginAtZero: true}}}
         });
     </script>
-
-    <style>
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            padding: 20px;
-        }
-        
-        .card {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-body {
-            margin-top: 20px;
-        }
-        
-        .card-title {
-            font-size: 1.5em;
-            color: #333;
-            text-align: center;
-        }
-        
-        .btn-submit {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: block;
-            width: 100%;
-        }
-        
-        .btn-submit:hover {
-            background-color: #45a049;
-        }
-        
-        .success-rate-container {
-            margin-top: 30px;
-            text-align: center;
-        }
-        
-        .success-rate-bar {
-            width: 100%;
-            background-color: #f3f3f3;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .success-rate-progress {
-            height: 20px;
-            border-radius: 10px;
-            text-align: center;
-            color: white;
-            line-height: 20px;
-        }
-        
-        .badge-top-performer {
-            display: inline-block;
-            background-color: gold;
-            color: black;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-    </style>
 </body>
+</html>
 {% endblock %}

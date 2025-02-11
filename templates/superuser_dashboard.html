@@ -5,55 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Superuser Dashboard</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
-
         .container {
-            background: #ffffff;
             padding: 20px;
+            margin: 20px auto;
             border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .table {
-            background: #fff;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .table th {
-            background: rgba(89, 50, 234, 1);
-            color: white;
-        }
-
-        .table-hover tbody tr:hover {
-            background: #e9ecef;
-        }
-
-        .btn-primary {
-            background: rgba(89, 50, 234, 1);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background: rgb(81, 43, 218);
-        }
         h2 {
             text-align: center;
             color: rgb(81, 43, 218);
             font-weight: 600;
+            margin-bottom: 12px;
         }
-        h4 {
+
+        .h4_title {
             color: rgb(81, 43, 218);
             font-weight: 600;
+            margin-top: 20px;
         }
 
         .clock {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             padding: 10px;
             background: rgba(89, 50, 234, 1);
@@ -62,34 +35,101 @@
             border-radius: 5px;
             margin-bottom: 20px;
         }
+        .form-container {
+            padding: 20px;
+            border-radius: 10px;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .row {
+            display: flex;
+            gap: 16px;
+        }
+        .row input {
+            width: 100%;
+        }
+        .row .btn_cont {
+            padding: 20px 10px;
+            width: 100%;
+        }
+
+        button {
+            background: rgba(89, 50, 234, 1);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: rgb(81, 43, 218);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(89, 50, 234, 1);
+            color: white;
+        }
+
+        tbody tr:hover {
+            background: #e9ecef;
+        }
     </style>
 </head>
 {% extends 'base.html' %} {% block content %}
 
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Welcome Boss!</h2>
+    <div class="container">
+        <h2>Welcome Boss!</h2>
         <div class="clock" id="clock"></div>
 
         <!-- Year and Month Selection -->
-        <form method="get" class="mb-4">
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="year">Select Year</label>
-                    <input type="number" name="year" id="year" class="form-control" value="{{ year }}">
+         <div class="form-container">
+            <form method="get">
+                <div class="row">
+                    <div>
+                        <label for="year">Select Year</label>
+                        <input type="number" name="year" id="year" class="form-control" value="{{ year }}">
+                    </div>
+                    <div>
+                        <label for="month">Select Month</label>
+                        <input type="number" name="month" id="month" class="form-control" value="{{ month }}">
+                    </div>
+                    <div class="btn_cont">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <label for="month">Select Month</label>
-                    <input type="number" name="month" id="month" class="form-control" value="{{ month }}">
-                </div>
-                <div class="col-md-4 align-self-end">
-                    <button type="submit" class="btn btn-primary w-100">Filter</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
 
         <!-- Success Rate Table for Associates -->
-        <h4>Associate Success Rates</h3>
+        <h4 class="h4_title">Associate Success Rates</h3>
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -114,7 +154,7 @@
         </table>
 
         <!-- Employee Comparison Table -->
-        <h4>Employee Comparison</h3>
+        <h4 class="h4_title">Employee Comparison</h3>
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -137,7 +177,7 @@
         </table>
 
         <!-- Day-by-Day Report -->
-        <h4>Day-by-Day Report</h3>
+        <h4 class="h4_title">Day-by-Day Report</h3>
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -160,7 +200,7 @@
         </table>
 
         <!-- Weekly Report -->
-        <h4>Weekly Report</h3>
+        <h4 class="h4_title">Weekly Report</h3>
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
