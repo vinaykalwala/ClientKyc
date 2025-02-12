@@ -334,9 +334,14 @@ def associate_dashboard(request):
         'associate_completed_counts': associate_completed_counts,  # Pass completed file counts too
     })
 
-from calendar import monthrange
+import matplotlib
+matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
+import io
+import base64
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime
+from calendar import monthrange
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -468,7 +473,37 @@ def superuser_dashboard(request):
         # Sort associates by success rate (descending) and employees by the number of files filed (descending)
         sorted_associates = sorted(success_rate_data.items(), key=lambda x: x[1]['success_rate'], reverse=True)
         sorted_employees = sorted(employee_comparison.items(), key=lambda x: x[1]['total_files_filed'], reverse=True)
-        
+
+        # Generate Graph for Day-by-Day Report
+        def generate_graph(data, x_labels, title, xlabel, ylabel, graph_type='line'):
+            fig, ax = plt.subplots()
+
+            if graph_type == 'line':
+                ax.plot(x_labels, data, marker='o', linestyle='-', color='b')
+            elif graph_type == 'bar':
+                ax.bar(x_labels, data, color='g')
+
+            ax.set_title(title)
+            ax.set_xlabel(xlabel)
+            ax.set_ylabel(ylabel)
+
+            # Save graph as image to be displayed in template
+            img_buf = io.BytesIO()
+            fig.savefig(img_buf, format='png')
+            img_buf.seek(0)
+            img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
+
+            return img_base64
+
+        day_report_img = generate_graph(
+            list(day_report.values()), list(day_report.keys()),
+            "Day-by-Day Report", "Day", "Files Processed", "line"
+        )
+
+        weekly_report_img = generate_graph(
+            list(weekly_report.values()), [f"Week {week}" for week in weekly_report.keys()],
+            "Weekly Report", "Week", "Files Processed", "bar"
+        )
 
         # Render the superuser dashboard with success rate data, day-wise and week-wise reports
         return render(request, 'superuser_dashboard.html', {
@@ -477,10 +512,13 @@ def superuser_dashboard(request):
             'day_report': dict(day_report),
             'weekly_report': dict(weekly_report),
             'year': year,
-            'month': month
+            'month': month,
+            'day_report_img': day_report_img,
+            'weekly_report_img': weekly_report_img
         })
 
     return redirect('')
+
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
