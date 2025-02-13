@@ -195,7 +195,7 @@ def employee_dashboard(request):
         "current_time": current_time_ist,
         "total_files_filed": total_files_filed,
         "rank": rank,
-        "monthly_progress": (total_files_filed / max(employee_file_counts.values(), default=1)) * 100,  # Calculate the progress
+        "monthly_progress": (total_files_filed / max(max(employee_file_counts.values(), default=1), 1)) * 100 ,# Calculate the progress
         "monthly_filing_data": monthly_filing_data,
         "weekly_data": weekly_data,
         "badge": badge,
