@@ -5,8 +5,11 @@
     <title>Employee Dashboard</title>
     <style>
         .container {
-            margin: 20px auto;
+            margin: 10px auto;
+            background: #ffffff;
             padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
         }
         .card {
             border-radius: 10px;
@@ -85,7 +88,7 @@
             text-align: center;
             color: white;
             line-height: 20px;
-            background-color: rgb(81, 43, 218);
+            background-color: rgb(68 185 0);
         }
         .clock {
             font-size: 1.5em;
@@ -121,11 +124,19 @@
                         <div class="row">
                             <div class="input-group">
                                 <label for="year">Select Year</label>
-                                <input type="number" name="year" id="year" class="form-control" value="{{ year }}" required>
+                                <select name="year" id="year" class="form-control" required>
+                                    {% for y in year_range %}
+                                        <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="input-group">
                                 <label for="month">Select Month</label>
-                                <input type="number" name="month" id="month" class="form-control" value="{{ month }}" required>
+                                <select name="month" id="month" class="form-control" required>
+                                    {% for num, name in months %}
+                                        <option value="{{ num }}" {% if num == month %}selected{% endif %}>{{ name }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="btn_cont">
                                 <button type="submit" class="btn-submit">Filter</button>

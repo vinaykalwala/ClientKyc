@@ -10,7 +10,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .container {
-            margin: 20px auto;
+            margin: 10px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
         }
         
         .card {
@@ -36,6 +40,7 @@
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
+            align-items: center;
         }
         
         .input-group label {
@@ -117,6 +122,7 @@
             text-align: center;
             color: white;
             line-height: 20px;
+            background-color: rgb(68 185 0);
         }
         
         .clock {
@@ -139,19 +145,19 @@
                     <form method="GET" action="{% url 'associate_dashboard' %}">
                         <div class="row">
                             <div class="input-group">
-                                <label for="year">Select Year</label>
-                                <input type="number" name="year" id="year" class="form-control" value="{{ request.GET.year }}" required>
+                                <label for="id_year">Select Year</label>
+                                {{ form.year }}
                             </div>
                             <div class="input-group">
-                                <label for="month">Select Month</label>
-                                <input type="number" name="month" id="month" class="form-control" value="{{ request.GET.month }}" required>
+                                <label for="id_month">Select Month</label>
+                                {{ form.month }}
                             </div>
                             <div class="btn_cont">
                                 <button type="submit" class="btn-submit">Filter</button>
                             </div>
                         </div>
                     </form>
-                </div>
+                </div>                
 
                 <h2>Dashboard Overview</h2>
                 <p><strong>Total Files Maintained:</strong> {{ success_rate.total_files_maintained }}</p>
