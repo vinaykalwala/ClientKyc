@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from .models import CustomUser
 from django.http import HttpResponseForbidden
 
+def home(request):
+    return render(request, 'home.html')
 
 def signup(request):
     if not request.user.is_superuser:
