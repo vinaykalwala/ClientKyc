@@ -87,6 +87,19 @@ class TaskForm(forms.ModelForm):
         super(TaskForm, self).__init__(*args, **kwargs)
         self.fields['assigned_to'].queryset = CustomUser.objects.exclude(is_staff=True)
 
+from django import forms
+import datetime
+
 class MonthYearForm(forms.Form):
-    month = forms.ChoiceField(choices=[(str(i), f"{i:02}") for i in range(1, 13)], label='Month')
-    year = forms.ChoiceField(choices=[(str(i), str(i)) for i in range(2020, 2031)], label='Year')
+    current_year = datetime.date.today().year
+    month = forms.ChoiceField(
+        choices=[(str(i), f"{i:02}") for i in range(1, 13)], 
+        label='Month',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    year = forms.ChoiceField(
+        choices=[(str(i), str(i)) for i in range(current_year - 10, current_year + 11)], 
+        label='Year',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+  
