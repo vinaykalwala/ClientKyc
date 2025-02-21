@@ -11,7 +11,7 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
-            'username', 'first_name', 'last_name', 'email', 
+            'username', 'first_name', 'last_name', 'email', 'phone_number','employee_status',
             'password1', 'password2', 'employee_type'
         ]
         help_texts = {  
@@ -41,6 +41,7 @@ class KYCPropertyForm(forms.ModelForm):
         exclude = ['filed_by']  
         widgets = {
             'file_status': forms.Select(choices=KYCProperty.FILE_STATUS_CHOICES),
+            'file_returned_date':forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -77,14 +78,17 @@ class LeaveRequestForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['survey_number', 'task_name', 'task_description', 'assigned_to', 'start_date', 'end_date', 'priority','status','remarks']
+        fields = ['survey_number', 'task_name', 'task_description', 'assigned_to', 'start_date', 'end_date', 'priority','task_status','work_done','remarks']
         widgets = {
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
+        survey_number = kwargs.pop('survey_number', None)
         super(TaskForm, self).__init__(*args, **kwargs)
+        if survey_number:
+            self.fields['survey_number'].initial = survey_number
         self.fields['assigned_to'].queryset = CustomUser.objects.exclude(is_staff=True)
 
 from django import forms
@@ -102,4 +106,18 @@ class MonthYearForm(forms.Form):
         label='Year',
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-  
+
+from django import forms
+from .models import CustomUser
+
+class EmployeeStatusForm(forms.ModelForm):
+    EMPLOYEE_STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+    ]
+    
+    employee_status = forms.ChoiceField(choices=EMPLOYEE_STATUS_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = CustomUser
+        fields = ['employee_status']

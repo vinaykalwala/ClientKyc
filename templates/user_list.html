@@ -1,6 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
 
-{% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -122,8 +121,10 @@
             <thead>
                 <tr>
                     <th>Username</th>
+                    <th>Phone Number</th>
                     <th>Email</th>
                     <th>Employee Type</th>
+                    <th>Employee Status</th>
                     <th>Password</th>
                     <th>Actions</th>
                 </tr>
@@ -132,8 +133,10 @@
                 {% for user in users %}
                 <tr class="user-row" data-employee-type="{{ user.employee_type }}">
                     <td>{{ user.username }}</td>
+                    <td>{{user.phone_number}}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.employee_type }}</td>
+                    <td>{{user.employee_status}}</td>
                     <td>
                         {% if is_superuser %}
                         <input type="password" id="password_{{ user.id }}" value="{{ user.original_password }}" readonly>
@@ -141,8 +144,9 @@
                         <span class="restricted-text">Restricted</span> {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'delete_user' user.id %}" class="button-link">Delete</a>
+                        <a href="{% url 'edit_employee_status' user.id %}" class="button-link">Edit Status</a>
                     </td>
+
                 </tr>
                 {% endfor %}
             </tbody>

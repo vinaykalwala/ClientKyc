@@ -45,6 +45,7 @@ urlpatterns = [
     path('user_list/', user_list, name='user_list'),
     path('delete_user/<int:user_id>/', delete_user, name='delete_user'),
     path('logs/', log_viewer, name='log_viewer'),
+    path('edit-status/<int:user_id>/', edit_employee_status, name='edit_employee_status'),
 
 ]
 if settings.DEBUG:

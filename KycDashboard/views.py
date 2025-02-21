@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, EmployeeStatusForm
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.contrib.auth.forms import AuthenticationForm
@@ -572,7 +572,7 @@ def kyc_detail(request, pk):
 @login_required
 def kyc_create(request):
     if request.method == "POST":
-        form = KYCPropertyForm(request.POST)
+        form = KYCPropertyForm(request.POST,request.FILES)
         if form.is_valid():
             kyc = form.save(commit=False)
             kyc.filed_by = request.user  # ensure 'filed_by' is correct
@@ -585,11 +585,25 @@ def kyc_create(request):
         form = KYCPropertyForm()
     return render(request, 'kyc_form.html', {'form': form})
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponseForbidden
+from .models import KYCProperty
+from .forms import KYCPropertyForm
+
 @login_required
 def kyc_update(request, pk):
     # Fetch the KYC property using the provided primary key
     kyc = get_object_or_404(KYCProperty, pk=pk)
-    
+
+    # Allow superusers to edit everything
+    if request.user.is_superuser:
+        form = KYCPropertyForm(request.POST or None,request.FILES or None, instance=kyc)
+        if request.method == "POST" and form.is_valid():
+            form.save()
+            return redirect('kyc_list')
+        return render(request, 'kyc_form.html', {'form': form})
+
     # Permission check: Ensure the logged-in user is either the one who filed the property
     # or the one maintaining the property
     if kyc.filed_by != request.user and kyc.file_maintained_by != request.user:
@@ -598,25 +612,19 @@ def kyc_update(request, pk):
     if request.method == "POST":
         # If the user is the 'filed_by', allow editing the entire form
         if kyc.filed_by == request.user:
-            form = KYCPropertyForm(request.POST, instance=kyc)
+            form = KYCPropertyForm(request.POST, request.FILES ,instance=kyc)
         # If the user is the 'file_maintained_by', allow editing only 'file_status' and 'status_remarks'
         elif kyc.file_maintained_by == request.user:
             form = KYCPropertyForm(request.POST, instance=kyc)
             form.fields['file_status'].required = True
             form.fields['status_remarks'].required = True
-            # Disable other fields (this is optional based on your requirements)
+            # Disable other fields
             for field in form.fields:
                 if field not in ['file_status', 'status_remarks']:
                     form.fields[field].disabled = True
         
         if form.is_valid():
-            # Save the form but ensure 'filed_by' and 'file_maintained_by' are not modified
             kyc = form.save(commit=False)
-            
-            if kyc.filed_by != request.user:
-                # If the current user is not the 'filed_by', we should not change the 'filed_by' field
-                kyc.filed_by = kyc.filed_by  # Keep the 'filed_by' unchanged if not updating by 'filed_by' user
-            
             kyc.save()
             return redirect('kyc_list')
     else:
@@ -630,10 +638,11 @@ def kyc_update(request, pk):
             form.fields['status_remarks'].required = True
             # Disable other fields
             for field in form.fields:
-                if field not in ['file_status', 'status_remarks']:
+                if field not in ['file_status', 'status_remarks','legal_opinion_doc']:
                     form.fields[field].disabled = True
 
     return render(request, 'kyc_form.html', {'form': form})
+
 
 @login_required
 def kyc_delete(request, pk):
@@ -762,15 +771,16 @@ def is_superuser(user):
 @login_required
 @user_passes_test(is_superuser)  # Only superusers can create tasks
 def create_task(request):
+    survey_number = request.GET.get('survey_number', '')
     if request.method == 'POST':
-        form = TaskForm(request.POST)
+        form = TaskForm(request.POST,survey_number=survey_number)
         if form.is_valid():
             task = form.save(commit=False)
             task.assigned_by = request.user 
             task.save()
             return redirect('task_list')
     else:
-        form = TaskForm()
+        form = TaskForm(survey_number=survey_number)
     return render(request, 'create_task.html', {'form': form})
 
 from django.db.models import Q
@@ -838,11 +848,12 @@ def update_task(request, task_id):
         # If the user is assigned to the task, allow editing only 'status' and 'remarks'
         elif task.assigned_to == request.user:
             form = TaskForm(request.POST, instance=task)
-            form.fields['status'].required = True
+            form.fields['work_done'].required = True
             form.fields['remarks'].required = True
+            form.fields['task_status'].required=True
             # Disable other fields (this is optional based on your requirements)
             for field in form.fields:
-                if field not in ['status', 'remarks']:
+                if field not in ['task_status','work_done', 'remarks']:
                     form.fields[field].disabled = True
         
         if form.is_valid():
@@ -862,11 +873,12 @@ def update_task(request, task_id):
         # If the user is assigned to the task, allow editing only 'status' and 'remarks'
         elif task.assigned_to == request.user:
             form = TaskForm(instance=task)
-            form.fields['status'].required = True
+            form.fields['work_done'].required = True
             form.fields['remarks'].required = True
+            form.fields['task_status'].required=True
             # Disable other fields
             for field in form.fields:
-                if field not in ['status', 'remarks']:
+                if field not in ['task_status','work_done', 'remarks']:
                     form.fields[field].disabled = True
 
     return render(request, 'update_task.html', {'form': form, 'task': task})
@@ -942,3 +954,19 @@ def log_viewer(request):
         return response
 
     return render(request, 'log_viewer.html', {'logs': logs})
+
+@login_required
+def edit_employee_status(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+
+    if request.method == "POST":
+        form = EmployeeStatusForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Employee status updated successfully.")
+            return redirect('user_list')  # Redirect back to the list
+
+    else:
+        form = EmployeeStatusForm(instance=user)
+
+    return render(request, 'edit_employee_status.html', {'form': form, 'user': user})

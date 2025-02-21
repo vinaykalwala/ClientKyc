@@ -64,26 +64,30 @@
     .btn-update:hover {
         background: #0056b3;
     }
+    
     .low-priority {
-    color: green;
-}
-.medium-priority {
-    color: orange;
-}
-.high-priority {
-    color: red;
-}
-
-.pending-status {
-    color: rgb(163, 163, 2);
-}
-.in-progress-status {
-    color: blue;
-}
-.completed-status {
-    color: green;
-}
-
+        color: green;
+    }
+    
+    .medium-priority {
+        color: orange;
+    }
+    
+    .high-priority {
+        color: red;
+    }
+    
+    .pending-status {
+        color: rgb(235, 54, 9);
+    }
+    
+    .in-progress-status {
+        color: blue;
+    }
+    
+    .completed-status {
+        color: green;
+    }
 </style>
 
 <div class="task-container">
@@ -106,15 +110,16 @@
     <table class="task-table">
         <thead>
             <tr>
+                <th>SL.No</th>
                 <th>Task Name</th>
                 <th>Survey Number</th>
                 <th>Task Description</th>
-                <th>Assigned To</th>
+                <th>Task Status</th>
                 <th>Assigned By</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Priority</th>
-                <th>Status</th>
+                <th>Work Done</th>
                 <th>Remarks</th>
                 <th>Action</th>
             </tr>
@@ -122,14 +127,25 @@
         <tbody>
             {% for task in tasks %}
             <tr>
-                <td>{{ task.task_name }}</td>
-                <td>{{ task.survey_number }}</td>
-                <td>{{ task.task_description }}</td>
-                <td>{{ task.assigned_to.username }}</td>
-                <td>{{ task.assigned_by.username }}</td>
-                <td>{{ task.start_date }}</td>
-                <td>{{ task.end_date }}</td>
-                <td class="priority-color 
+                <td>{{ forloop.counter }}
+                    <td>{{ task.task_name }}</td>
+                    <td>{{ task.survey_number }}</td>
+                    <td>{{ task.task_description }}</td>
+                    <td class="priority-color 
+    {% if task.task_status == 'Accepted' %}
+        low-priority
+    {% elif task.task_status == 'Pending' %}
+        medium-priority
+    {% elif task.task_status == 'Not Accepted' %}
+        high-priority
+    {% endif %}
+">
+                        {{ task.task_status }}
+                    </td>
+                    <td>{{ task.assigned_by.username }}</td>
+                    <td>{{ task.start_date }}</td>
+                    <td>{{ task.end_date }}</td>
+                    <td class="priority-color 
     {% if task.priority == 'Low' %}
         low-priority
     {% elif task.priority == 'Medium' %}
@@ -138,26 +154,24 @@
         high-priority
     {% endif %}
 ">
-    {{ task.priority }}
-</td>
+                        {{ task.priority }}
+                    </td>
 
-<td class="status-color 
-    {% if task.status == 'Pending' %}
+                    <td class="status-color 
+    {% if task.work_done == 'No' %}
         pending-status
-    {% elif task.status == 'In Progress' %}
-        in-progress-status
-    {% elif task.status == 'Completed' %}
+    {% elif task.work_done == 'Yes' %}
         completed-status
     {% endif %}
 ">
-    {{ task.status }}
-</td>
+                        {{ task.work_done }}
+                    </td>
 
-                <td>{{ task.remarks }}</td>
-                <td>
-                    {% if user.is_superuser or task.assigned_by == user or task.assigned_to == user %}
-                    <a href="{% url 'update_task' task.id %}" class="btn-update">Update</a> {% endif %}
-                </td>
+                    <td>{{ task.remarks }}</td>
+                    <td>
+                        {% if user.is_superuser or task.assigned_by == user or task.assigned_to == user %}
+                        <a href="{% url 'update_task' task.id %}" class="btn-update">Update</a> {% endif %}
+                    </td>
             </tr>
             {% empty %}
             <tr>
