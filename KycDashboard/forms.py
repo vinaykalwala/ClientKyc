@@ -7,12 +7,12 @@ class CustomUserCreationForm(UserCreationForm):
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(required=True)
     employee_type = forms.ChoiceField(choices=CustomUser.EMPLOYEE_CHOICES, required=True)
-
+    profile_picture = forms.ImageField(required=False)
     class Meta:
         model = CustomUser
         fields = [
             'username', 'first_name', 'last_name', 'email', 'phone_number','employee_status',
-            'password1', 'password2', 'employee_type'
+            'password1', 'password2', 'employee_type','profile_picture'
         ]
         help_texts = {  
             'username': '',
@@ -120,4 +120,4 @@ class EmployeeStatusForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ['employee_status']
+        fields = ['employee_status','profile_picture']

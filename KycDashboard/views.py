@@ -12,13 +12,14 @@ from django.http import HttpResponseForbidden
 def home(request):
     return render(request, 'home.html')
 
+
 def signup(request):
     if not request.user.is_superuser:
         return HttpResponseForbidden("You are not authorized to create users.")
 
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        
+        form = CustomUserCreationForm(request.POST, request.FILES)  # Include request.FILES for profile picture
+
         if form.is_valid():
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
@@ -36,7 +37,6 @@ def signup(request):
                 messages.error(request, "Invalid email address.")
                 return render(request, 'signup.html', {'form': form})
 
-            # Use CustomUser model instead of User
             if CustomUser.objects.filter(username=username).exists():
                 messages.error(request, "Username already taken.")
                 return render(request, 'signup.html', {'form': form})
@@ -45,22 +45,20 @@ def signup(request):
                 messages.error(request, "Email already associated with an account.")
                 return render(request, 'signup.html', {'form': form})
 
-            # Create and save the user
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')  # Using original password
-            user = authenticate(username=username, password=password)
-            
-            if user is not None:
-                messages.success(request, "User created successfully! User can now log in.")
-                return redirect('signup')  # Redirect to the next page
+            # Save the user with profile picture
+            user = form.save(commit=False)
+            user.original_password = password1  # Save original password if needed
+            if 'profile_picture' in request.FILES:
+                user.profile_picture = request.FILES['profile_picture']  # Handle image upload
+            user.save()
+
+            messages.success(request, "User created successfully! User can now log in.")
+            return redirect('signup')  # Redirect to login instead of signup
         else:
-            # Handle form errors if not valid
             messages.error(request, "Please correct the errors below.")
-        
     else:
         form = CustomUserCreationForm()
-    
+
     return render(request, 'signup.html', {'form': form})
 
 
@@ -955,18 +953,42 @@ def log_viewer(request):
 
     return render(request, 'log_viewer.html', {'logs': logs})
 
+
+
 @login_required
 def edit_employee_status(request, user_id):
     user = get_object_or_404(CustomUser, id=user_id)
 
     if request.method == "POST":
-        form = EmployeeStatusForm(request.POST, instance=user)
+        form = EmployeeStatusForm(request.POST, request.FILES, instance=user)  # Handle files
         if form.is_valid():
             form.save()
-            messages.success(request, "Employee status updated successfully.")
+            messages.success(request, "Employee status and profile picture updated successfully.")
             return redirect('user_list')  # Redirect back to the list
 
     else:
         form = EmployeeStatusForm(instance=user)
 
     return render(request, 'edit_employee_status.html', {'form': form, 'user': user})
+
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import get_user_model
+from .models import KYCProperty
+
+def user_portfolio(request, user_id):
+    User = get_user_model()
+    user = get_object_or_404(User, id=user_id)
+
+    if user.employee_type == 'employee':
+        kyc_records = KYCProperty.objects.filter(filed_by=user)
+    elif user.employee_type == 'associate':
+        kyc_records = KYCProperty.objects.filter(file_maintained_by=user)
+    else:
+        kyc_records = KYCProperty.objects.none()
+
+    context = {
+        'user': user,
+        'kyc_records': kyc_records,
+    }
+    return render(request, 'user_portfolio.html', context)

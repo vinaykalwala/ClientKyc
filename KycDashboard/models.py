@@ -33,6 +33,12 @@ class CustomUser(AbstractUser):
         blank=True,  # Allows phone number to be optional
         null=True,  # Stores NULL in DB if empty
     )
+    profile_picture = models.ImageField(
+        upload_to='profile_pics/', 
+        blank=True, 
+        null=True
+    )
+
 
     original_password = models.CharField(max_length=255)
 

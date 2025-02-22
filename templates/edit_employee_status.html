@@ -1,10 +1,23 @@
 {% extends "base.html" %} {% block content %}
-<div class="container">
-    <h2>Edit Employee Status for {{ user.username }}</h2>
-    <form method="post">
-        {% csrf_token %} {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{% url 'user_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
-{% endblock %}
+<h2>Edit Employee Status & Profile Picture</h2>
+
+<!-- Display Current Profile Picture -->
+{% if user.profile_picture %}
+<img src="{{ user.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;"> {% else %}
+<img src="/static/default_profile.png" alt="Default Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;"> {% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label for="id_employee_status">Employee Status:</label> {{ form.employee_status }}
+
+    <br><br>
+
+    <label for="id_profile_picture">Update Profile Picture:</label> {{ form.profile_picture }}
+
+    <br><br>
+
+    <button type="submit">Save Changes</button>
+</form>
+
+<a href="{% url 'user_list' %}">Back to List</a> {% endblock %}
