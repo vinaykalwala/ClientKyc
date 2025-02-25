@@ -12,7 +12,7 @@
     .task-container h2 {
         text-align: center;
         margin-bottom: 16px;
-        color: #5732ea;
+        color: #4B4C4C;
     }
     
     .search-form {
@@ -44,7 +44,7 @@
     }
     
     .task-table th {
-        background-color: #5732ea;
+        background-color: #4B4C4C;
         color: white;
     }
     
@@ -56,13 +56,14 @@
         display: inline-block;
         padding: 8px 12px;
         color: white;
-        background: #007bff;
+        background: #7C6A59;
         text-decoration: none;
         border-radius: 5px;
     }
     
     .btn-update:hover {
-        background: #0056b3;
+        background: #675340;
+        cursor: pointer;
     }
     
     .low-priority {
@@ -103,7 +104,7 @@
         <label for="end_date">End Date:</label>
         <input type="date" name="end_date" value="{{ end_date }}">
 
-        <button type="submit">Search</button>
+        <button type="submit" class="btn-update">Search</button>
     </form>
 
     <!-- Task Table -->
@@ -175,7 +176,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="11" style="text-align: center;">No tasks available.</td>
+                <td colspan="12" style="text-align: center;">No tasks available.</td>
             </tr>
             {% endfor %}
         </tbody>

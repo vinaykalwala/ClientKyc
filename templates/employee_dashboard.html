@@ -20,7 +20,7 @@
         
         .card-title {
             font-size: 1.8em;
-            color: rgb(81, 43, 218);
+            color: #4B4C4C;
             text-align: center;
             margin-bottom: 10px;
         }
@@ -55,9 +55,35 @@
             border-radius: 5px;
             font-size: 1em;
         }
+        .dashboard-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .overview-item {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .overview-item h3 {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .overview-item p {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #7C6A59;
+        }
         
         .btn-submit {
-            background-color: rgb(81, 43, 218);
+            background-color: #7C6A59;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -68,7 +94,7 @@
         }
         
         .btn-submit:hover {
-            background-color: rgb(60, 32, 180);
+            background-color: #675340;
         }
         
         .chart-container {
@@ -101,13 +127,13 @@
             font-size: 1.5em;
             text-align: center;
             margin-bottom: 20px;
-            color: rgb(81, 43, 218);
+            color: #4B4C4C;
         }
         
         .badge-top-performer {
             display: inline-block;
-            background-color: gold;
-            color: black;
+            background-color: #7C6A59;
+            color: rgb(255, 255, 255);
             padding: 5px 10px;
             border-radius: 10px;
             font-weight: bold;
@@ -143,12 +169,26 @@
                     </form>
                 </div>
 
+                <h3>Dashboard Overview</h>
+                <div class="dashboard-overview">
+                    <div class="overview-item">
+                        <h3>Total Files Filed</h3>
+                        <p>{{ total_files_filed }}</p>
+                    </div>
+                    <div class="overview-item">
+                        <h3>Current Rank</h3>
+                        <p>{{ rank }}</p>
+                    </div>
+                    <div class="overview-item">
+                        <h3>Badge</h3>
+                        <p>{{ badge }}</p>
+                    </div>
+                    <div class="overview-item">
+                        <h3>Progress</h3>
+                        <div class="progress-circle">{{ monthly_progress }}%</div>
+                    </div>
+                </div>
 
-                <h2>Dashboard Overview</h2>
-                <p>Total Files Filed: {{ total_files_filed }}</p>
-                <p>Current Rank: {{ rank }}</p>
-                <p>Badge: {{ badge }}</p>
-                <p>Progress: {{ monthly_progress }}%</p>
                 <div class="success-rate-container">
                     <h3>Success Rate</h3>
                     <div class="success-rate-bar">

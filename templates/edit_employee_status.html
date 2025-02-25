@@ -1,23 +1,95 @@
 {% extends "base.html" %} {% block content %}
-<h2>Edit Employee Status & Profile Picture</h2>
 
-<!-- Display Current Profile Picture -->
-{% if user.profile_picture %}
-<img src="{{ user.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;"> {% else %}
-<img src="/static/default_profile.png" alt="Default Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;"> {% endif %}
+<style>
+    .profile-card {
+        max-width: 400px;
+        margin: auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+    }
 
-    <label for="id_employee_status">Employee Status:</label> {{ form.employee_status }}
+    .profile-name {
+        color: #4B4C4C;
+        margin-top: 10px;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
 
-    <br><br>
+    .profile-status {
+        color: #7C6A59;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
 
-    <label for="id_profile_picture">Update Profile Picture:</label> {{ form.profile_picture }}
+    .form-label {
+        font-weight: bold;
+        color: #333;
+        display: block;
+        margin-top: 10px;
+    }
 
-    <br><br>
+    .submit-btn, .back-link a {
+        background-color: #7C6A59;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        width: 100%;
+        text-align: center;
+        display: inline-block;
+        text-decoration: none;
+    }
 
-    <button type="submit">Save Changes</button>
-</form>
+    .submit-btn:hover, .back-link a:hover {
+        background-color: #5a4d3f;
+    }
 
-<a href="{% url 'user_list' %}">Back to List</a> {% endblock %}
+    .edit-form {
+        margin-top: 20px;
+    }
+</style>
+
+<h2 style="text-align: center; color: #4B4C4C; margin-bottom: 20px;">Edit Employee Status & Profile Picture</h2>
+
+<div class="profile-card">
+    {% if user.profile_picture %}
+    <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-picture"> 
+    {% else %}
+    <img src="/static/default_profile.png" alt="Profile Picture" class="profile-picture"> 
+    {% endif %}
+    
+    <h3 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h3>
+    <p class="profile-status">{{ form.employee_status.value }}</p>
+
+    <!-- Edit Form -->
+    <form method="POST" enctype="multipart/form-data" class="edit-form">
+        {% csrf_token %}
+
+        <label for="id_employee_status" class="form-label">Employee Status:</label>
+        <div style="margin-bottom: 15px;">{{ form.employee_status }}</div>
+
+        <label for="id_profile_picture" class="form-label">Update Profile Picture:</label>
+        <div style="margin-bottom: 15px;">{{ form.profile_picture }}</div>
+
+        <button type="submit" class="submit-btn">Save Changes</button>
+        <div class="back-link" style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'user_list' %}">Back to List</a>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}
