@@ -19,8 +19,8 @@
             padding: 10px 20px;
         }
         .header img {
-            width: 50px;
-            height: auto;
+            width: 100px;
+            height: 40px;
         }
         .header .login-button {
             padding: 6px 14px;
@@ -79,16 +79,14 @@
             color: #555;
             line-height: 1.6;
         }
-        .banner-text {
-            color: #fff;
-        }
-        .contact, .about, .services {
+        .services, .contact, .about {
             margin-top: 20px;
             text-align: left;
             padding: 0 20px;
         }
         .services ul {
             list-style-type: square;
+            color: #4B4C4C;
             padding-left: 20px;
         }
     </style>
@@ -96,8 +94,8 @@
 <body>
     <div class="header">
         <div class="logo">
-            <img src="../static/logo.jpg" alt="Law Firm Logo">
-            <h4>C.K.V.K Law associates</h4>
+            <img src="../static/logo.jpeg" alt="Law Firm Logo">
+            <h4>C.K.V.K Law Associates</h4>
         </div>
         <a href="{% url 'login' %}" class="login-button">Login</a>
     </div>
@@ -110,12 +108,26 @@
                 <span>Advocates & Legal Consultants</span>
             </div>
         </div>
+        
         <div class="about">
+            <h2 class="title">About Us</h2>
             <p>C.K.V.K. Law Associates is a leading law firm specializing in various legal domains, providing expert legal consultation and advocacy services. With years of experience, we are committed to offering high-quality legal solutions to our clients.</p>
         </div>
         
+        <div class="services">
+            <h2 class="title">Our Services</h2>
+            <ul>
+                <li>Drafting & Registration of Sale Deed, Gift Deed, Mortgage Deed, Partition Deed, Joint Development Agreement, General & Special Power of Attorney, Sale Agreement, Trust Deed, Release Deed, Rental & Lease Agreements,
+                Memorandum of Agreement, Deed of Declaration & Rectification, Affidavit, Partnership Deed,
+                <li>RTI</li>
+                <li>Formation of Associations, Trusts, Partnership Firms & Marriage Registration</li>
+                <li>Katha, Tax (BBMP, BDA & Panchayath) & Notary Works</li>
+                <li>Sub-Registrar, BDA, AC, DC & Taluk Office Related Works</li>
+            </ul>
+        </div>
+        
         <div class="contact">
-            <h2 class="title">Contacts Details</h2>
+            <h2 class="title">Contact Details</h2>
             <p><strong>Landline Number:</strong> 80-35777038 / 80-48658774</p>
             <p><strong>Mobile Number:</strong> 9108784843 (WhatsApp)</p>
             <p><strong>Email:</strong> rvlaw.76@gmail.com / ckvklaw.76@gmail.com</p>
