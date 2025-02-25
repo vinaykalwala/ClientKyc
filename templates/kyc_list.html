@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <style>
     .container {
-        max-width: 1100px;
+        max-width: 1400px;
         margin: auto;
         padding: 20px;
         background: #fff;
@@ -64,7 +64,7 @@
     .table th,
     .table td {
         border: 1px solid #ddd;
-        padding: 12px;
+        padding: 10px 6px;
         text-align: center;
     }
     
@@ -140,20 +140,20 @@
                 <td>{{ property.client_name }}</td>
                 <td>{{ property.mobile_number }}</td>
                 <td class="
-    {% if property.get_file_status_display == 'Assigned' %}
-        text-primary
-    {% elif property.get_file_status_display == 'Pending' %}
-        text-warning
-    {% elif property.get_file_status_display == 'Completed' %}
-        text-success
-    {% elif property.get_file_status_display == 'Rejected' %}
-        text-danger
-    {% elif property.get_file_status_display == 'Closed' %}
-        text-secondary
-    {% else %}
-        text-muted
-    {% endif %}
-">
+                        {% if property.get_file_status_display == 'Assigned' %}
+                            text-primary
+                        {% elif property.get_file_status_display == 'Pending' %}
+                            text-warning
+                        {% elif property.get_file_status_display == 'Completed' %}
+                            text-success
+                        {% elif property.get_file_status_display == 'Rejected' %}
+                            text-danger
+                        {% elif property.get_file_status_display == 'Closed' %}
+                            text-secondary
+                        {% else %}
+                            text-muted
+                        {% endif %}
+                    ">
                     {{ property.get_file_status_display }}
                 </td>
 
