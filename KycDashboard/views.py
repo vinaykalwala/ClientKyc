@@ -553,7 +553,8 @@ def kyc_list(request):
             Q(village__icontains=search_query) |
             Q(site_number__icontains=search_query) |
             Q(sy_number__icontains=search_query) |
-            Q(file_status__icontains=search_query)
+            Q(file_status__icontains=search_query) |
+            Q(file_number__icontains=search_query)
         )
     
     return render(request, 'kyc_list.html', {
