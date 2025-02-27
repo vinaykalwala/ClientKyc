@@ -1,4 +1,5 @@
 {% extends 'base.html' %} {% block title %}Task List{% endblock %} {% block content %}
+
 <style>
     .task-container {
         max-width: 1100px;
@@ -40,7 +41,7 @@
     .task-table td {
         padding: 8px;
         border: 1px solid #ddd;
-        text-align: left;
+        text-align: center;
     }
     
     .task-table th {
@@ -52,48 +53,15 @@
         background-color: #f9f9f9;
     }
     
-    .btn-update {
-        display: inline-block;
-        padding: 8px 12px;
-        color: white;
-        background: #7C6A59;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-    
-    .btn-update:hover {
-        background: #675340;
+    .icon-btn {
         cursor: pointer;
-    }
-    
-    .low-priority {
-        color: green;
-    }
-    
-    .medium-priority {
-        color: orange;
-    }
-    
-    .high-priority {
-        color: red;
-    }
-    
-    .pending-status {
-        color: rgb(235, 54, 9);
-    }
-    
-    .in-progress-status {
-        color: blue;
-    }
-    
-    .completed-status {
-        color: green;
+        font-size: 18px;
+        margin: 0 5px;
     }
 </style>
 
 <div class="task-container">
     <h2>Task List</h2>
-
     <!-- Search form -->
     <form method="get" class="search-form">
         <input type="text" name="search" value="{{ search_term }}" placeholder="Search tasks...">
@@ -107,7 +75,7 @@
         <button type="submit" class="btn-update">Search</button>
     </form>
 
-    <!-- Task Table -->
+
     <table class="task-table">
         <thead>
             <tr>
@@ -128,51 +96,44 @@
         <tbody>
             {% for task in tasks %}
             <tr>
-                <td>{{ forloop.counter }}
-                    <td>{{ task.task_name }}</td>
-                    <td>{{ task.survey_number }}</td>
-                    <td>{{ task.task_description }}</td>
-                    <td class="priority-color 
-    {% if task.task_status == 'Accepted' %}
-        low-priority
-    {% elif task.task_status == 'Pending' %}
-        medium-priority
-    {% elif task.task_status == 'Not Accepted' %}
-        high-priority
-    {% endif %}
-">
-                        {{ task.task_status }}
-                    </td>
-                    <td>{{ task.assigned_by.username }}</td>
-                    <td>{{ task.start_date }}</td>
-                    <td>{{ task.end_date }}</td>
-                    <td class="priority-color 
-    {% if task.priority == 'Low' %}
-        low-priority
-    {% elif task.priority == 'Medium' %}
-        medium-priority
-    {% elif task.priority == 'High' %}
-        high-priority
-    {% endif %}
-">
-                        {{ task.priority }}
-                    </td>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ task.task_name }}</td>
+                <td>{{ task.survey_number }}</td>
+                <td>{{ task.task_description }}</td>
 
-                    <td class="status-color 
-    {% if task.work_done == 'No' %}
-        pending-status
-    {% elif task.work_done == 'Yes' %}
-        completed-status
-    {% endif %}
-">
-                        {{ task.work_done }}
-                    </td>
+                <!-- Task Status Column -->
+                <td>
+                    <span id="task-status-{{ task.id }}">{{ task.task_status }}</span> {% if user == task.assigned_to %}
+                    <span class="icon-btn" onclick="updateTaskStatus({{ task.id }}, 'Accepted')">✅</span>
+                    <span class="icon-btn" onclick="updateTaskStatus({{ task.id }}, 'Not Accepted')">❌</span> {% endif %}
+                </td>
+                <td>{{ task.assigned_by.username }}</td>
+                <td>{{ task.start_date }}</td>
+                <td>{{ task.end_date }}</td>
 
-                    <td>{{ task.remarks }}</td>
-                    <td>
-                        {% if user.is_superuser or task.assigned_by == user or task.assigned_to == user %}
-                        <a href="{% url 'update_task' task.id %}" class="btn-update">Update</a> {% endif %}
-                    </td>
+                <!-- Priority Column -->
+                <td class="priority-color 
+                    {% if task.priority == 'Low' %} low-priority 
+                    {% elif task.priority == 'Medium' %} medium-priority 
+                    {% elif task.priority == 'High' %} high-priority 
+                    {% endif %}">
+                    {{ task.priority }}
+                </td>
+
+                <!-- Work Done Column -->
+                <td>
+                    <span id="work-done-{{ task.id }}">{{ task.work_done }}</span> {% if user == task.assigned_to %}
+                    <span class="icon-btn" onclick="updateWorkDone({{ task.id }}, 'Yes')">✅</span>
+                    <span class="icon-btn" onclick="updateWorkDone({{ task.id }}, 'No')">❌</span> {% endif %}
+                </td>
+
+                <td>{{ task.remarks }}</td>
+
+                <!-- Action Column -->
+                <td>
+                    {% if user.is_superuser or task.assigned_by == user or task.assigned_to == user %}
+                    <a href="{% url 'update_task' task.id %}" class="btn-update">Update</a> {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr>
@@ -182,4 +143,41 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    function updateTaskStatus(taskId, status) {
+        fetch(`/update_task_status/${taskId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    task_status: status
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById(`task-status-${taskId}`).innerText = data.task_status;
+            });
+    }
+
+    function updateWorkDone(taskId, status) {
+        fetch(`/update_work_done/${taskId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    work_done: status
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById(`work-done-${taskId}`).innerText = data.work_done;
+            });
+    }
+</script>
+
 {% endblock %}

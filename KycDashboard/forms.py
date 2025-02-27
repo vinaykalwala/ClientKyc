@@ -43,6 +43,9 @@ class KYCPropertyForm(forms.ModelForm):
             'file_status': forms.Select(choices=KYCProperty.FILE_STATUS_CHOICES),
             'file_returned_date':forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
+        labels = {
+            'sy_number': 'Survey Number',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

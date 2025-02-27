@@ -597,7 +597,7 @@ def kyc_update(request, pk):
 
     # Allow superusers to edit everything
     if request.user.is_superuser:
-        form = KYCPropertyForm(request.POST or None,request.FILES or None, instance=kyc)
+        form = KYCPropertyForm(request.POST or None, request.FILES or None, instance=kyc)
         if request.method == "POST" and form.is_valid():
             form.save()
             return redirect('kyc_list')
@@ -611,25 +611,27 @@ def kyc_update(request, pk):
     if request.method == "POST":
         # If the user is the 'filed_by', allow editing the entire form
         if kyc.filed_by == request.user:
-            form = KYCPropertyForm(request.POST, request.FILES ,instance=kyc)
+            form = KYCPropertyForm(request.POST, request.FILES, instance=kyc)
+
         # If the user is the 'file_maintained_by', allow editing only 'file_status' and 'status_remarks'
         elif kyc.file_maintained_by == request.user:
-            form = KYCPropertyForm(request.POST, instance=kyc)
+            form = KYCPropertyForm(request.POST, request.FILES, instance=kyc)  # Include request.FILES
             form.fields['file_status'].required = True
             form.fields['status_remarks'].required = True
             # Disable other fields
             for field in form.fields:
-                if field not in ['file_status', 'status_remarks']:
+                if field not in ['file_status', 'status_remarks', 'legal_opinion_doc']:
                     form.fields[field].disabled = True
         
         if form.is_valid():
-            kyc = form.save(commit=False)
-            kyc.save()
+            form.save()
             return redirect('kyc_list')
+
     else:
         # If user is the 'filed_by', allow editing the entire form
         if kyc.filed_by == request.user:
             form = KYCPropertyForm(instance=kyc)
+
         # If user is the 'file_maintained_by', allow editing only 'file_status' and 'status_remarks'
         elif kyc.file_maintained_by == request.user:
             form = KYCPropertyForm(instance=kyc)
@@ -637,7 +639,7 @@ def kyc_update(request, pk):
             form.fields['status_remarks'].required = True
             # Disable other fields
             for field in form.fields:
-                if field not in ['file_status', 'status_remarks','legal_opinion_doc']:
+                if field not in ['file_status', 'status_remarks', 'legal_opinion_doc']:
                     form.fields[field].disabled = True
 
     return render(request, 'kyc_form.html', {'form': form})
@@ -807,7 +809,7 @@ def task_list(request):
                 Q(assigned_to__username__icontains=search_term) | \
                 Q(assigned_by__username__icontains=search_term) | \
                 Q(survey_number__icontains=search_term) | \
-                Q(status__icontains=search_term) | \
+                Q(task_status=search_term) | \
                 Q(priority__icontains=search_term)
 
     # Date range filtering logic
@@ -848,7 +850,6 @@ def update_task(request, task_id):
         elif task.assigned_to == request.user:
             form = TaskForm(request.POST, instance=task)
             form.fields['work_done'].required = True
-            form.fields['remarks'].required = True
             form.fields['task_status'].required=True
             # Disable other fields (this is optional based on your requirements)
             for field in form.fields:
@@ -873,7 +874,7 @@ def update_task(request, task_id):
         elif task.assigned_to == request.user:
             form = TaskForm(instance=task)
             form.fields['work_done'].required = True
-            form.fields['remarks'].required = True
+            
             form.fields['task_status'].required=True
             # Disable other fields
             for field in form.fields:
@@ -993,3 +994,39 @@ def user_portfolio(request, user_id):
         'kyc_records': kyc_records,
     }
     return render(request, 'user_portfolio.html', context)
+
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.contrib.auth.decorators import login_required
+from .models import Task
+
+@login_required
+@csrf_exempt
+def update_task_status(request, task_id):
+    """ Update task status (Accepted / Not Accepted) via AJAX """
+    task = get_object_or_404(Task, id=task_id)
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        task.task_status = data.get("task_status", task.task_status)
+        task.save()
+        return JsonResponse({"task_status": task.task_status})
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+@login_required
+@csrf_exempt
+def update_work_done(request, task_id):
+    """ Update work done (Yes / No) via AJAX """
+    task = get_object_or_404(Task, id=task_id)
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        task.work_done = data.get("work_done", task.work_done)
+        task.save()
+        return JsonResponse({"work_done": task.work_done})
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)

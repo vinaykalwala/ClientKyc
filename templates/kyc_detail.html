@@ -79,7 +79,7 @@
         <a href="{% url 'kyc_list' %}" class="btn btn-secondary">Back to List</a>
 
         <!-- Show the "Edit" button only if the current user filed the KYC property or is a superuser -->
-        {% if property.filed_by == request.user %}
+        {% if property.filed_by == request.user or property.file_maintained_by or request.user.is_superuser %}
         <a href="{% url 'kyc_update' property.pk %}" class="btn btn-warning">Edit</a> {% endif %}
     </div>
 
