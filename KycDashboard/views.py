@@ -18,7 +18,7 @@ def signup(request):
         return HttpResponseForbidden("You are not authorized to create users.")
 
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, request.FILES)  # Include request.FILES for profile picture
+        form = CustomUserCreationForm(request.POST, request.FILES)  # Include request.FILES for file uploads
 
         if form.is_valid():
             username = form.cleaned_data.get('username')
@@ -45,15 +45,20 @@ def signup(request):
                 messages.error(request, "Email already associated with an account.")
                 return render(request, 'signup.html', {'form': form})
 
-            # Save the user with profile picture
+            # Save the user with profile picture and resume
             user = form.save(commit=False)
-            user.original_password = password1  # Save original password if needed
+            user.original_password = password1  
+
             if 'profile_picture' in request.FILES:
-                user.profile_picture = request.FILES['profile_picture']  # Handle image upload
+                user.profile_picture = request.FILES['profile_picture']
+
+            if 'resume' in request.FILES:
+                user.resume = request.FILES['resume']
+
             user.save()
 
             messages.success(request, "User created successfully! User can now log in.")
-            return redirect('signup')  # Redirect to login instead of signup
+            return redirect('signup')  
         else:
             messages.error(request, "Please correct the errors below.")
     else:

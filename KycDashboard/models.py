@@ -38,6 +38,11 @@ class CustomUser(AbstractUser):
         blank=True, 
         null=True
     )
+    resume = models.FileField(
+        upload_to='resumes/',  # Directory to store uploaded resumes
+        blank=True,
+        null=True
+    )
 
 
     original_password = models.CharField(max_length=255)

@@ -2,17 +2,23 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, Task
 
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
+
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(required=True)
     employee_type = forms.ChoiceField(choices=CustomUser.EMPLOYEE_CHOICES, required=True)
     profile_picture = forms.ImageField(required=False)
+    resume = forms.FileField(required=False)  # Added resume field
+
     class Meta:
         model = CustomUser
         fields = [
-            'username', 'first_name', 'last_name', 'email', 'phone_number','employee_status',
-            'password1', 'password2', 'employee_type','profile_picture'
+            'username', 'first_name', 'last_name', 'email', 'phone_number', 'employee_status',
+            'password1', 'password2', 'employee_type', 'profile_picture', 'resume'
         ]
         help_texts = {  
             'username': '',
@@ -22,7 +28,11 @@ class CustomUserCreationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.original_password = self.cleaned_data['password1']  # Store original password
+        user.original_password = self.cleaned_data['password1']
+        
+        if self.cleaned_data.get('resume'):
+            user.resume = self.cleaned_data['resume']  # Save resume file
+
         if commit:
             user.save()
         return user
@@ -123,4 +133,4 @@ class EmployeeStatusForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ['employee_status','profile_picture']
+        fields = ['employee_status','profile_picture','resume']

@@ -1,147 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
 
-
-<style>
-    .content {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        max-width: 800px;
-        margin: auto;
-    }
-
-    h1, h3 {
-        color: #4B4C4C;
-        text-align: center;
-    }
-
-    .back-btn {
-        display: inline-block;
-        padding: 8px 12px;
-        background: #7C6A59;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-
-    .back-btn:hover {
-        background: #5a4d3f;
-    }
-
-    .profile-card {
-        text-align: center;
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 8px;
-        margin-top: 10px;
-    }
-
-    .profile-picture {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 3px solid #4B4C4C;
-        margin-bottom: 10px;
-    }
-
-    .user-details {
-        background: #f9f9f9;
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 15px;
-        text-align: left;
-    }
-
-    .user-details p {
-        margin: 10px 0;
-        font-size: 16px;
-        color: #333;
-        padding: 8px;
-        border-radius: 5px;
-        background: #ffffff;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    table, th, td {
-        border: 1px solid #ddd;
-    }
-
-    th, td {
-        padding: 10px;
-        text-align: center;
-    }
-
-    th {
-        background-color: #4B4C4C;
-        color: white;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-</style>
-
-<div class="content">
-    <div>
-        <a href="{% url 'user_list' %}" class="back-btn">← Back</a>
-    </div>
-    
-    <h1>{{ user.username }}'s Portfolio</h1>
-    
-    <div class="profile-card">
-        {% if user.profile_picture %}
-        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-picture"> 
-        {% else %}
-        <img src="/static/default_profile.jpg" alt="Default Profile Picture" class="profile-picture"> 
-        {% endif %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Portfolio</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e3e6ea);
+            margin: 0;
+            padding: 0;
+        }
         
-        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
-        <div class="user-details">
-            <p><strong>Status:</strong> {{ user.get_employee_status_display }}</p>
-            <p><strong>Type:</strong> {{ user.get_employee_type_display }}</p>
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Phone:</strong> {{ user.phone_number }}</p>
+        .content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            max-width: 850px;
+            margin: 40px auto;
+            text-align: center;
+        }
+        
+        h1,
+        h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #7C6A59, #5a4d3f);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #5a4d3f;
+        }
+        
+        .profile-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .profile-picture {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid #4B4C4C;
+            margin-bottom: 12px;
+        }
+        
+        .user-details {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: left;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-details p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #444;
+            padding: 8px;
+            border-radius: 6px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+        
+        .kyc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .kyc-table th,
+        .kyc-table td {
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .kyc-table th {
+            background: #4B4C4C;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .kyc-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .kyc-table tr:hover {
+            background: #e3e6ea;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content">
+        <div>
+            <a href="{% url 'user_list' %}" class="back-btn">← Back</a>
         </div>
+
+        <h1>{{ user.username }}'s Portfolio</h1>
+
+        <div class="profile-card">
+            {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-picture"> {% else %}
+            <img src="/static/default_profile.jpg" alt="Default Profile Picture" class="profile-picture"> {% endif %}
+
+            <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+
+            <div class="user-details">
+                <p><strong>Status:</strong> {{ user.get_employee_status_display }}</p>
+                <p><strong>Type:</strong> {{ user.get_employee_type_display }}</p>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Phone:</strong> {{ user.phone_number }}</p>
+                {% if user.resume %}
+                <p><strong>Resume:</strong>
+                    <a href="{{ user.resume.url }}" target="_blank">View Resume</a>
+                </p>
+                {% else %}
+                <p><strong>Resume:</strong> Not uploaded</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <h3>KYC Records</h3>
+        <table class="kyc-table">
+            <thead>
+                <tr>
+                    <th>SL.No</th>
+                    <th>File No</th>
+                    <th>Client Name</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Filed On</th>
+                    <th>Returned Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in kyc_records %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ record.file_number }}</td>
+                    <td>{{ record.client_name }}</td>
+                    <td>{{ record.mobile_number }}</td>
+                    <td>{{ record.email_id }}</td>
+                    <td>{{ record.filed_on_date }}</td>
+                    <td>{{ record.file_returned_date }}</td>
+                    <td>{{ record.get_file_status_display }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8">No KYC records available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <h3>KYC Records</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>SL.No</th>
-                <th>File No</th>
-                <th>Client Name</th>
-                <th>Mobile</th>
-                <th>Email</th>
-                <th>Filed On</th>
-                <th>Returned Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in kyc_records %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ record.file_number }}</td>
-                <td>{{ record.client_name }}</td>
-                <td>{{ record.mobile_number }}</td>
-                <td>{{ record.email_id }}</td>
-                <td>{{ record.filed_on_date }}</td>
-                <td>{{ record.file_returned_date }}</td>
-                <td>{{ record.get_file_status_display }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="8">No KYC records available.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+</body>
+
+</html>
