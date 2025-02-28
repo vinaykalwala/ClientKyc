@@ -117,7 +117,7 @@
                         {% else %} status-not-accepted {% endif %}">
                         {{ task.task_status }}
                     </span>
-                    {% if user == task.assigned_to %}
+                    {% if user == task.assigned_to %}<br/>
                     <span class="icon-btn" onclick="updateTaskStatus({{ task.id }}, 'Accepted')">✅</span>
                     <span class="icon-btn" onclick="updateTaskStatus({{ task.id }}, 'Not Accepted')">❌</span>
                     {% endif %}
@@ -138,7 +138,7 @@
                         {% else %} work-done-no {% endif %}">
                         {{ task.work_done }}
                     </span>
-                    {% if user == task.assigned_to %}
+                    {% if user == task.assigned_to %} <br/>
                     <span class="icon-btn" onclick="updateWorkDone({{ task.id }}, 'Yes')">✅</span>
                     <span class="icon-btn" onclick="updateWorkDone({{ task.id }}, 'No')">❌</span>
                     {% endif %}
