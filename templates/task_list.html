@@ -9,13 +9,11 @@
         border-radius: 8px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
-    
     .task-container h2 {
         text-align: center;
         margin-bottom: 16px;
         color: #4B4C4C;
     }
-    
     .search-form {
         display: flex;
         justify-content: center;
@@ -24,42 +22,30 @@
         align-items: center;
         margin-bottom: 20px;
     }
-    
     .search-form input,
     .search-form button {
         padding: 8px;
         border-radius: 5px;
         border: 1px solid #ccc;
     }
-    
     .task-table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
     }
-    
     .task-table th,
     .task-table td {
         padding: 8px;
         border: 1px solid #ddd;
         text-align: center;
     }
-    
     .task-table th {
         background-color: #4B4C4C;
         color: white;
     }
-    
     .task-table tr:nth-child(even) {
         background-color: #f9f9f9;
     }
-    
-    .icon-btn {
-        cursor: pointer;
-        font-size: 18px;
-        margin: 0 5px;
-    }
-    
     .button-btn {
         padding: 8px 14px;
         border-radius: 20px;
@@ -78,24 +64,29 @@
         text-decoration: none;
         font-size: 16px;
     }
+    .task-status, .priority, .work-done {
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    .status-accepted { color: #28a745; }
+    .status-not-accepted { color: #dc3545; }
+    .priority-low { color: #17a2b8; }
+    .priority-medium { color: #ffc107; }
+    .priority-high { color: #dc3545; }
+    .work-done-yes { color: #28a745; }
+    .work-done-no { color: #dc3545; }
 </style>
 
 <div class="task-container">
     <h2>Task List</h2>
-    <!-- Search form -->
     <form method="get" class="search-form">
         <input type="text" name="search" value="{{ search_term }}" placeholder="Search tasks...">
-
         <label for="start_date">Start Date:</label>
         <input type="date" name="start_date" value="{{ start_date }}">
-
         <label for="end_date">End Date:</label>
         <input type="date" name="end_date" value="{{ end_date }}">
-
         <button type="submit" class="button-btn">Search</button>
     </form>
-
-
     <table class="task-table">
         <thead>
             <tr>
@@ -120,44 +111,48 @@
                 <td>{{ task.task_name }}</td>
                 <td>{{ task.survey_number }}</td>
                 <td>{{ task.task_description }}</td>
-
-                <!-- Task Status Column -->
                 <td>
-                    <span id="task-status-{{ task.id }}">{{ task.task_status }}</span> {% if user == task.assigned_to %}
+                    <span id="task-status-{{ task.id }}" class="task-status 
+                        {% if task.task_status == 'Accepted' %} status-accepted 
+                        {% else %} status-not-accepted {% endif %}">
+                        {{ task.task_status }}
+                    </span>
+                    {% if user == task.assigned_to %}
                     <span class="icon-btn" onclick="updateTaskStatus({{ task.id }}, 'Accepted')">✅</span>
-                    <span class="icon-btn" onclick="updateTaskStatus({{ task.id }}, 'Not Accepted')">❌</span> {% endif %}
+                    <span class="icon-btn" onclick="updateTaskStatus({{ task.id }}, 'Not Accepted')">❌</span>
+                    {% endif %}
                 </td>
                 <td>{{ task.assigned_by.username }}</td>
                 <td>{{ task.start_date }}</td>
                 <td>{{ task.end_date }}</td>
-
-                <!-- Priority Column -->
-                <td class="priority-color 
-                    {% if task.priority == 'Low' %} low-priority 
-                    {% elif task.priority == 'Medium' %} medium-priority 
-                    {% elif task.priority == 'High' %} high-priority 
+                <td class="priority 
+                    {% if task.priority == 'Low' %} priority-low 
+                    {% elif task.priority == 'Medium' %} priority-medium 
+                    {% elif task.priority == 'High' %} priority-high 
                     {% endif %}">
                     {{ task.priority }}
                 </td>
-
-                <!-- Work Done Column -->
                 <td>
-                    <span id="work-done-{{ task.id }}">{{ task.work_done }}</span> {% if user == task.assigned_to %}
-                    <span class="icon-btn" onclick="updateWorkDone({{ task.id }}, 'Yes')">✅</span> 
-                    <span class="icon-btn" onclick="updateWorkDone({{ task.id }}, 'No')">❌</span> {% endif %}
+                    <span id="work-done-{{ task.id }}" class="work-done 
+                        {% if task.work_done == 'Yes' %} work-done-yes 
+                        {% else %} work-done-no {% endif %}">
+                        {{ task.work_done }}
+                    </span>
+                    {% if user == task.assigned_to %}
+                    <span class="icon-btn" onclick="updateWorkDone({{ task.id }}, 'Yes')">✅</span>
+                    <span class="icon-btn" onclick="updateWorkDone({{ task.id }}, 'No')">❌</span>
+                    {% endif %}
                 </td>
-
                 <td>{{ task.remarks }}</td>
-
-                <!-- Action Column -->
                 <td>
                     {% if user.is_superuser or task.assigned_by == user or task.assigned_to == user %}
-                    <a href="{% url 'update_task' task.id %}" class="button-btn">Update</a> {% endif %}
+                    <a href="{% url 'update_task' task.id %}" class="button-btn">Update</a>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="12" style="text-align: center;">No tasks available.</td>
+                <td colspan="12">No tasks available.</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -181,7 +176,6 @@
                 document.getElementById(`task-status-${taskId}`).innerText = data.task_status;
             });
     }
-
     function updateWorkDone(taskId, status) {
         fetch(`/update_work_done/${taskId}/`, {
                 method: "POST",
