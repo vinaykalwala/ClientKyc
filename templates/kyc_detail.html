@@ -70,6 +70,30 @@
         justify-content: flex-start;
         gap: 10px;
     }
+    
+    .text-primary {
+        color: #007bff;
+    }
+    
+    .text-warning {
+        color: #ffc107;
+    }
+    
+    .text-success {
+        color: #28a745;
+    }
+    
+    .text-danger {
+        color: #dc3545;
+    }
+    
+    .text-secondary {
+        color: #6c757d;
+    }
+    
+    .text-muted {
+        color: #adb5bd;
+    }
 </style>
 
 <div class="container">
@@ -194,7 +218,23 @@
         </tr>
         <tr>
             <th>File Status</th>
-            <td>{{ property.get_file_status_display }}</td>
+            <td class="
+                {% if property.get_file_status_display == 'Assigned' %}
+                    text-primary
+                {% elif property.get_file_status_display == 'Pending' %}
+                    text-warning
+                {% elif property.get_file_status_display == 'Completed' %}
+                    text-success
+                {% elif property.get_file_status_display == 'Rejected' %}
+                    text-danger
+                {% elif property.get_file_status_display == 'Closed' %}
+                    text-secondary
+                {% else %}
+                    text-muted
+                {% endif %}
+                ">
+                {{ property.get_file_status_display }}
+            </td>
         </tr>
         <tr>
             <th>Status Remarks</th>
@@ -206,7 +246,12 @@
         </tr>
         <tr>
             <th>Legal Opinion Status</th>
-            <td>{{ property.legal_opinion_status|default:"N/A" }}</td>
+            <td class="
+                {% if property.legal_opinion_status == 'approved' %} text-success
+                {% elif property.legal_opinion_status == 'rejected' %} text-danger
+                {% endif %}">
+                {{ property.legal_opinion_status }}
+            </td>
         </tr>
         <tr>
             <th>Legal Opinion Document</th>
