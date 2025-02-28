@@ -74,6 +74,25 @@
             border-radius: 10px;
             width: 80%;
         }
+        .home-container {
+            text-align: center;
+            padding: 30px;
+            background: #f9f9f9;
+            margin: 40px auto;
+            width: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .home-container h2 {
+            font-size: 28px;
+            color: #4B4C4C;
+            margin-bottom: 15px;
+        }
+         p {
+            line-height: 1.6;
+            color: #333;
+            margin: 0 auto;
+        }
         .title {
             color: #4B4C4C;
             text-align: center;
@@ -127,14 +146,26 @@
             color: #fff;
             font-weight: bold;
         }
+        li {
+            line-height: 1.8;
+        }
         .contact-info p {
             margin: 10px 0;
             font-size: 16px;
             display: flex;
             align-items: center;
             gap: 10px;
+        }        
+        .contact-info a {
+            text-decoration: none;
+            color: #675340;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
         }
-        .contact-info strong {
+        .contact-info a:hover {
+            color: #3e3227;
+        }
+        .contact-info a:visited {
             color: #675340;
         }
     </style>
@@ -157,6 +188,13 @@
                 <span>Advocates & Legal Consultants</span>
             </div>
         </div>
+        <div class="home-container">
+            <h2 class="title">Welcome to CKVK Law Associates</h2>
+            <p>At CKVK Law Associates, we are committed to providing expert legal services with integrity, professionalism, and a client-centric approach. With years of experience in diverse legal fields, our team of skilled attorneys offers strategic guidance and practical solutions to meet your legal needs. Located in Bangalore, we specialize in various domains of law, ensuring comprehensive legal support for individuals, businesses, and organizations.
+                We understand that legal issues can be complex and stressful. That’s why we focus on delivering clear, concise, and effective solutions, ensuring peace of mind for our clients. Whether you need representation in court, assistance with contracts, or legal advisory services, we are here to guide you every step of the way.
+                Contact us today for personalized legal assistance!
+            </p>
+        </div>
 
         <!-- About Us Section with Image -->
         <div class="section about">
@@ -165,6 +203,32 @@
                 <p>C.K.V.K. Law Associates is a leading law firm specializing in various legal domains, providing expert legal consultation and advocacy services. With years of experience, we are committed to offering high-quality legal solutions to our clients.</p>
             </div>
             <img src="../static/aboutus.jpg" alt="Law Firm About Us">
+        </div>
+        <div class="section">
+            <div>
+                <h3 class="title">How We Work</h3>
+                <ul>
+                    <li>Consultation – Schedule a consultation to discuss your legal needs.</li>
+                    <li>Case Evaluation – Our team will analyze the case and suggest the best course of action.</li>
+                    <li>Legal Strategy – We devise a customized legal strategy tailored to your situation.</li>
+                    <li>Execution & Representation – We handle all legal formalities and represent you in legal procedures.</li>
+                    <li>Resolution & Follow-Up – We ensure a satisfactory resolution and provide continued legal support if needed.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <div>
+                <h3 class="title">Our Mission</h3>
+                <ul>
+                    <li>To provide transparent and client-focused legal services.</li>
+                    <li>To uphold the highest standards of legal ethics and professionalism.</li>
+                    <li>To deliver timely and cost-effective legal solutions.</li>
+                    <li>To ensure client satisfaction with a personalized approach.</li>
+                </ul>
+                <h3 class="title">Our Vision</h3>
+                <p>To be a trusted legal partner by offering innovative legal solutions with professionalism, ethics, and excellence.</p>
+            </div>
+            <img src="../static/mission-vision.jpeg" alt="our mission and vision">
         </div>
 
         <!-- Our Services Section with Image -->
@@ -182,15 +246,49 @@
                 </ul>
             </div>
         </div>
+            <!-- Why Choose Us Section -->
+        <div class="section why-choose-us">
+            <div class="section-text">
+                <h2 class="title">Why Choose Us?</h2>
+                <ul>
+                    <li><strong>Legal Professionals : </strong> Our team consists of highly qualified and experienced lawyers with specialized expertise in various fields of law.</li>
+                    <li><strong>Client-Centric Approach : </strong> We prioritize our clients’ interests and provide tailored legal solutions based on their specific needs.</li>
+                    <li><strong>Transparent Legal Process : </strong> We ensure clarity and honesty in every legal proceeding, keeping clients informed at every stage.</li>
+                    <li><strong>Proven Track Record : </strong> We have successfully handled a wide range of legal cases, achieving favorable outcomes for our clients.</li>
+                    <li><strong>Affordable & Flexible Solutions : </strong> Our services are competitively priced without compromising on quality. We offer flexible payment plans for certain legal services.</li>
+                    <li><strong>Strong Ethical Values : </strong> We uphold the highest standards of professionalism, ethics, and confidentiality in our practice.</li>
+                    <li><strong>24/7 Legal Assistance : </strong> We understand that legal emergencies can arise anytime. Our team is available to assist clients with urgent legal matters.</li>
+                </ul>
+            </div>
+            <img src="../static/why-choose-us.jpg" alt="Why Choose Us">
+        </div>
+
+        <!-- Our Process Section -->
+        <div class="section our-process">
+            <div class="section-text">
+                <h2 class="title">Our Process</h2>
+                <ul>
+                    <li><strong>Consultation:</strong> Discuss your legal needs with our experts.</li>
+                    <li><strong>Case Evaluation:</strong> We analyze and suggest the best course of action.</li>
+                    <li><strong>Legal Strategy:</strong> Customized legal solutions tailored to your case.</li>
+                    <li><strong>Execution & Representation:</strong> Handling all legal formalities and court representations.</li>
+                    <li><strong>Resolution & Follow-Up:</strong> Ensuring satisfactory resolution with continued support.</li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Contact Details Section -->
         <div class="section contact">
+            <img src="../static/contact-us.jpg" alt="Contact-us">
             <div class="section-text">
                 <h2 class="title">Contact Details</h2>
                 <div class="contact-info">
-                    <p><strong>📞 Landline:</strong> 80-35777038 / 80-48658774</p>
-                    <p><strong>📱 Mobile:</strong> 9108784843 (WhatsApp)</p>
-                    <p><strong>✉ Email:</strong> rvlaw.76@gmail.com / ckvklaw.76@gmail.com</p>
+                    <p><strong>📞Landline:</strong> 80-35777038 / 80-48658774</p>
+                    <p><strong>📱 Mobile:</strong> <a href="https://wa.me/9108784843" target="_blank">9108784843 (WhatsApp)</a></p>
+                    <p><strong>✉ Email:</strong> 
+                        <a href="mailto:rvlaw.76@gmail.com">rvlaw.76@gmail.com</a> / 
+                        <a href="mailto:ckvklaw.76@gmail.com">ckvklaw.76@gmail.com</a>
+                    </p>
                     <!-- <p><strong>📍 Address:</strong> [Your Address Here]</p> -->
                 </div>
             </div>
