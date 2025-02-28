@@ -12,8 +12,63 @@
             box-sizing: border-box;
         }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
+            background-image: url('../static/home-banner.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .navbar {
+            display: flex;
+            font-family: sans-serif;
+            align-items: center;
+            justify-content: space-between;
+            background: #000;
+            height: 60px;
+            padding: 0 20px;
+            color: #fff;
+            border-bottom: 1px solid #ffffff;
+            font-size: 24px;
+            transition: 0.5s;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: 100px;
+            height: 40px;
+            margin-right: 6px;
+        }
+        
+        .logo h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .home-button {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #7C6A59;
+            text-decoration: none;
+            transition: 0.3s;
+            outline: none;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #675340;
+        }
+        a {
+            text-decoration: none;
+            font-size: 16px;
+        }
+        
+        .login {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -30,6 +85,7 @@
             width: 350px;
             position: relative;
         }
+        
 
         h3 {
             color: #4B4C4C;
@@ -91,21 +147,32 @@
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h3>Login</h3>
-        <p>Login to your Dashboard</p>
-        <form method="post">
-            {% csrf_token %}
-            <div class="input-group">
-                <span class="icon">👤</span>
-                <input type="text" name="username" placeholder="Username" required>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="../../static/logo.jpeg" />
+                <h4>C.K.V.K Law associates</h4>
             </div>
-            <div class="input-group">
-                <span class="icon">🔒</span>
-                <input type="password" name="password" placeholder="Password" required>
+            <a href="{% url 'home' %}" class="home-button">Home</a>
+        </nav>
+        <div class="login">
+            <div class="login-container">
+                <h3>Login</h3>
+                <p>Login to your Dashboard</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <span class="icon">👤</span>
+                        <input type="text" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="input-group">
+                        <span class="icon">🔒</span>
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
             </div>
-            <button type="submit">Login</button>
-        </form>
+        </div>
     </div>
 </body>
 </html>
