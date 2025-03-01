@@ -248,7 +248,7 @@ class Task(models.Model):
 
     survey_number = models.CharField(max_length=255)
     task_name = models.CharField(max_length=255)
-    task_description = models.TextField()
+    task_description = models.TextField(null=True,blank=True)
     assigned_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     assigned_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="created_tasks")
     start_date = models.DateField()
