@@ -258,6 +258,12 @@ class Task(models.Model):
     task_status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, default='Pending') 
     work_done = models.CharField(max_length=3, choices=WORK_DONE_CHOICES, default='No')  
     remarks = models.TextField(blank=True, null=True)
+    notification_status = models.CharField(max_length=50, choices=[
+        ('Pending', 'Pending'),
+        ('Overdue', 'Overdue'),
+        ('Requires Update', 'Requires Update'),
+        ('Completed', 'Completed')
+    ], default='Pending')
 
     def __str__(self):
         return self.task_name
@@ -270,3 +276,32 @@ class Task(models.Model):
         """ Validate assigned_to only allows users with employee_type 'Associate' """
         if self.assigned_to.employee_type not in ['associate', 'employee']:
             raise ValidationError({'assigned_to': 'Task can only be assigned to Associates or Employees.'})
+
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Notification(models.Model):
+    recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="notifications")
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def mark_as_read(self):
+        self.is_read = True
+        self.save()
+
+    def __str__(self):
+        return f"Notification for {self.recipient} - {'Read' if self.is_read else 'Unread'}"
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Notification
+
+@login_required
+def all_notifications_view(request):
+    """Display all notifications including read and unread."""
+    notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
+    return render(request, 'all_notifications.html', {'notifications': notifications})

@@ -1062,3 +1062,153 @@ def change_password(request):
 
         messages.success(request, "Password updated successfully!")
         return redirect('user_list')
+
+
+import re
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils.timezone import now
+from .models import Task, Notification, KYCProperty, CustomUser
+
+def remove_special_chars(text):
+    """Removes emojis and non-ASCII characters from the text."""
+    return re.sub(r'[^\x00-\x7F]+', '', text)  # Removes non-ASCII characters
+
+@receiver(post_save, sender=Task)
+def send_task_notifications(sender, instance, **kwargs):
+    """Handles notifications without changing the existing task status."""
+
+    kyc_property = KYCProperty.objects.filter(sy_number=instance.survey_number).first()
+    assigned_user = instance.assigned_to
+    assigned_user_name = assigned_user.get_full_name() if assigned_user.get_full_name() else assigned_user.username
+
+    file_number = kyc_property.file_number if kyc_property else "N/A"
+    survey_number = instance.survey_number if instance.survey_number else "N/A"
+
+    new_notification_status = instance.notification_status  # Store initial status
+    message = None  # Default to None
+
+    # Condition 1: Task is overdue but incomplete
+    if instance.end_date < now().date() and instance.task_status == "Accepted":
+        if kyc_property and kyc_property.file_status in ['assigned', 'pending']:
+            message = (
+                f"Task '{instance.task_name}' is OVERDUE!\n\n"
+                f"Assigned To: {assigned_user_name}\n"
+                f"Survey Number: {survey_number}\n"
+                f"File Number: {file_number}\n"
+                f"File Status: {kyc_property.file_status}\n\n"
+                f"Please update the file status and Work done to proceed."
+            )
+            new_notification_status = "Overdue"
+
+    # Condition 2: Work is done, but file status is incomplete
+    elif instance.work_done == "Yes" and instance.task_status == "Accepted":
+        if kyc_property and kyc_property.file_status in ['assigned', 'pending']:
+            message = (
+                f"Task '{instance.task_name}' requires a FILE STATUS UPDATE!\n\n"
+                f"Assigned To: {assigned_user_name}\n"
+                f"Survey Number: {survey_number}\n"
+                f"File Number: {file_number}\n"
+                f"File Status: {kyc_property.file_status}\n\n"
+                f"Please update the file status to 'Completed' to finalize the task."
+            )
+            new_notification_status = "Requires Update"
+
+    # Condition 3: Task is fully completed
+    elif instance.work_done == "Yes" and kyc_property and kyc_property.file_status == "Completed":
+        message = (
+            f"Task '{instance.task_name}' has been successfully COMPLETED!\n\n"
+            f"Assigned To: {assigned_user_name}\n"
+            f"Survey Number: {survey_number}\n"
+            f"File Number: {file_number}\n"
+            f"File Status: Completed\n\n"
+            f"Thank you for completing the task!"
+        )
+        new_notification_status = "Completed"
+
+    # ✅ Ensure only **ONE** notification is created/updated per recipient
+    if message:
+        Notification.objects.update_or_create(
+            recipient=assigned_user, 
+            defaults={"message": remove_special_chars(message)}
+        )
+
+    # ✅ Prevent infinite recursion
+    if new_notification_status != instance.notification_status:
+        Task.objects.filter(id=instance.id).update(notification_status=new_notification_status)
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Notification
+
+@login_required
+def notifications_view(request):
+    """ 
+    - Regular users see their own unread notifications.
+    - Superusers see only unique unread notifications.
+    """
+    if request.user.is_superuser:
+        seen_messages = set()
+        notifications = []
+        for notification in Notification.objects.filter(is_read=False).order_by('-created_at'):
+            if notification.message not in seen_messages:
+                seen_messages.add(notification.message)
+                notifications.append(notification)
+    else:
+        notifications = Notification.objects.filter(recipient=request.user, is_read=False).order_by('-created_at')
+
+    return render(request, 'notifications.html', {'notifications': notifications})
+
+@login_required
+def read_notifications_view(request):
+    """ 
+    - Regular users see their read notifications.
+    - Superusers see only unique read notifications.
+    """
+    if request.user.is_superuser:
+        seen_messages = set()
+        notifications = []
+        for notification in Notification.objects.filter(is_read=True).order_by('-created_at'):
+            if notification.message not in seen_messages:
+                seen_messages.add(notification.message)
+                notifications.append(notification)
+    else:
+        notifications = Notification.objects.filter(recipient=request.user, is_read=True).order_by('-created_at')
+
+    return render(request, 'read_notifications.html', {'notifications': notifications})
+
+@login_required
+def mark_notification_as_read(request, notification_id):
+    """ Mark a single notification as read """
+    notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+    notification.mark_as_read()
+    return redirect('notifications')
+
+@login_required
+def mark_all_notifications_as_read(request):
+    """ 
+    - Regular users mark their own notifications as read.
+    - Superusers mark all notifications as read.
+    """
+    if request.user.is_superuser:
+        Notification.objects.filter(is_read=False).update(is_read=True)
+    else:
+        Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+
+    return redirect('notifications')
+
+
+@login_required
+def delete_all_read_notifications(request):
+    """ 
+    - Regular users delete their own read notifications.
+    - Superusers delete all read notifications.
+    """
+    if request.user.is_superuser:
+        # Delete all read notifications (for all users)
+        Notification.objects.filter(is_read=True).delete()
+    else:
+        # Delete read notifications for the current user
+        Notification.objects.filter(recipient=request.user, is_read=True).delete()
+
+    return redirect('read_notifications')

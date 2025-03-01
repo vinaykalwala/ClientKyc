@@ -50,6 +50,11 @@ urlpatterns = [
     path('update_task_status/<int:task_id>/', update_task_status, name='update_task_status'),
     path('update_work_done/<int:task_id>/', update_work_done, name='update_work_done'),
     path('change-password/', change_password, name='change_password'),
+    path('notifications/', notifications_view, name='notifications'),
+    path('read/<int:notification_id>/', mark_notification_as_read, name='mark_notification_as_read'),
+    path('read-all/', mark_all_notifications_as_read, name='mark_all_notifications_as_read'),
+    path('notifications/read/', read_notifications_view, name='read_notifications'),
+    path('notifications/delete-all-read/', delete_all_read_notifications, name='delete_all_read_notifications'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

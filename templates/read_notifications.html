@@ -1,0 +1,114 @@
+{% extends "base.html" %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Notifications</title>
+    <style>
+        .container {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .notification-box {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #0a0a0a;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+        
+        .notification-box:hover {
+            transform: translateY(-3px);
+            background: #f9f9f9;
+        }
+        
+        .notification-box p {
+            margin: 0;
+            font-size: 16px;
+            color: #444;
+        }
+        
+        .notification-time {
+            font-size: 12px;
+            color: #777;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            /* Space between buttons */
+            margin-top: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        
+        .btn-view {
+            background: #111111;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background: #515253;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Read Notifications</h2>
+
+        <div class="btn-container">
+            <!-- Link to view unread notifications -->
+            <a href="{% url 'notifications' %}" class="btn btn-view">View Unread Notifications</a>
+
+            <!-- Link to delete all read notifications -->
+            <a href="{% url 'delete_all_read_notifications' %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete all read notifications?');">Delete All Read Notifications</a>
+        </div>
+
+        {% if notifications %} {% for notification in notifications %}
+        <div class="notification-box">
+            <p><strong>{{ notification.message }}</strong></p>
+            <small class="notification-time">Received on: {{ notification.created_at }}</small>
+        </div>
+        {% endfor %} {% else %}
+        <p style="text-align:center; color: #666;">No read notifications available.</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>
+{% endblock %}
