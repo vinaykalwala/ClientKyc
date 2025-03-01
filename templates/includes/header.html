@@ -33,12 +33,12 @@
         .navbar .logo {
             display: flex;
             align-items: center;
+            gap: 40px;
         }
         
         .logo img {
-            width: 100px;
-            height: 40px;
-            margin-right: 6px;
+            width: 160px;
+            height: 54px;
         }
         
         .logo h4 {
@@ -65,15 +65,18 @@
         .user-profile {
             display: flex;
             align-items: center;
+            gap: 10px;
         }
         
         .user-profile img {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            margin-right: 10px;
             object-fit: cover;
             border: 2px solid #fff;
+        }
+        .user-profile span {
+            font-size: 16px;
         }
     </style>
 </head>
@@ -81,17 +84,16 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="../../static/logo.jpeg" />
-            <h4>C.K.V.K Law associates</h4>
+            <img src="../../static/logo1.jpg" />
+            {% if user.is_authenticated %}
+            <div class="user-profile">
+                {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="Profile Picture"> {% else %}
+                <img src="{% static 'default_profile.jpg' %}" alt="Default Profile"> {% endif %}
+                <span>{{ user.username }}</span>
+            </div>
+            {% endif %}
         </div>
-        {% if user.is_authenticated %}
-        <div class="user-profile">
-            {% if user.profile_picture %}
-            <img src="{{ user.profile_picture.url }}" alt="Profile Picture"> {% else %}
-            <img src="{% static 'default_profile.jpg' %}" alt="Default Profile"> {% endif %}
-            <span>{{ user.username }}</span>
-        </div>
-        {% endif %}
 
         <div class="logout">
             <form method="POST" action="{% url 'logout' %}">
