@@ -898,7 +898,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 @staff_member_required
 def user_list(request):
     # Fetch all CustomUser objects excluding superusers
-    users = CustomUser.objects.all().exclude(is_superuser=True)
+    users = CustomUser.objects.all()
     
     # Get the EMPLOYEE_CHOICES to pass to the template
     employee_choices = CustomUser.EMPLOYEE_CHOICES  # Get the employee types
@@ -1037,3 +1037,28 @@ def update_work_done(request, task_id):
         return JsonResponse({"work_done": task.work_done})
     
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.hashers import make_password
+from .models import CustomUser  # Assuming you have a CustomUser model
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        new_password = request.POST.get('new_password')
+        
+        user = get_object_or_404(CustomUser, id=user_id)
+        user.password = make_password(new_password)
+        user.original_password = new_password  # Store raw password
+        user.save()
+
+        # Keep the logged-in user session intact if they changed their own password
+        if request.user == user:
+            update_session_auth_hash(request, user)
+
+        messages.success(request, "Password updated successfully!")
+        return redirect('user_list')

@@ -56,7 +56,8 @@
         }
         
         .button-link,
-        .toggle-password-btn {
+        .toggle-password-btn,
+        .change-password-btn {
             display: inline-block;
             padding: 6px 8px;
             background-color: #7C6A59;
@@ -70,13 +71,60 @@
         }
         
         .button-link:hover,
-        .toggle-password-btn:hover {
+        .toggle-password-btn:hover,
+        .change-password-btn:hover {
             background-color: #675340;
         }
         
         .restricted-text {
             color: #888;
             font-style: italic;
+        }
+        /* Modal Styling */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            text-align: center;
+        }
+        
+        .close {
+            float: right;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: red;
+        }
+        
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .status-inactive {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .status-default {
+            color: black;
+            font-weight: bold;
         }
     </style>
 
@@ -97,13 +145,19 @@
         function filterByEmployeeType(employeeType) {
             const rows = document.querySelectorAll('.user-row');
             rows.forEach(row => {
-                const userEmployeeType = row.getAttribute('data-employee-type');
-                if (employeeType === 'all' || userEmployeeType === employeeType) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                let userEmployeeType = row.getAttribute('data-employee-type') || 'superuser'; // Treat empty values as 'superuser'
+
+                row.style.display = (employeeType === 'all' || userEmployeeType === employeeType) ? '' : 'none';
             });
+        }
+
+        function openChangePasswordModal(userId) {
+            document.getElementById('changePasswordModal').style.display = 'block';
+            document.getElementById('user_id').value = userId;
+        }
+
+        function closeModal() {
+            document.getElementById('changePasswordModal').style.display = 'none';
         }
     </script>
 </head>
@@ -115,7 +169,10 @@
         <div class="filter-buttons">
             <button onclick="filterByEmployeeType('all')">All Users</button> {% for employee_key, employee_name in employee_choices %}
             <button onclick="filterByEmployeeType('{{ employee_key }}')">{{ employee_name }}</button> {% endfor %}
+            <button onclick="filterByEmployeeType('superuser')">Superusers</button>
+            <!-- Added button -->
         </div>
+
 
         <table>
             <thead>
@@ -132,14 +189,14 @@
             <tbody>
                 {% for user in users %}
                 <tr class="user-row" data-employee-type="{{ user.employee_type }}">
-                    <td>
-                        <a href="{% url 'user_portfolio' user.id %}">{{ user.username }}</a>
-                    </td>
-
-                    <td>{{user.phone_number}}</td>
+                    <td><a href="{% url 'user_portfolio' user.id %}">{{ user.username }}</a></td>
+                    <td>{{ user.phone_number }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.employee_type }}</td>
-                    <td>{{user.employee_status}}</td>
+                    <td class="{% if user.employee_status == 'active' %}status-active{% elif user.employee_status == 'inactive' %}status-inactive{% else %}status-default{% endif %}">
+                        {{ user.employee_status }}
+                    </td>
+
                     <td>
                         {% if is_superuser %}
                         <input type="password" id="password_{{ user.id }}" value="{{ user.original_password }}" readonly>
@@ -147,13 +204,28 @@
                         <span class="restricted-text">Restricted</span> {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'edit_employee_status' user.id %}" class="button-link">Edit</a>
+                        <a href="{% url 'edit_employee_status' user.id %}" class="button-link">Edit</a> {% if is_superuser %}
+                        <button onclick="openChangePasswordModal({{ user.id }})" class="change-password-btn">Change Password</button> {% endif %}
                     </td>
-
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Change Password Modal -->
+        <div id="changePasswordModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>Change Password</h3>
+                <form method="POST" action="{% url 'change_password' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" id="user_id">
+                    <input type="password" name="new_password" placeholder="Enter new password" required>
+                    <br><br>
+                    <button type="submit" class="button-link">Update</button>
+                </form>
+            </div>
+        </div>
     </div>
-    {% endblock %}
 </body>
+{% endblock %}

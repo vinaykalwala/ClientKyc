@@ -137,9 +137,8 @@
     <!-- Edit Form -->
     <form method="POST" enctype="multipart/form-data" class="edit-form">
         {% csrf_token %}
-
         <label for="id_employee_status" class="form-label">Employee Status:</label>
-        <div><input type="text" id="id_employee_status" name="employee_status" class="input-field" value="{{ form.employee_status.value }}"></div>
+        <div>{{ form.employee_status }}</div>
 
         <label for="id_profile_picture" class="form-label">Update Profile Picture:</label>
         <div><input type="file" id="id_profile_picture" name="profile_picture" class="input-field"></div>

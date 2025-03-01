@@ -49,6 +49,7 @@ urlpatterns = [
     path('user/<int:user_id>/', user_portfolio, name='user_portfolio'),
     path('update_task_status/<int:task_id>/', update_task_status, name='update_task_status'),
     path('update_work_done/<int:task_id>/', update_work_done, name='update_work_done'),
+    path('change-password/', change_password, name='change_password'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
