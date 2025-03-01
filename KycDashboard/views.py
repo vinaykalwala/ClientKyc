@@ -498,6 +498,8 @@ def superuser_dashboard(request):
             img_buf.seek(0)
             img_base64 = base64.b64encode(img_buf.getvalue()).decode('utf-8')
 
+            plt.close(fig)  
+
             return img_base64
 
         day_report_img = generate_graph(

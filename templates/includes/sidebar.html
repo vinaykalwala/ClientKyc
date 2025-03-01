@@ -100,10 +100,10 @@
                     <a href="{% url 'kyc_list' %}"><i class="fas fa-users"></i> Client List<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href="{%url 'create_task'%}"><i class="fas fa-tasks"></i>Assign Tasks<i class="fas fa-chevron-right"></i></a>
+                    <a href="{%url 'create_task'%}"><i class="fas fa-tasks"></i>Daily Tasks<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
-                    <a href="{%url 'task_list'%}"><i class="fas fa-tasks"></i>Tasks List<i class="fas fa-chevron-right"></i></a>
+                    <a href="{%url 'task_list'%}"><i class="fas fa-clipboard-list"></i>Tasks List<i class="fas fa-chevron-right"></i></a>
                 </li>
                 <li class="">
                     <a href="{% url 'signup' %}"><i class="fas fa-user-plus"></i>Add Employees<i class="fas fa-chevron-right"></i></a>
@@ -168,6 +168,28 @@
             {% endif %}
         </aside>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the current URL path
+            let currentPath = window.location.pathname;
+
+            // Select all sidebar links
+            let sidebarLinks = document.querySelectorAll(".sidebar ul li a");
+
+            // Loop through each link and check if its href matches the current URL
+            sidebarLinks.forEach(link => {
+                if (link.getAttribute("href") === currentPath) {
+                    link.parentElement.classList.add("active");
+                }
+
+                // Add click event listener to update active class dynamically
+                link.addEventListener("click", function() {
+                    sidebarLinks.forEach(l => l.parentElement.classList.remove("active"));
+                    link.parentElement.classList.add("active");
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +12,13 @@
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             background-image: url('../static/login-bg1.jpg');
             background-repeat: no-repeat;
             background-size: cover;
         }
+        
         .navbar {
             display: flex;
             font-family: sans-serif;
@@ -48,7 +51,7 @@
             margin: 0;
             font-size: 16px;
         }
-
+        
         .home-button {
             padding: 8px 14px;
             border-radius: 20px;
@@ -60,9 +63,11 @@
             outline: none;
             cursor: pointer;
         }
+        
         .home-button:hover {
             background-color: #675340;
         }
+        
         a {
             text-decoration: none;
             font-size: 16px;
@@ -74,7 +79,7 @@
             align-items: center;
             height: 100vh;
         }
-
+        
         .login-container {
             background: white;
             padding: 40px 20px;
@@ -86,7 +91,6 @@
             position: relative;
         }
         
-
         h3 {
             color: #4B4C4C;
             position: absolute;
@@ -95,12 +99,12 @@
             left: 14px;
             padding: 2px 8px;
         }
-
+        
         p {
             color: #7C6A59;
             margin-bottom: 20px;
         }
-
+        
         .input-group {
             display: flex;
             align-items: center;
@@ -109,11 +113,11 @@
             border-radius: 5px;
             margin-bottom: 10px;
         }
-
+        
         .input-group .icon {
             margin-right: 10px;
         }
-
+        
         .input-group input {
             width: 100%;
             padding: 10px;
@@ -121,7 +125,7 @@
             background: none;
             outline: none;
         }
-
+        
         button {
             background: #7C6A59;
             color: white;
@@ -132,20 +136,20 @@
             cursor: pointer;
             font-size: 16px;
         }
-
+        
         button:hover {
             background: #675340;
         }
-
+        
         a {
             display: block;
             margin-top: 10px;
             text-decoration: none;
             color: rgba(89, 50, 234, 1);
         }
-
     </style>
 </head>
+
 <body>
     <div class="container">
         <nav class="navbar">
@@ -157,7 +161,7 @@
         </nav>
         <div class="login">
             <div class="login-container">
-                <h3>Login</h3>
+
                 <p>Login to your Dashboard</p>
                 <form method="post">
                     {% csrf_token %}
@@ -175,4 +179,5 @@
         </div>
     </div>
 </body>
+
 </html>
