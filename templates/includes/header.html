@@ -63,6 +63,9 @@
         }
         
         .user-profile {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -75,6 +78,7 @@
             object-fit: cover;
             border: 2px solid #fff;
         }
+        
         .user-profile span {
             font-size: 16px;
         }
@@ -84,8 +88,7 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="../../static/logo1.jpg" />
-            {% if user.is_authenticated %}
+            <img src="../../static/logo1.jpg" /> {% if user.is_authenticated %}
             <div class="user-profile">
                 {% if user.profile_picture %}
                 <img src="{{ user.profile_picture.url }}" alt="Profile Picture"> {% else %}
