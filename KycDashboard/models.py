@@ -227,6 +227,7 @@ class LeaveRequest(models.Model):
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils.timezone import now
 
 class Task(models.Model):
     PRIORITY_CHOICES = [
@@ -251,7 +252,7 @@ class Task(models.Model):
     task_description = models.TextField(null=True,blank=True)
     assigned_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     assigned_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="created_tasks")
-    start_date = models.DateField()
+    start_date = models.DateField(default=now)
     end_date = models.DateField()
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES)
     task_status = models.CharField(max_length=20, choices=TASK_STATUS_CHOICES, default='Pending') 
