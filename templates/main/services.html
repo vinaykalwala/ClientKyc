@@ -1,0 +1,483 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Our Legal Services - CKVK Law Associates{% endblock %}
+
+{% block extra_head %}
+<style>
+.service-hero {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    max-height: 500px; /* Limits height on larger screens */
+}
+
+.service-img {
+    width: 100%;
+    height: 100%;
+}
+
+.service-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* Mobile-specific override */
+@media (max-width: 768px) {
+    .service-hero {
+        max-height: none;
+        height: auto;
+        aspect-ratio: 16 / 10; /* Slightly taller on smaller devices */
+    }
+}
+
+.service-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px 40px;
+    border-radius: 10px;
+    color: #fff;
+    text-align: center;
+    max-width: 90%;
+}
+
+.service-overlay h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+.section-heading {
+    text-align: center;
+    color: #333;
+    font-size: 2.2em;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0c36d;
+    display: inline-block;
+    margin: 0 auto 30px;
+}
+
+.section-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* Service Area Section */
+.service-areas {
+    padding: 4rem 1rem;
+    background-color: #fff;
+    text-align: center;
+}
+
+.service-areas h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.service-areas p{
+    font-size: 1.5rem;
+    color:black;
+    margin-bottom: 20px;
+}
+
+.underline{
+    width: 150px;
+    height: 4px;
+    background-color: #DF9755;
+    margin: 0 auto 40px;
+}
+
+/* Responsive Styling */
+@media (max-width: 992px) {
+    .service-overlay h1 {
+        font-size: 1.75rem;
+    }
+
+    .service-areas {
+        padding: 3rem 1rem;
+    }
+
+    .service-areas h2 {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .service-overlay {
+        padding: 15px 25px;
+    }
+
+    .service-overlay h1 {
+        font-size: 1.5rem;
+    }
+
+    .service-areas {
+        padding: 2.5rem 1rem;
+    }
+
+    .service-areas h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-overlay {
+        padding: 10px 20px;
+    }
+
+    .service-overlay h1 {
+        font-size: 1.25rem;
+    }
+
+    .service-areas {
+        padding: 2rem 0.5rem;
+    }
+
+    .service-areas h2 {
+        font-size: 1.3rem;
+    }
+}
+
+.services-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.service-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(44, 62, 80, 0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(44, 62, 80, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #2c3e50;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(223, 151, 85, 0.2);
+    border-color: #DF9755;
+}
+
+.service-card:hover::before {
+    transform: scaleX(1);
+    background: #DF9755;
+}
+
+.service-icon {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 20px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1);
+}
+
+.service-card h3 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover h3 {
+    color: #DF9755;
+}
+
+.service-card p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.learn-more-btn {
+    color: #2c3e50;
+    border: 2px solid #2c3e50;
+    padding: 0.7rem 1.5rem;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+}
+
+.learn-more-btn:hover {
+    background-color: #DF9755;
+    color: white;
+    border-color: #DF9755;
+    transform: translateY(-2px);
+}
+
+.services-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    padding: 2rem;
+    max-width: 1300px;
+    margin: auto;
+}
+
+/* Heading & Description */
+.service-card h3 {
+    font-size: 22px;
+    color: #DF9755;
+    margin-bottom: 10px;
+}
+
+.service-card p {
+    font-size: 1.5rem;
+    color: black;
+    margin-bottom: 15px;
+}
+
+.service-card {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(44, 62, 80, 0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(44, 62, 80, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(223, 151, 85, 0.2);
+    border-color: #DF9755;
+    background-color: #fff;
+}
+
+.learn-more-btn {
+    color: #2c3e50;
+    border: 2px solid #2c3e50;
+    padding: 0.7rem 1.5rem;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: inline-block;
+    background-color: transparent;
+}
+
+.learn-more-btn:hover {
+    background-color: #DF9755;
+    color: white;
+    border-color: #DF9755;
+}
+
+
+
+/* Tablets (2 per row) */
+@media (max-width: 992px) {
+    .services-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile (1 per row) */
+@media (max-width: 600px) {
+    .services-container {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card {
+        padding: 1.2rem;
+    }
+
+    .service-card h3 {
+        font-size: 20px;
+    }
+
+    .service-card p {
+        font-size: 0.95rem;
+    }
+
+    .learn-more-btn {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.9rem;
+    }
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="service-hero">
+    <div class="service-img">
+        <img src="{% static 'images/bookimg.jpg' %}" alt="services-banner" class="services-banner-image" />
+        <div class="service-overlay">
+            <h1>Our Services</h1>
+
+        </div>
+    </div>
+</section>
+
+<!-- Service Area Section -->
+<section class="service-areas">
+    <h2 class="section-heading">We Provide Services Like</h2>
+   
+    <p>We offer a wide range of legal services including documentation, registrations, RTI support, and more — tailored to meet your legal needs with expertise and care.</p>
+    
+
+    <div class="services-container">
+
+        <!-- Card 1 -->
+        <div class="service-card">
+            <img src="{% static 'images/saledeed.png' %}" alt="Sale Deed Icon" class="service-icon">
+            <h3>Property Agreements</h3>
+            <p>Drafting & registration of sale deed, gift deed, mortgage deed, partition deed, etc.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="service-card">
+            <img src="{% static 'images/agreement.png' %}" alt="Agreements Icon" class="service-icon">
+            <h3>Legal Documentation</h3>
+            <p>Sale agreement, trust deed, release deed, rental & lease agreements, and more.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="service-card">
+            <img src="{% static 'images/attorone.png' %}" alt="Power of Attorney Icon" class="service-icon">
+            <h3>Power of Attorney</h3>
+            <p>Drafting of General & Special Power of Attorney as per legal requirements.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="service-card">
+            <img src="{% static 'images/moa.png' %}" alt="MOA Icon" class="service-icon">
+            <h3>MOA & Declarations</h3>
+            <p>Memorandum of Agreement, deed of declaration, rectification deeds, etc.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="service-card">
+            <img src="{% static 'images/affidavit.png' %}" alt="Affidavit Icon" class="service-icon">
+            <h3>Affidavits & Deeds</h3>
+            <p>Drafting affidavits, partnership deeds, and other legal documentation.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="service-card">
+            <img src="{% static 'images/rti.png' %}" alt="RTI Icon" class="service-icon">
+            <h3>RTI Assistance</h3>
+            <p>Support for filing and following up on Right to Information (RTI) applications.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="service-card">
+            <img src="{% static 'images/registration.png' %}" alt="Registration Icon" class="service-icon">
+            <h3>Entity Formation</h3>
+            <p>Formation of associations, trusts, partnership firms, and marriage registration.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="service-card">
+            <img src="{% static 'images/tax.png' %}" alt="Katha Icon" class="service-icon">
+            <h3>KATHA & Tax Services</h3>
+            <p>Handling of KATHA, tax services (BBMP, BDA, Panchayat), and notary works.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 9 -->
+        <div class="service-card">
+            <img src="{% static 'images/govtoffice.png' %}" alt="Govt Office Icon" class="service-icon">
+            <h3>Government Office Works</h3>
+            <p>Matters related to Sub-Registrar, BDA, AC, DC & Taluk Office handled efficiently.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 10 -->
+        <div class="service-card">
+            <img src="{% static 'images/legal.png' %}" alt="Consultation Icon" class="service-icon">
+            <h3>Legal Consultation</h3>
+            <p>Expert one-on-one consultation to guide you through your legal concerns and rights.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 11 -->
+        <div class="service-card">
+            <img src="{% static 'images/disputeresolution.png' %}" alt="Dispute Resolution Icon" class="service-icon">
+            <h3>Dispute Resolution</h3>
+            <p>Assistance in resolving disputes through legal mediation, arbitration, and settlements.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 12 -->
+        <div class="service-card">
+            <img src="{% static 'images/litigation.png' %}" alt="Court Litigation Icon" class="service-icon">
+            <h3>Court Representation</h3>
+            <p>Professional representation in civil, criminal, and family courts across all levels.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 13 -->
+        <div class="service-card">
+            <img src="{% static 'images/compliance.png' %}" alt="Compliance Icon" class="service-icon">
+            <h3>Legal Compliance</h3>
+            <p>Support with regulatory compliance, corporate governance, and legal due diligence.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 14 -->
+        <div class="service-card">
+            <img src="{% static 'images/familylaw.png' %}" alt="Family Law Icon" class="service-icon">
+            <h3>Family Law Services</h3>
+            <p>Legal aid in matters related to marriage, divorce, custody, adoption, and inheritance.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+        <!-- Card 15 -->
+        <div class="service-card">
+            <img src="{% static 'images/propertydisputes.png' %}" alt="Property Dispute Icon" class="service-icon">
+            <h3>Property Disputes</h3>
+            <p>Handling disputes related to land, boundaries, title claims, and joint ownerships.</p>
+            <a href="#" class="learn-more-btn">Learn More</a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

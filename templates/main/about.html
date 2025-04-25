@@ -1,0 +1,636 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}About Us - CKVK Associates{% endblock %}
+
+{% block content %}
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+    .hero-section {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        max-height: 700px;
+        margin-top: -15px;
+    }
+
+
+    .hero-section img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .hero-section img {
+            max-height: none;
+            height: auto;
+            aspect-ratio: 16 / 10; /* Slightly taller on smaller devices */
+        }
+    }
+
+    
+    /* About Section */
+    .about-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        
+    }
+    
+    .about-content {
+        display: flex;
+        gap: 40px;
+        margin-bottom: 60px;
+        margin-top:20px;
+    }
+    
+    .about-text {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .about-text h2 {
+        color: #333;
+        margin-bottom: 25px;
+        font-size: 2em;
+    }
+    
+    .about-text p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+    
+    .about-image {
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+        height: 400px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .about-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    /* Add this to your existing style section */
+.section-heading {
+    text-align: center;
+    color: #333;
+    font-size: clamp(1.5rem, 4vw, 2.2em);
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0c36d;
+    display: inline-block;
+    margin: 0 auto 30px;
+}
+
+.section-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+    
+.timeline {
+    position: relative;
+    max-width: 1300px;
+    margin: 50px auto;
+    padding: 40px 0;
+    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, -0.1)), 
+                url('{% static "main/legacy.jpeg" %}') center/cover no-repeat fixed;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-content {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+}
+    
+    .timeline::after {
+        content: '';
+        position: absolute;
+        width: 4px;
+        background-color: #f0c36d;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -2px;
+    }
+    
+    .timeline-item {
+        padding: 10px 40px;
+        position: relative;
+        width: 50%;
+        box-sizing: border-box;
+    }
+    
+    .timeline-item::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 4px solid #f0c36d;
+        border-radius: 50%;
+        top: 15px;
+        z-index: 1;
+    }
+    
+    .left {
+        left: 0;
+        text-align: right;
+    }
+    
+    .right {
+        left: 50%;
+        text-align: left;
+    }
+    
+    .left::after {
+        right: -12px;
+    }
+    
+    .right::after {
+        left: -12px;
+    }
+    
+    .timeline-content {
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Services Section */
+    .services-showcase {
+        background: #f8f9fa;
+        
+        padding: 60px 20px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .service-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    
+    .service-icon {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: #f0c36d;
+        background: rgba(240, 195, 109, 0.1);
+    }
+    
+    .service-content {
+        padding: 25px;
+    }
+    
+    .learn-more {
+        display: inline-block;
+        padding: 10px 25px;
+        background: #2c3e50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+    
+    .learn-more:hover {
+        background: #1a252f;
+    }
+    /* Add to your existing style section */
+.mission-vision-section {
+    background: #f8f9fa;
+   
+}
+
+.mission-container, .vision-container {
+    margin-bottom: 60px;
+}
+
+.mission-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.mission-card, .vision-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(44, 62, 80, 0.1);
+}
+
+.mission-card:hover, .vision-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(223, 151, 85, 0.2);
+    border-color: #DF9755;
+}
+
+.mission-card i, .vision-card i {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+.mission-card:hover i, .vision-card:hover i {
+    color: #DF9755;
+}
+
+.mission-card p, .vision-card p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #555;
+    margin: 0;
+}
+
+.vision-card {
+    max-width: 800px;
+    margin: 40px auto 0;
+    padding: 40px;
+}
+
+.vision-card p {
+    font-size: 1.3em;
+}
+
+
+    
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        overflow-y: auto;
+    }
+    
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 30px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 800px;
+        position: relative;
+    }
+    
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #333;
+    }
+    /* Stats Section */
+    .stats-section {
+        background: #2c3e50;
+        padding: 60px 0;
+        margin: 40px 0;
+    }
+
+    .stats-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        padding: 0 20px;
+    }
+
+    .stat-item {
+        text-align: center;
+        color: white;
+    }
+
+    .stat-item span {
+        font-size: 3.5em;
+        font-weight: bold;
+        color: #f0c36d;
+    }
+
+    .stat-item p {
+        margin-top: 10px;
+        font-size: 1.2em;
+        color: #ffffff;
+    }
+    @media screen and (min-width: 1201px) {
+        .hero-section {
+            height: 80vh;
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        .hero-section {
+            height: 70vh;
+        }
+    }
+    @media screen and (max-width: 992px) {
+        .hero-section {
+            height: 60vh;
+        }
+    }
+
+
+    @media (max-width: 480px) {
+        .stats-container {
+            grid-template-columns: 1fr;
+        }
+    }
+   
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-section {
+            height: 50vh;
+        }
+        .about-container {
+            padding: 0 15px;
+        }
+       
+        .about-content {
+            flex-direction: column;
+            padding: 0 10px;
+            margin-top: 30px;
+        }
+        .about-text {
+            padding: 15px;
+        }
+        
+        .about-image {
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            left: 31px;
+        }
+        
+        .timeline-item {
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 25px;
+        }
+        
+        .timeline-item::after {
+            left: 18px;
+        }
+        
+        .left, .right {
+            left: 0;
+            text-align: left;
+        }
+        
+        .services-grid {
+            grid-template-columns: 1fr;
+            padding: 0 20px;
+        }
+        .mission-grid {
+            grid-template-columns: 1fr;
+        }
+    
+        .mission-card, .vision-card {
+            padding: 25px;
+        }
+    
+        .vision-card p {
+            font-size: 1.1em;
+        }
+        .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media screen and (max-width: 720px) {
+        .hero-section {
+            height: 45vh;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+        .hero-section {
+            height: 40vh;
+        }
+        .about-container {
+            padding: 0 12px;
+        }
+        
+        .about-content {
+            padding: 0 8px;
+            margin-top: 25px;
+        }
+    
+        .about-text {
+            padding: 12px;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        .hero-section {
+            height: 30vh;
+        }
+        .about-content {
+            margin-top: 20px;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <img src="{% static 'main/banner2.jpg' %}" alt="Law Image">
+    
+</section>
+
+<!-- About Content section -->
+<div class="about-container">
+    <section class="about-content" data-aos="fade-up">
+        <div class="about-text" data-aos="fade-right" data-aos-delay="100">
+            
+            <h2 class="section-heading">Our Legacy</h2>
+            <p>CKVK Law Associates is a leading law firm specializing in various legal domains, providing expert legal consultation and advocacy services. With years of experience, we are committed to offering high-quality legal solutions to our clients.</p>
+            <p>Founded with a vision to bridge the gap between complex legal frameworks and client needs, we combine traditional values with modern legal approaches. Our team of seasoned attorneys brings diverse expertise to every case, ensuring comprehensive legal support.</p>
+            <p>Based in Bangalore, we serve clients across India with personalized attention and strategic legal counsel tailored to individual circumstances.</p>
+        </div>
+        <div class="about-image" data-aos="fade-left" data-aos-delay="200">
+            <img src="{% static 'main/team.jpg' %}" alt="CKVK Associates Team">
+        </div>
+    </section>
+
+    <!-- Add this after the about-content section and before the timeline -->
+    <section class="stats-section" data-aos="fade-up">
+        <div class="stats-container">
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
+                <span class="stat-number" data-target="1000">0</span><span>+</span>
+                <p>Satisfied Clients</p>
+            </div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
+                <span class="stat-number" data-target="15">0</span><span>+</span>
+                <p>Expert Attorneys</p>
+            </div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
+                <span class="stat-number" data-target="18">0</span>
+                <p>Years of Experience</p>
+            </div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="400">
+                <span class="stat-number" data-target="95">0</span><span>%</span>
+                <p>Success Rate</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Replace the Our Journey section with Team Expertise -->
+    <h2 class="section-heading">Our Legal Expertise</h2>
+       
+        <div class="timeline" data-aos="fade-up">
+            <div class="timeline-item left" data-aos="fade-right">
+                <div class="timeline-content">
+                    <h3>2005</h3>
+                    <p>Founded by Mr. Venkatesh Chandran with a small office and big vision for client-centric legal services.</p>
+                </div>
+            </div>
+            <div class="timeline-item right" data-aos="fade-left">
+                <div class="timeline-content">
+                    <h3>2010</h3>
+                    <p>Expanded to full-service practice with specialization in property and corporate law.</p>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="timeline-content">
+                    <h3>2015</h3>
+                    <p>Recognized as one of Hyderabad's fastest growing law firms with 1000+ satisfied clients.</p>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="timeline-content">
+                    <h3>Present</h3>
+                    <p>Serving clients nationwide with a team of 15+ expert attorneys across multiple legal domains.</p>
+                </div>
+            </div>
+        </div>
+</div>
+<!-- Replace the Services Showcase section with this -->
+<section class="mission-vision-section" data-aos="fade-up">
+    <div class="about-container">
+        <div class="mission-container">
+            <h2 class="section-heading">Our Mission</h2>
+            <div class="mission-grid">
+                <div class="mission-card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-balance-scale"></i>
+                    <p>To provide transparent and client-focused legal services.</p>
+                </div>
+                <div class="mission-card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-handshake"></i>
+                    <p>To uphold the highest standards of legal ethics and professionalism.</p>
+                </div>
+                <div class="mission-card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fas fa-clock"></i>
+                    <p>To deliver timely and cost-effective legal solutions.</p>
+                </div>
+                <div class="mission-card" data-aos="fade-up" data-aos-delay="400">
+                    <i class="fas fa-users"></i>
+                    <p>To ensure client satisfaction with a personalized approach.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="vision-container">
+            <h2 class="section-heading">Our Vision</h2>
+            <div class="vision-card" data-aos="fade-up" data-aos-delay="500">
+                <i class="fas fa-lightbulb"></i>
+                <p>To be a trusted legal partner by offering innovative legal solutions with professionalism, ethics, and excellence.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Animated number counter
+    const counters = document.querySelectorAll('.stat-number');
+    
+    function animateValue(element, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            element.textContent = Math.floor(progress * (end - start) + start);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    // Intersection Observer for stats
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.getAttribute('data-target'));
+                animateValue(entry.target, 0, target, 2000);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => observer.observe(counter));
+</script>
+<script>
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+        document.body.style.overflow = "hidden";
+    }
+    
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+    
+    window.onclick = function(event) {
+        if (event.target.className === "modal") {
+            event.target.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    }
+</script>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

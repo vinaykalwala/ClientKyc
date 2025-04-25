@@ -1212,3 +1212,18 @@ def delete_all_read_notifications(request):
         Notification.objects.filter(recipient=request.user, is_read=True).delete()
 
     return redirect('read_notifications')
+
+
+from django.shortcuts import render
+
+def landing(request):
+    return render(request, 'main/landing.html')
+
+def about(request):
+    return render(request, 'main/about.html')
+
+def services(request):
+    return render(request, 'main/services.html')
+
+def contact(request):
+    return render(request, 'main/contact.html')

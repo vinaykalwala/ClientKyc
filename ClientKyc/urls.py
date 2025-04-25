@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
+    path('home', home, name='home'),
     path('signup/', signup, name='signup'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
@@ -55,6 +55,10 @@ urlpatterns = [
     path('read-all/', mark_all_notifications_as_read, name='mark_all_notifications_as_read'),
     path('notifications/read/', read_notifications_view, name='read_notifications'),
     path('notifications/delete-all-read/', delete_all_read_notifications, name='delete_all_read_notifications'),
+     path('', landing, name='landing'),
+    path('about/', about, name='about'),
+    path('services/', services, name='services'),
+    path('contact/',contact, name='contact'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
