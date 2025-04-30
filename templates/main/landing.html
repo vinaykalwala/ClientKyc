@@ -32,7 +32,21 @@
         object-position: center;
         display: block;
     }
-
+    .banner-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.705);
+        padding: 20px;
+        border-radius: 10px;
+        width: 40%;
+    }
+    .banner-text h2 {
+        margin-bottom: 10px;
+    }
     
     .hero-content {
         background-color: #fdfdfd;
@@ -227,7 +241,7 @@
 }
 
 .view-all-arrow i {
-    font-size: 1.5rem;   /* 24px */
+    font-size: 2.5rem;   /* 24px */
 }
 
 /* Responsive Styles */
@@ -747,6 +761,20 @@
         .hero-content {
             padding: 25px 12px;
         }
+        .banner-text {
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px;
+        }
+
+        .banner-text h2 {
+            font-size: 18px;
+        }
+
+        .banner-text span {
+            font-size: 14px;
+        }
         .header-container {
             gap: 15px;
             margin-bottom: 20px;
@@ -777,6 +805,10 @@
 
 <section class="hero-section">
     <img src="{% static 'main/lawbann.png' %}" alt="Law Image">
+    <div class="banner-text">
+        <h2>Mr. VENKATESH CHANDRAN (M.A., LL.B.)</h2>
+        <span>Advocates & Legal Consultants</span>
+    </div>
 </section>
 
 
@@ -854,6 +886,12 @@
         <div class="practice-section-container">
         <div class="practice-container">
             <div class="practice-cards">
+                <img src="{% static 'images/propertydisputes.png' %}" alt="Real Estate Icon" class="practice-logo" />
+                <h3>Real Estate Law</h3>
+                <p>Legal support for property transactions, title checks, RERA, and land issues.</p>
+                <button class="learn-mores">Learn More</button>
+            </div>
+            <div class="practice-cards">
                 <img src="{% static 'images/saledeed.png' %}" alt="Sale Deed Icon" class="practice-logo" />
                 <h3>Property Agreements</h3>
                 <p>Drafting & registration of sale deed, gift deed, mortgage deed, partition deed, etc.</p>
@@ -874,12 +912,12 @@
                 <button class="learn-mores">Learn More</button>
             </div>
     
-            <div class="practice-cards">
+            <!-- <div class="practice-cards">
                 <img src="{% static 'images/moa.png' %}" alt="MOA Icon" class="practice-logo" />
                 <h3>MOA & Declarations</h3>
                 <p>Memorandum of Agreement, deed of declaration, rectification deeds, etc.</p>
                 <button class="learn-mores">Learn More</button>
-            </div>
+            </div> -->
         </div>
     
         <a href="{% url 'services' %}" class="view-all-arrow" title="View All Services">
