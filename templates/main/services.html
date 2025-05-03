@@ -15,49 +15,48 @@
 
 .service-img {
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-height: 600px;
+    overflow: hidden;
 }
 
 .service-img img {
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-height: 60vh;
     object-fit: cover;
     object-position: center;
     display: block;
 }
+
+@media (max-width: 768px) {
+    .service-img img {
+        max-height: 50vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-img img {
+        max-height: 40vh;
+    }
+}
+
 
 /* Mobile-specific override */
 @media (max-width: 768px) {
     .service-hero {
         max-height: none;
         height: auto;
-        aspect-ratio: 16 / 10; /* Slightly taller on smaller devices */
     }
 }
 
-.service-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 20px 40px;
-    border-radius: 10px;
-    color: #fff;
-    text-align: center;
-    max-width: 90%;
-}
 
-.service-overlay h1 {
-    font-size: 2rem;
-    margin: 0;
-}
 .section-heading {
     text-align: center;
     color: #333;
     font-size: 2.2em;
     padding-bottom: 15px;
-    border-bottom: 2px solid #f0c36d;
+    border-bottom: 2px solid #020b43d1;
     display: inline-block;
     margin: 0 auto 30px;
 }
@@ -78,7 +77,11 @@
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 10px;
+    background: linear-gradient(90deg, rgb(4, 0, 254), rgb(4, 0, 254), rgb(255, 4, 4), rgb(245, 0, 0));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
+
 
 .service-areas p{
     font-size: 1.5rem;
@@ -86,12 +89,13 @@
     margin-bottom: 20px;
 }
 
-.underline{
+.underline {
     width: 150px;
     height: 4px;
-    background-color: #DF9755;
+    background: rgb(255, 4, 4);
     margin: 0 auto 40px;
 }
+
 
 /* Responsive Styling */
 @media (max-width: 992px) {
@@ -128,7 +132,7 @@
 
 @media (max-width: 480px) {
     .service-overlay {
-        padding: 10px 20px;
+        padding: 0px 20px;
     }
 
     .service-overlay h1 {
@@ -182,12 +186,12 @@
 .service-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 8px 30px rgba(223, 151, 85, 0.2);
-    border-color: #DF9755;
+    border-color: #020b43d1;
 }
 
 .service-card:hover::before {
     transform: scaleX(1);
-    background: #DF9755;
+    background: #020b43d1;
 }
 
 .service-icon {
@@ -210,7 +214,7 @@
 }
 
 .service-card:hover h3 {
-    color: #DF9755;
+    color: #020b43d1;
 }
 
 .service-card p {
@@ -234,9 +238,9 @@
 }
 
 .learn-more-btn:hover {
-    background-color: #DF9755;
+    background-color: #020b43d1;
     color: white;
-    border-color: #DF9755;
+    border-color: #020b43d1;
     transform: translateY(-2px);
 }
 
@@ -252,9 +256,12 @@
 /* Heading & Description */
 .service-card h3 {
     font-size: 22px;
-    color: #DF9755;
+    background: linear-gradient(90deg, #0400fe, #0400fe, #ff0404, #f50000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
+
 
 .service-card p {
     font-size: 1.5rem;
@@ -279,7 +286,7 @@
 .service-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 8px 30px rgba(223, 151, 85, 0.2);
-    border-color: #DF9755;
+    border-color: #020b43d1;
     background-color: #fff;
 }
 
@@ -296,9 +303,9 @@
 }
 
 .learn-more-btn:hover {
-    background-color: #DF9755;
+    background-color: #020b43d1;
     color: white;
-    border-color: #DF9755;
+    border-color: #020b43d1;
 }
 
 
@@ -341,9 +348,9 @@
 <!-- Hero Section -->
 <section class="service-hero">
     <div class="service-img">
-        <img src="{% static 'images/bookimg.jpg' %}" alt="services-banner" class="services-banner-image" />
+        <img src="{% static 'images/ckvkservicesbanner.jpeg' %}" alt="services-banner" class="services-banner-image" />
         <div class="service-overlay">
-            <h1>Our Services</h1>
+            <!-- <h1>Our Services</h1> -->
 
         </div>
     </div>

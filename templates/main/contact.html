@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
 /* Modern Contact Page Styling */
+/* Contact Page Container */
 .contact-page {
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     min-height: 100vh;
@@ -14,38 +15,52 @@
 
 .contact-banner-container {
     position: relative;
-    height: 400px;
+    width: 100%;
+    height: 50vh;
+    min-height: 300px;
+    max-height: 500px;
     overflow: hidden;
-    background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(223, 151, 85, 0.8));
 }
 
 .contact-banner-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    /* object-fit: cover; */
     object-position: center;
-    opacity: 0.8;
+    display: block;
 }
 
+@media (max-width: 576px) {
+    .contact-banner-container {
+        height: 40vh;
+        min-height: 250px;
+    }
+
+    .contact-banner-img {
+        height: 100%;
+        
+    }
+}
+
+
+/* Banner Text */
 .banner-text {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    left: 30%;
+    transform: translate(-30%, -50%);
     text-align: center;
     color: white;
     z-index: 2;
-    width: 100%;
-    max-width: 800px;
+    width: 90%;
+    max-width: 500px;
     padding: 2rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .banner-text h1 {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -53,21 +68,23 @@
 }
 
 .banner-text p {
-    font-size: 1.5rem;
+    font-size: 1rem;
     opacity: 0.9;
 }
 
+/* Contact Grid */
 .contact-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
     max-width: 1200px;
     margin: -50px auto 0;
-    padding: 0 2rem;
+    padding: 2rem;
     position: relative;
     z-index: 2;
 }
 
+/* Contact Card */
 .contact-card {
     background: white;
     border-radius: 20px;
@@ -80,8 +97,9 @@
     transform: translateY(-10px);
 }
 
+/* Card Header */
 .card-header {
-    background: linear-gradient(145deg, #2c3e50, #34495e);
+    background: #091057;
     color: white;
     padding: 2rem;
     position: relative;
@@ -101,16 +119,24 @@
     left: 0;
     width: 50px;
     height: 3px;
-    background: #df9755;
+    background: white;
 }
 
+/* Card Body */
 .card-body {
     padding: 2rem;
 }
 
+/* Contact Info Items */
 .contact-info {
     margin-bottom: 2rem;
 }
+.connect h3 {
+    background: linear-gradient(90deg, rgb(4, 0, 254), rgb(255, 4, 4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 
 .contact-item {
     display: flex;
@@ -123,14 +149,14 @@
 }
 
 .contact-item:hover {
-    background: #df9755;
+    background: #020b43d1;
     color: white;
 }
 
 .contact-item i {
     font-size: 1.5rem;
     margin-right: 1rem;
-    color: #df9755;
+    color: #020b43d1;
     width: 40px;
     text-align: center;
 }
@@ -139,6 +165,7 @@
     color: white;
 }
 
+/* Map Container */
 .map-container {
     height: 100%;
     min-height: 400px;
@@ -152,11 +179,15 @@
     border: none;
 }
 
+/* Social Icons Grid */
 .social-media-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    gap: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
     margin-top: 2rem;
+    flex-wrap: wrap;
+    padding: 0 1rem;
 }
 
 .social-icon {
@@ -166,7 +197,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(145deg, #df9755, #c97f3f);
+    background: #020b43d1;
     color: white;
     font-size: 1.5rem;
     transition: all 0.3s ease;
@@ -178,45 +209,75 @@
     box-shadow: 0 10px 20px rgba(223, 151, 85, 0.3);
 }
 
+/* Responsive Breakpoints */
+
+/* Tablet */
 @media (max-width: 992px) {
     .contact-grid {
         grid-template-columns: 1fr;
         margin-top: -30px;
+        padding: 1.5rem;
     }
-    
+
+    .banner-text {
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 1.5rem;
+    }
+
     .banner-text h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
-    
+
     .banner-text p {
+        font-size: 1rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .banner-text {
+        padding: 1rem;
+        max-width: 90%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .banner-text h1 {
+        font-size: 1.5rem;
+    }
+
+    .banner-text p {
+        font-size: 0.9rem;
+    }
+
+    .contact-grid {
+        padding: 1rem;
+    }
+
+    .card-header, .card-body {
+        padding: 1rem;
+    }
+
+    .social-media-grid {
+        gap: 1.2rem;
+        justify-content: center;
+    }
+
+    .social-icon {
+        width: 50px;
+        height: 50px;
         font-size: 1.2rem;
     }
 }
 
-@media (max-width: 576px) {
-    .banner-text h1 {
-        font-size: 2rem;
-    }
-    
-    .contact-grid {
-        padding: 0 1rem;
-    }
-    
-    .card-header {
-        padding: 1.5rem;
-    }
-    
-    .card-body {
-        padding: 1.5rem;
-    }
-}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="contact-page">
     <div class="contact-banner-container">
-        <img src="{% static 'images/advocate.jpeg' %}" alt="Contact Banner" class="contact-banner-img" />
+        <img src="{% static 'images/ckvkcontactusbanner.jpg' %}" alt="Contact Banner" class="contact-banner-img" />
         <div class="banner-text">
             <h1>Contact Us</h1>
             <p>Available Always To Assist You</p>
@@ -247,8 +308,9 @@
                         <p>rvlaw.76@gmail.com / ckvklaw.76@gmail.com</p>
                     </div>
                 </div>
-
+                <div class="connect">
                 <h3>Connect With Us</h3>
+                </div>
                 <div class="social-media-grid">
                     <div class="social-icon"><i class="fab fa-facebook-f"></i></div>
                     <div class="social-icon"><i class="fab fa-twitter"></i></div>
