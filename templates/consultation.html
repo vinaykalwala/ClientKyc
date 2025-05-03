@@ -1,0 +1,223 @@
+{% extends 'main/base.html' %} {% block content %}<!DOCTYPE html>
+<html>
+<head>
+  <title>Property Legal Consultation Form</title>
+  <style>
+   
+
+    .form-container {
+      background: #fff;
+      max-width: 80%;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+    }
+
+    fieldset {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    legend {
+      font-weight: bold;
+      color: #34495e;
+      padding: 0 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: #2980b9;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+      margin-top: 30px;
+    }
+
+    button:hover {
+      background-color: #1f6391;
+    }
+    .modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2>Property Legal Consultation Form</h2>
+  <div style="background: #eaf4ff; padding: 20px 25px; border-left: 5px solid #007BFF; border-radius: 8px; margin-bottom: 30px; font-size: 16px; line-height: 1.6;">
+    <h3 style="margin-top: 0; color: #2c3e50;">About This Consultation Form</h3>
+    <p>
+        Welcome to our <strong>Property Legal Consultation Program</strong>. This <strong>Property Legal Consultation Form</strong> is designed to collect essential information and supporting documents related to your property. The details you provide will help our legal experts analyze the property records and offer professional guidance to ensure your transaction is legally safe and compliant.
+    </p>
+  
+    <h4 style="margin-bottom: 10px; color: #2c3e50;">Why This Form is Important</h4>
+    <ul style="margin-top: 0;">
+      <li>To verify property ownership and supporting legal documents.</li>
+      <li>To identify potential legal issues or risks with the property.</li>
+      <li>To offer you customized legal advice and clarity before you buy/sell.</li>
+    </ul>
+  
+    <h4 style="margin-bottom: 10px; color: #2c3e50;">Payment Instructions</h4>
+    <p>
+      A <strong>consultation fee of ₹500</strong> is required to begin the review process. Please pay the amount via UPI to the following ID:
+      <br><br>
+      <strong style="font-size: 17px; color: #007BFF;">yourupiid@upi</strong>
+    </p>
+    <p>
+      Once you've made the payment, take a screenshot of the transaction and fill in the payment details in the "Transaction Details" section below. This step confirms your request and allows our team to prioritize your case.
+    </p>
+  
+    <h4 style="margin-bottom: 10px; color: #2c3e50;">What Happens Next?</h4>
+    <ul>
+      <li>After submitting this form, our legal team will review your details and documents.</li>
+      <li>You will be contacted within <strong>1-2 business days</strong> for further discussion to the Email mentioned in the form.</li>
+      <li>Based on your property type and documents, you'll receive tailored legal recommendations or a formal report.</li>
+    </ul>
+  
+    <p style="margin-top: 15px;">
+      <strong>Note:</strong> All information submitted is kept strictly confidential and used only for consultation purposes.
+    </p>
+  </div>
+  
+ 
+
+  <form method="POST" enctype="multipart/form-data" action="/consultation_submit_form/">
+    {% csrf_token %}
+
+    <fieldset>
+      <legend>Client & Property Details</legend>
+      <label>Client Name:</label><input type="text" name="client_name" required>
+      <label>Mobile Number:</label><input type="text" name="mobile" required>
+      <label>WhatsApp Number:</label><input type="text" name="whatsapp">
+      <label>Email ID:</label><input type="email" name="email" required>
+      <label>Property Owner PAN:</label><input type="text" name="pan" required>
+      <label>Mode of Seller Ownership:</label><input type="text" name="ownership_mode" required>
+      <label>Nature of Property:</label><input type="text" name="nature" required>
+      <label>Site Number:</label><input type="text" name="site_number" required>
+      <label>Survey Number:</label><input type="text" name="survey_number" required>
+      <label>Village:</label><input type="text" name="village" required>
+      <label>Hobli:</label><input type="text" name="hobli" required>
+      <label>Taluk:</label><input type="text" name="taluk" required>
+      <label>Vacant or Built:</label><input type="text" name="vacant_or_built" required>
+    </fieldset>
+
+    <fieldset>
+      <legend>Upload Property Documents</legend>
+      <label>Ownership Documents:</label><input type="file" name="ownership_docs">
+      <label>Property Tax Receipt:</label><input type="file" name="tax_receipt">
+      <label>Encumbrance Certificate:</label><input type="file" name="encumbrance_cert">
+      <label>Khata Certificate:</label><input type="file" name="khata_cert">
+      <label>Khata Extract:</label><input type="file" name="khata_extract">
+      <label>Land Conversion Order:</label><input type="file" name="land_conversion">
+      <label>Property Plan/Layout:</label><input type="file" name="property_plan">
+      <label>PAN Card of Owner:</label><input type="file" name="pan_card">
+      <label>Previous Sale Deeds:</label><input type="file" name="sale_deeds">
+      <label>Loan Documents:</label><input type="file" name="loan_docs">
+      <label>Court Orders (if any):</label><input type="file" name="court_orders">
+      <label>Location Map:</label><input type="file" name="location_map">
+    </fieldset>
+
+    <fieldset>
+        <div style="background-color:#f9f9f9; border-left:4px solid #007BFF; padding:10px; margin-bottom:15px;">
+            <strong>Payment Instructions:</strong><br>
+            Please pay <strong>₹500</strong> to the following UPI ID: <strong style="color:#007BFF;">yourupiid@upi</strong><br>
+            After completing the payment, take a screenshot and fill in the transaction details below. Attach the screenshot to submit the form.
+          </div>
+      <legend>Transaction Details</legend>
+      <label>Transaction Amount:</label><input type="text" name="transaction_amount" required>
+      <label>Transaction Date:</label><input type="date" name="transaction_date" required>
+      <label>Transaction ID:</label><input type="text" name="transaction_id" required>
+      <label>Transaction Screenshot:</label><input type="file" name="transaction_screenshot" required>
+    </fieldset>
+
+    <button type="submit">Submit</button>
+  </form>
+
+
+</div>
+<div id="successModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Form Submitted Successfully!</h2>
+      <p>Your consultation form has been submitted. We will get in touch with you within the next 36 to 48 hours.</p>
+    </div>
+  </div>
+  
+  <script>
+    {% if success_message %}
+      var modal = document.getElementById("successModal");
+      modal.style.display = "block";
+  
+      var span = document.getElementsByClassName("close")[0];
+      span.onclick = function () {
+        modal.style.display = "none";
+      };
+  
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    {% endif %}
+  </script>
+  
+
+</body>
+</html>
+{% endblock %}

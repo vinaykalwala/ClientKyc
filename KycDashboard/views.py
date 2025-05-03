@@ -1227,3 +1227,59 @@ def services(request):
 
 def contact(request):
     return render(request, 'main/contact.html')
+
+def consultation(request):
+    return render(request,'consultation.html')
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from django.core.mail import EmailMessage
+
+@csrf_exempt
+def consultation_submit_form(request):
+    if request.method == 'POST':
+        user_email = request.POST.get('email')
+        if not user_email:
+            return HttpResponse("Email is required", status=400)
+
+        subject = "New Property Legal Consultation Form Submission"
+        body = f"""
+        Client Name: {request.POST.get('client_name')}
+        Mobile: {request.POST.get('mobile')}
+        WhatsApp: {request.POST.get('whatsapp')}
+        Email: {user_email}
+        PAN: {request.POST.get('pan')}
+        Mode of Seller Ownership: {request.POST.get('ownership_mode')}
+        Nature of Property: {request.POST.get('nature')}
+        Site Number: {request.POST.get('site_number')}
+        Survey Number: {request.POST.get('survey_number')}
+        Village: {request.POST.get('village')}
+        Hobli: {request.POST.get('hobli')}
+        Taluk: {request.POST.get('taluk')}
+        Vacant or Built: {request.POST.get('vacant_or_built')}
+        
+        Transaction Amount: {request.POST.get('transaction_amount')}
+        Transaction Date: {request.POST.get('transaction_date')}
+        Transaction ID: {request.POST.get('transaction_id')}
+        """
+
+        email = EmailMessage(
+            subject=subject,
+            body=body,
+            from_email=user_email,  # 👈 User-provided email as sender
+            to=["durgaprakash1102@gmail.com"],
+            reply_to=[user_email]  
+        )
+
+        for file_key in request.FILES:
+            uploaded_file = request.FILES[file_key]
+            email.attach(uploaded_file.name, uploaded_file.read(), uploaded_file.content_type)
+
+        try:
+            email.send(fail_silently=False)
+            messages.success(request, "Form submitted successfully. We will get in touch with you shortly.")
+            return render(request, 'consultation.html', {'success_message': True})
+        except Exception as e:
+            return HttpResponse(f"Email sending failed: {str(e)}", status=500)
+
+    return HttpResponse("Only POST method allowed", status=405)
