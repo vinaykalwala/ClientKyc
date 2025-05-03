@@ -94,6 +94,79 @@
     .text-muted {
         color: #adb5bd;
     }
+    @media print {
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        color: #000;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    .container, .container * {
+        visibility: visible;
+    }
+
+    .container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 30px;
+        background: white !important;
+        box-shadow: none !important;
+    }
+
+    .container h2 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 30px;
+        color: #000;
+    }
+
+    .action-buttons {
+        display: none !important;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+        border: 1px solid #444;
+        padding: 10px;
+    }
+
+    .table th {
+        background-color: #e0e0e0 !important;
+        color: #000 !important;
+        font-weight: bold;
+    }
+
+    .table td {
+        background-color: #fff !important;
+        color: #000;
+    }
+
+    .text-success, .text-danger, .text-warning, .text-primary, .text-secondary, .text-muted {
+        color: #000 !important;
+        font-weight: normal;
+    }
+
+    a[href]:after {
+        content: "";
+    }
+}
+
+
+
+
 </style>
 
 <div class="container">
@@ -105,6 +178,8 @@
         <!-- Show the "Edit" button only if the current user filed the KYC property or is a superuser -->
         {% if property.filed_by == request.user or property.file_maintained_by or request.user.is_superuser %}
         <a href="{% url 'kyc_update' property.pk %}" class="btn btn-warning">Edit</a> {% endif %}
+
+        <button class="btn btn-secondary" onclick="window.print()">Print</button>
     </div>
 
     <table class="table table-bordered">
