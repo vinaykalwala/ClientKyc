@@ -31,7 +31,7 @@ nav {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding: 10px 20px;
+  padding: 18px 20px;
   position: relative;
 }
 
@@ -54,11 +54,13 @@ nav {
   align-items: center;
   justify-content: flex-end;
   gap: 25px;
+  margin-top: 15px;
   flex: 1;
 }
 
 /* Nav Links */
 .nav-links a {
+    background-color: rgba(255, 255, 255, 0.05);
     color: #fff;
     text-decoration: none;
     font-size: 1rem;
@@ -70,7 +72,8 @@ nav {
 }
 
 .nav-links a:hover {
-    color: #cccccc;
+  text-decoration: underline;
+  color: #f57c00;
 }
 
 .nav-links a i {
@@ -275,15 +278,7 @@ footer {
                 <span></span>
             </div>
 
-            <!-- Logout Button placed in the right corner -->
-            {% if user.is_authenticated %}
-            <div class="logout">
-                <form method="POST" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="logout-button">Logout</button>
-                </form>
-            </div>
-            {% endif %}
+           
 
             <div class="nav-links" id="navLinks">
                 <a href="{% url 'landing' %}"><i class="fas fa-home"></i> Home</a>

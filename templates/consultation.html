@@ -1,42 +1,115 @@
-{% extends 'main/base.html' %} {% block content %}<!DOCTYPE html>
+{% extends 'main/base.html' %} 
+{% block content %}
+<!DOCTYPE html>
 <html>
 <head>
   <title>Property Legal Consultation Form</title>
   <style>
-   
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    *{
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+  }
+  html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+  }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+      {% comment %} padding: 20px 0; {% endcomment %}
+    }
 
     .form-container {
       background: #fff;
-      max-width: 80%;
-      margin: 0 auto;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     }
 
     h2 {
       text-align: center;
+      background: linear-gradient(90deg, #0400fe, #0400fe, #ff0404, #f50000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text; /* fallback for some modern browsers */
+      color: transparent; 
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+  
+
+    .intro-box {
+      background: linear-gradient(135deg, #f5f9ff 0%, #e8f2ff 100%);
+      padding: 25px 30px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      border-left: 5px solid #007BFF;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .intro-box h3 {
+      margin-top: 0;
+      background: linear-gradient(90deg, #0400fe, #0400fe, #ff0404, #f50000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text; /* fallback for some modern browsers */
+      color: transparent; 
+      font-size: 1.4rem;
+    }
+
+    .intro-box h4 {
       color: #2c3e50;
-      margin-bottom: 25px;
+      font-size: 1.1rem;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .intro-box ul {
+      padding-left: 20px;
+      margin-top: 0;
+    }
+
+    .intro-box li {
+      margin-bottom: 8px;
     }
 
     fieldset {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 25px;
+      border: 1px solid #e0e6ed;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+      background: #f9fbfe;
     }
 
     legend {
-      font-weight: bold;
-      color: #34495e;
-      padding: 0 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      background: linear-gradient(90deg, #0400fe, #0400fe, #ff0404, #f50000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text; /* fallback for some modern browsers */
+      color: transparent; 
+      padding: 0 15px;
+      
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     label {
       display: block;
-      margin-top: 12px;
+      margin-top: 18px;
       font-weight: 500;
+      color: #4a5568;
     }
 
     input[type="text"],
@@ -44,179 +117,387 @@
     input[type="date"],
     input[type="file"] {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      padding: 12px 15px;
+      margin-top: 8px;
+      border: 1px solid #e0e6ed;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: #fff;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="date"]:focus {
+      outline: none;
+      border-color: #007BFF;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+
+    .payment-instruction {
+      background: #f8f9ff;
+      border-left: 4px solid #007BFF;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .payment-instruction strong {
+      color: #007BFF;
     }
 
     button {
-      background-color: #2980b9;
+      background: linear-gradient(135deg, #0400fe 0%, #007BFF 100%);
       color: white;
-      padding: 12px 25px;
+      padding: 14px 30px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
       display: block;
-      margin: 0 auto;
-      margin-top: 30px;
+      margin: 40px auto 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(4, 0, 254, 0.2);
     }
 
     button:hover {
-      background-color: #1f6391;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(4, 0, 254, 0.25);
     }
+
+    /* Modal Styles */
     .modal {
-  display: none;
-  position: fixed;
-  z-index: 999;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4);
-}
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
 
-.modal-content {
-  background-color: #fff;
-  margin: 15% auto;
-  padding: 30px;
-  border-radius: 8px;
-  max-width: 500px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      position: relative;
+      animation: modalopen 0.4s;
+    }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    @keyframes modalopen {
+      from {opacity: 0; transform: translateY(-50px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
 
+    .close {
+      color: #aaa;
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .close:hover {
+      color: #333;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 25px;
+        max-width: 95%;
+      }
+      
+      h2 {
+        font-size: 1.8rem;
+      }
+      
+      fieldset {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-container {
+        padding: 20px 15px;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .intro-box {
+        padding: 20px;
+      }
+      
+      button {
+        width: 100%;
+      }
+    }
+
+    /* File Input Styling */
+    input[type="file"] {
+      padding: 10px;
+      border: 1px dashed #ccc;
+      background: #f9f9f9;
+    }
+
+    input[type="file"]:focus {
+      border-color: #007BFF;
+      border-style: solid;
+    }
   </style>
 </head>
 <body>
 
 <div class="form-container">
-  <h2>Property Legal Consultation Form</h2>
-  <div style="background: #eaf4ff; padding: 20px 25px; border-left: 5px solid #007BFF; border-radius: 8px; margin-bottom: 30px; font-size: 16px; line-height: 1.6;">
-    <h3 style="margin-top: 0; color: #2c3e50;">About This Consultation Form</h3>
+  <h2>Property Legal Consultation</h2>
+  
+  <div class="intro-box">
+    <h3>About This Consultation Service</h3>
     <p>
-        Welcome to our <strong>Property Legal Consultation Program</strong>. This <strong>Property Legal Consultation Form</strong> is designed to collect essential information and supporting documents related to your property. The details you provide will help our legal experts analyze the property records and offer professional guidance to ensure your transaction is legally safe and compliant.
+      Our <strong>Property Legal Consultation Program</strong> helps you verify property documents and identify potential legal risks before transactions. Complete this form to receive expert analysis and recommendations.
     </p>
   
-    <h4 style="margin-bottom: 10px; color: #2c3e50;">Why This Form is Important</h4>
-    <ul style="margin-top: 0;">
-      <li>To verify property ownership and supporting legal documents.</li>
-      <li>To identify potential legal issues or risks with the property.</li>
-      <li>To offer you customized legal advice and clarity before you buy/sell.</li>
-    </ul>
-  
-    <h4 style="margin-bottom: 10px; color: #2c3e50;">Payment Instructions</h4>
-    <p>
-      A <strong>consultation fee of ₹500</strong> is required to begin the review process. Please pay the amount via UPI to the following ID:
-      <br><br>
-      <strong style="font-size: 17px; color: #007BFF;">yourupiid@upi</strong>
-    </p>
-    <p>
-      Once you've made the payment, take a screenshot of the transaction and fill in the payment details in the "Transaction Details" section below. This step confirms your request and allows our team to prioritize your case.
-    </p>
-  
-    <h4 style="margin-bottom: 10px; color: #2c3e50;">What Happens Next?</h4>
+    <h4>Why This Service Matters</h4>
     <ul>
-      <li>After submitting this form, our legal team will review your details and documents.</li>
-      <li>You will be contacted within <strong>1-2 business days</strong> for further discussion to the Email mentioned in the form.</li>
-      <li>Based on your property type and documents, you'll receive tailored legal recommendations or a formal report.</li>
+      <li>Comprehensive verification of property ownership and documents</li>
+      <li>Identification of legal issues before they become problems</li>
+      <li>Personalized legal advice tailored to your property situation</li>
     </ul>
   
-    <p style="margin-top: 15px;">
-      <strong>Note:</strong> All information submitted is kept strictly confidential and used only for consultation purposes.
+    <h4>Payment Process</h4>
+    <p>
+      A <strong>consultation fee of ₹500</strong> is required to begin the review. Please pay via UPI to:
+      <br><br>
+      <span style="display: inline-block; background: #007BFF; color: white; padding: 8px 15px; border-radius: 6px; font-weight: 600;">yourupiid@upi</span>
+    </p>
+    <p>
+      After payment, upload the transaction screenshot in the designated section below to confirm your request.
+    </p>
+  
+    <h4>Next Steps After Submission</h4>
+    <ul>
+      <li>Our legal team will review your documents within 24 hours</li>
+      <li>You'll receive a preliminary assessment via email</li>
+      <li>A detailed consultation will be scheduled based on your documents</li>
+    </ul>
+  
+    <p style="margin-top: 20px; font-size: 14px; color: #666;">
+      <strong>Confidentiality Note:</strong> All information provided is protected under attorney-client privilege and used solely for consultation purposes.
     </p>
   </div>
-  
- 
 
   <form method="POST" enctype="multipart/form-data" action="/consultation_submit_form/">
     {% csrf_token %}
 
     <fieldset>
-      <legend>Client & Property Details</legend>
-      <label>Client Name:</label><input type="text" name="client_name" required>
-      <label>Mobile Number:</label><input type="text" name="mobile" required>
-      <label>WhatsApp Number:</label><input type="text" name="whatsapp">
-      <label>Email ID:</label><input type="email" name="email" required>
-      <label>Property Owner PAN:</label><input type="text" name="pan" required>
-      <label>Mode of Seller Ownership:</label><input type="text" name="ownership_mode" required>
-      <label>Nature of Property:</label><input type="text" name="nature" required>
-      <label>Site Number:</label><input type="text" name="site_number" required>
-      <label>Survey Number:</label><input type="text" name="survey_number" required>
-      <label>Village:</label><input type="text" name="village" required>
-      <label>Hobli:</label><input type="text" name="hobli" required>
-      <label>Taluk:</label><input type="text" name="taluk" required>
-      <label>Vacant or Built:</label><input type="text" name="vacant_or_built" required>
+      <legend>Client & Property Information</legend>
+      <label>Full Name</label>
+      <input type="text" name="client_name" required placeholder="Enter your full name">
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Mobile Number</label>
+          <input type="text" name="mobile" required placeholder="10-digit number">
+        </div>
+        <div>
+          <label>WhatsApp Number</label>
+          <input type="text" name="whatsapp" placeholder="Optional">
+        </div>
+      </div>
+      
+      <label>Email Address</label>
+      <input type="email" name="email" required placeholder="example@domain.com">
+      
+      <label>Property Owner PAN</label>
+      <input type="text" name="pan" required placeholder="ABCDE1234F">
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Mode of Seller Ownership</label>
+          <input type="text" name="ownership_mode" required placeholder="e.g. Individual, Joint, etc.">
+        </div>
+        <div>
+          <label>Nature of Property</label>
+          <input type="text" name="nature" required placeholder="Residential, Commercial, etc.">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Site Number</label>
+          <input type="text" name="site_number" required>
+        </div>
+        <div>
+          <label>Survey Number</label>
+          <input type="text" name="survey_number" required>
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Village</label>
+          <input type="text" name="village" required>
+        </div>
+        <div>
+          <label>Hobli</label>
+          <input type="text" name="hobli" required>
+        </div>
+        <div>
+          <label>Taluk</label>
+          <input type="text" name="taluk" required>
+        </div>
+      </div>
+      
+      <label>Vacant or Built Property</label>
+      <input type="text" name="vacant_or_built" required placeholder="Specify property status">
     </fieldset>
 
     <fieldset>
-      <legend>Upload Property Documents</legend>
-      <label>Ownership Documents:</label><input type="file" name="ownership_docs">
-      <label>Property Tax Receipt:</label><input type="file" name="tax_receipt">
-      <label>Encumbrance Certificate:</label><input type="file" name="encumbrance_cert">
-      <label>Khata Certificate:</label><input type="file" name="khata_cert">
-      <label>Khata Extract:</label><input type="file" name="khata_extract">
-      <label>Land Conversion Order:</label><input type="file" name="land_conversion">
-      <label>Property Plan/Layout:</label><input type="file" name="property_plan">
-      <label>PAN Card of Owner:</label><input type="file" name="pan_card">
-      <label>Previous Sale Deeds:</label><input type="file" name="sale_deeds">
-      <label>Loan Documents:</label><input type="file" name="loan_docs">
-      <label>Court Orders (if any):</label><input type="file" name="court_orders">
-      <label>Location Map:</label><input type="file" name="location_map">
+      <legend>Property Documents Upload</legend>
+      <p style="margin-top: 0; color: #666; font-size: 14px;">
+        Please upload clear scans/photos of all relevant documents (PDF, JPG, PNG)
+      </p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Ownership Documents</label>
+          <input type="file" name="ownership_docs" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+        <div>
+          <label>Property Tax Receipt</label>
+          <input type="file" name="tax_receipt" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Encumbrance Certificate</label>
+          <input type="file" name="encumbrance_cert" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+        <div>
+          <label>Khata Certificate</label>
+          <input type="file" name="khata_cert" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Khata Extract</label>
+          <input type="file" name="khata_extract" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+        <div>
+          <label>Land Conversion Order</label>
+          <input type="file" name="land_conversion" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Property Plan/Layout</label>
+          <input type="file" name="property_plan" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+        <div>
+          <label>PAN Card of Owner</label>
+          <input type="file" name="pan_card" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Previous Sale Deeds</label>
+          <input type="file" name="sale_deeds" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+        <div>
+          <label>Loan Documents</label>
+          <input type="file" name="loan_docs" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Court Orders (if any)</label>
+          <input type="file" name="court_orders" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+        <div>
+          <label>Location Map</label>
+          <input type="file" name="location_map" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
     </fieldset>
 
     <fieldset>
-        <div style="background-color:#f9f9f9; border-left:4px solid #007BFF; padding:10px; margin-bottom:15px;">
-            <strong>Payment Instructions:</strong><br>
-            Please pay <strong>₹500</strong> to the following UPI ID: <strong style="color:#007BFF;">yourupiid@upi</strong><br>
-            After completing the payment, take a screenshot and fill in the transaction details below. Attach the screenshot to submit the form.
-          </div>
-      <legend>Transaction Details</legend>
-      <label>Transaction Amount:</label><input type="text" name="transaction_amount" required>
-      <label>Transaction Date:</label><input type="date" name="transaction_date" required>
-      <label>Transaction ID:</label><input type="text" name="transaction_id" required>
-      <label>Transaction Screenshot:</label><input type="file" name="transaction_screenshot" required>
+      <legend>Payment Confirmation</legend>
+      <div class="payment-instruction">
+        <strong>Payment Instructions:</strong><br>
+        Please pay <strong>₹500</strong> to UPI ID: <strong>yourupiid@upi</strong><br>
+        Upload the transaction screenshot below to complete your submission.
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <label>Transaction Amount (₹)</label>
+          <input type="text" name="transaction_amount" required placeholder="500">
+        </div>
+        <div>
+          <label>Transaction Date</label>
+          <input type="date" name="transaction_date" required>
+        </div>
+      </div>
+      
+      <label>Transaction ID/Reference Number</label>
+      <input type="text" name="transaction_id" required placeholder="Enter transaction reference">
+      
+      <label>Payment Screenshot/Proof</label>
+      <input type="file" name="transaction_screenshot" required accept=".jpg,.jpeg,.png">
     </fieldset>
 
-    <button type="submit">Submit</button>
+    <button type="submit">Submit Consultation Request</button>
   </form>
-
-
 </div>
+
 <div id="successModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Form Submitted Successfully!</h2>
-      <p>Your consultation form has been submitted. We will get in touch with you within the next 36 to 48 hours.</p>
-    </div>
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;">
+      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" fill="#4CAF50"/>
+    </svg>
+    <h2 style="color: #4CAF50;">Submission Successful!</h2>
+    <p>Thank you for your consultation request. Our legal team will review your documents and contact you within 24-48 hours.</p>
+    <p style="font-size: 14px; color: #666; margin-top: 20px;">A confirmation has been sent to your email address.</p>
   </div>
-  
-  <script>
-    {% if success_message %}
-      var modal = document.getElementById("successModal");
-      modal.style.display = "block";
-  
-      var span = document.getElementsByClassName("close")[0];
-      span.onclick = function () {
+</div>
+
+<script>
+  {% if success_message %}
+    var modal = document.getElementById("successModal");
+    modal.style.display = "block";
+
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function() {
+      modal.style.display = "none";
+    };
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
         modal.style.display = "none";
-      };
-  
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      };
-    {% endif %}
-  </script>
-  
+      }
+    };
+  {% endif %}
+</script>
 
 </body>
 </html>

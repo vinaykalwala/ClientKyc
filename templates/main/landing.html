@@ -27,26 +27,30 @@
 
     .hero-section img {
         width: 100%;
-        height: 100%;
+        height: 87%;
         object-fit: cover;
         object-position: center;
         display: block;
     }
     .banner-text {
         position: absolute;
-        top: 50%;
+        top: 43%;
         left: 50%;
         transform: translate(-50%, -50%);
         color: white;
         text-align: center;
-         background: linear-gradient(rgba(0, 0, 0, 0.838), rgba(0, 0, 0, 0.838)),
-                url("{% static 'main/bann3.png' %}") center/cover no-repeat;
+        background: rgba(0, 0, 0, 0.838);
         padding: clamp(15px, 3vw, 40px);
         border-radius: 10px;
-        width: clamp(280px, 80%, 600px);
+        width: clamp(280px, 80%, 650px);
         max-width: 90%;
     }
     .banner-text h1 {
+        background: linear-gradient(90deg, #0400fe, #0400fe, #ff0404, #f50000);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text; /* fallback for some modern browsers */
+        color: transparent; 
         font-size: clamp(1.5rem, 4vw, 2.5rem);
         padding: clamp(5px, 1vw, 10px);
         margin-bottom: clamp(5px, 1vw, 10px);
@@ -58,11 +62,12 @@
     }
     .banner-text p {
         font-size: clamp(0.8rem, 2vw, 1.2rem);
+        color: #f57c00;
     {% comment %} margin-bottom: clamp(5px, 1vw, 15px); {% endcomment %}
     }
 
     .hero-section button {
-        background-color: #f57c00;
+        background-color:rgb(3, 19, 231);
         color: white;
         padding: clamp(6px, 1.2vw, 12px) clamp(12px, 2.5vw, 20px);
         border: none;
@@ -75,7 +80,7 @@
     }
 
     .hero-section button:hover {
-        background-color: #e6b555;
+        background-color: #f57c00;
     }
 
     .hero-section button a {
@@ -88,11 +93,11 @@
     
     .hero-content {
         background-color: #fdfdfd;
-        padding: 60px 20px;
+        {% comment %} padding: 60px 20px; {% endcomment %}
         text-align: justify;
         max-width: 1350px;
         margin: 0 auto;
-        margin-top: -20px;
+        margin-top: -55px;
     }
 
     .header-container {
@@ -782,7 +787,7 @@
             max-height: 400px;
         }
         .hero-content {
-            padding: 30px 15px;
+            padding: 60px 15px;
         }
         .hero-section img {
             max-height: none;
@@ -877,7 +882,7 @@
             max-height: 230px;
         }
         .hero-content {
-            padding: 25px 12px;
+            padding: 65px 12px;
         }
         .banner-text {
             top: 50%;
@@ -965,7 +970,7 @@
 <section class="hero-section">
     <img src="{% static 'main/bann3.png' %}" alt="Law Image">
     <div class="banner-text">
-        <h1>CKVK LAW ASSOCIATES</h1>
+        <h1>C.K.V.K LAW ASSOCIATES</h1>
         <h2>Mr. Venkatesh Chandran (MA.LLB)</h2>
         <h2>Ms. Sherien Oomen Mathai (BA.LLB)</h2>
         <h2>Ms. Nirmala Royan (MBA.LLB)</h2>
