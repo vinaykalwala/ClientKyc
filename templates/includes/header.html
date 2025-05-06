@@ -88,7 +88,7 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <img src="../../static/logo1.jpg" /> {% if user.is_authenticated %}
+            <img src="{% static  '/images/ckvklogo.png' %}" /> {% if user.is_authenticated %}
             <div class="user-profile">
                 {% if user.profile_picture %}
                 <img src="{{ user.profile_picture.url }}" alt="Profile Picture"> {% else %}

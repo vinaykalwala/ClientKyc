@@ -131,6 +131,23 @@
             color: black;
             font-weight: bold;
         }
+        .buttonlink {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color:rgb(3, 19, 231);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.buttonlink:hover {
+    background-color:#675340;
+}
+
     </style>
 
     <script>
@@ -172,6 +189,7 @@
         <h1>Employees List</h1>
 
         <div class="filter-buttons">
+            <a href="{% url 'signup' %}" class="buttonlink">Add Employee</a>
             <button onclick="filterByEmployeeType('all')">All Users</button> {% for employee_key, employee_name in employee_choices %}
             <button onclick="filterByEmployeeType('{{ employee_key }}')">{{ employee_name }}</button> {% endfor %}
             <button onclick="filterByEmployeeType('superuser')">Superusers</button>

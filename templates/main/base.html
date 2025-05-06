@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CKVK Associates{% endblock %}</title>
-    <link rel="icon" type="logo1.jpg" href="{% static 'logo1.jpg' %}">
+    <link rel="icon" type="images/ckvklogo.png" href="{% static 'images/ckvklogo.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
@@ -268,7 +268,7 @@ footer {
     <header>
         <nav>
             <div class="logo">
-                <img src="{% static 'logo1.jpg' %}" alt="CKVK Logo" />
+                <img src="{% static 'images/ckvklogo.png' %}" alt="CKVK Logo" />
             </div>
 
             <!-- Hamburger Menu -->
@@ -284,7 +284,8 @@ footer {
                 <a href="{% url 'landing' %}"><i class="fas fa-home"></i> Home</a>
                 <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About Us</a>
                 <a href="{% url 'services' %}"><i class="fas fa-cogs"></i> Services</a>
-                <a href="{% url 'consultation' %}"><i class="fas fa-phone"></i> Consultation</a>
+                <a href="{% url 'consultation' %}">
+                  <i class="fas fa-phone-alt" style="margin-right: 5px;"></i> Consultation</a>
                 <a href="{% url 'contact' %}"><i class="fas fa-envelope"></i> Contact</a>
                 <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
             </div>
